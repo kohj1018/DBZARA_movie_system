@@ -1,3 +1,5 @@
 from .employee import Employee, Department, Attendance, EmployeeEvaluationByUser, EmployeeEvaluationByEmployer
-from .user import User, Profile, Grade, Mileage
+from .user import (
+    User, Profile, Grade, Mileage, CouponHold, NonCouponHold
+)
 
