@@ -103,7 +103,6 @@ class Profile(models.Model):
 
 class CouponHold(models.Model):
     class Meta:
-        auto_created = True
         indexes = [
             models.Index(fields=['profile'], name='coupon_hold_profile_idx')
         ]
@@ -126,7 +125,6 @@ class CouponHold(models.Model):
 
 class NonCouponHold(models.Model):
     class Meta:
-        auto_created = True
         indexes = [
             models.Index(fields=['profile'], name='non_coupon_hold_profile_idx')
         ]
@@ -148,11 +146,15 @@ class Grade(models.Model):
 
 
 # TODO: PostgreSQL Partitioning
-class Mileage(models.Model):
-    class Meta:
-        indexes = [
-            models.Index(fields=['profile'], name='mileage_profile_idx')
-        ]
+class Mileage(PostgresPartitionedModel):
+    class PartitioningMeta:
+        class Meta:
+            indexes = [
+                models.Index(fields=['profile'], name='mileage_profile_idx')
+            ]
+        method = PostgresPartitioningMethod.RANGE
+        key = ['created']
+
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField()

@@ -25,13 +25,13 @@ class Event(models.Model):
 
 
 class Coupon(models.Model):
-    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='+')
     amount = models.IntegerField(verbose_name='최대 수량')
     duration = models.IntegerField(verbose_name='유효 기간')
 
 
 class NonCoupon(models.Model):
-    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='+')
     amount = models.IntegerField(verbose_name='최대 수량')

@@ -46,10 +46,10 @@ INSTALLED_APPS = [
     'psqlextra',
 
     # Custom Apps
-    'accounts.apps.AccountsConfig',
-    'cinema.apps.CinemaConfig',
     'item.apps.ItemConfig',
-    'movie.apps.MovieConfig'
+    'accounts.apps.AccountsConfig',
+    'movie.apps.MovieConfig',
+    'cinema.apps.CinemaConfig',
 ]
 
 MIDDLEWARE = [
