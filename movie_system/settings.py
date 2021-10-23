@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from secret_settings import SECRET_KEY
+from .secret_settings import SECRET_KEY, DATABASES
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,12 +33,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
+
+    # Django Third Party Apps
+    'psqlextra',
+
+    # Custom Apps
+    'item.apps.ItemConfig',
+    'accounts.apps.AccountsConfig',
+    'movie.apps.MovieConfig',
+    'cinema.apps.CinemaConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,13 +86,7 @@ WSGI_APPLICATION = 'movie_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
+DATABASES = DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -105,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'kr'
+LANGUAGE_CODE = 'ko'
 
 TIME_ZONE = 'Asia/Seoul'
 
