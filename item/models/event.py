@@ -18,20 +18,18 @@ class Event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     image = models.ImageField(upload_to='item/%Y/%m', null=True)
-    # TODO: Rename ForeignKey Model(Department)
-    cinema = models.ManyToManyField('Cinema')
-    coupon = models.ManyToManyField(Benefit, through='Coupon', through_fields=('benefit', 'event'))
-    non_coupon = models.ManyToManyField(Benefit, through='NonCoupon', through_fields=('benefit', 'event'))
+    coupon = models.ManyToManyField(Benefit, through='Coupon', through_fields=('event', 'benefit'), related_name='+')
+    non_coupon = models.ManyToManyField(Benefit, through='NonCoupon', through_fields=('event', 'benefit'), related_name='+')
 
 
 class Coupon(models.Model):
-    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='+')
     amount = models.IntegerField(verbose_name='최대 수량')
     duration = models.IntegerField(verbose_name='유효 기간')
 
 
 class NonCoupon(models.Model):
-    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='+')
     amount = models.IntegerField(verbose_name='최대 수량')

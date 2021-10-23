@@ -1,6 +1,9 @@
 from django.db import models
 from datetime import datetime
 
+from psqlextra.types import PostgresPartitioningMethod
+from psqlextra.models import PostgresPartitionedModel
+
 
 class Cinema(models.Model):
     RANK_CHOICES = [
@@ -17,7 +20,7 @@ class Cinema(models.Model):
     schedules = models.ManyToManyField('movie.Movie', through='cinema.Schedule', through_fields=('cinema', 'movie'))
     inquiries = models.ManyToManyField('accounts.Profile', through='cinema.Question', through_fields=('cinema', 'profile'))
     stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'))
-    events = models.ManyToManyField('item.Event')
+    events = models.ManyToManyField('item.Event', related_name='cinema')
 
     # TODO: Fix Function Name
     def on_time(self):
@@ -38,11 +41,15 @@ class Seat(models.Model):
     rows = models.IntegerField(verbose_name='행')
 
 
-class Schedule(models.Model):
-    class Meta:
-        indexes = [
-            models.Index(fields=['cinema'], name='schedule_cinema_idx')
-        ]
+class Schedule(PostgresPartitionedModel):
+    class PartitioningMeta:
+        class Meta:
+            indexes = [
+                models.Index(fields=['cinema'], name='schedule_cinema_idx')
+            ]
+        method = PostgresPartitioningMethod.RANGE
+        key = ["datetime"]
+
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
@@ -52,12 +59,18 @@ class Schedule(models.Model):
 
 # TODO: ADD attribute profile id? - with Index
 # TODO: PostgreSQL Partitioning
-class Reservation(models.Model):
+class Reservation(PostgresPartitionedModel):
+    class PartitioningMeta:
+        method = PostgresPartitioningMethod.RANGE
+        key = ["datetime"]
+
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    # profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
     order = models.ForeignKey('item.Order', on_delete=models.CASCADE)
-    reservation_number = models.CharField(max_length=20)
+    datetime = models.DateTimeField()
+    # profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    reservation_number = models.CharField(max_length=15)
     seat_column = models.IntegerField()
     seat_row = models.IntegerField()
+    is_canceled = models.BooleanField(default=False)
 
 

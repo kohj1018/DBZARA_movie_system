@@ -19,7 +19,7 @@ class Movie(models.Model):
     actors = models.ManyToManyField('movie.Actor')
     directors = models.ManyToManyField('movie.Director')
     distributors = models.ManyToManyField('movie.Distributor')
-    images = models.ManyToManyField('movie.Image')
+    images = models.ManyToManyField('movie.Image', related_name='+')
 
 
 class Genre(models.Model):
@@ -40,14 +40,9 @@ class Distributor(models.Model):
 
 
 class Image(models.Model):
-    class Meta:
-        indexes = [
-            models.Index(fields=['movie'], name='movie_images_idx')
-        ]
     CATEGORY_CHOICES = [
         (1, '스틸컷'),
         (2, '이후는 찾아서 적어보자')
     ]
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     category = models.IntegerField(choices=CATEGORY_CHOICES)
     image = models.ImageField(upload_to='movie/images')

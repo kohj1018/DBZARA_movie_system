@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from psqlextra.types import PostgresPartitioningMethod
+from psqlextra.models import PostgresPartitionedModel
 from datetime import datetime, timedelta
 from . import Attendance
 
@@ -25,6 +28,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile/%Y/%m/')
     coupons = models.ManyToManyField('item.Coupon', through='accounts.CouponHold', through_fields=('profile', 'coupon'))
     non_coupons = models.ManyToManyField('item.NonCoupon', through='accounts.NonCouponHold', through_fields=('profile', 'non_coupon'))
+    orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
     # TODO: Rename ForeignKey Model(Genre, Actor, Director, Movie, Distributor)
     favorite_movies = models.ManyToManyField('movie.Movie')
     favorite_genres = models.ManyToManyField('movie.Genre')
@@ -103,7 +107,6 @@ class Profile(models.Model):
 
 class CouponHold(models.Model):
     class Meta:
-        auto_created = True
         indexes = [
             models.Index(fields=['profile'], name='coupon_hold_profile_idx')
         ]
@@ -126,7 +129,6 @@ class CouponHold(models.Model):
 
 class NonCouponHold(models.Model):
     class Meta:
-        auto_created = True
         indexes = [
             models.Index(fields=['profile'], name='non_coupon_hold_profile_idx')
         ]
@@ -148,11 +150,15 @@ class Grade(models.Model):
 
 
 # TODO: PostgreSQL Partitioning
-class Mileage(models.Model):
-    class Meta:
-        indexes = [
-            models.Index(fields=['profile'], name='mileage_profile_idx')
-        ]
+class Mileage(PostgresPartitionedModel):
+    class PartitioningMeta:
+        class Meta:
+            indexes = [
+                models.Index(fields=['profile'], name='mileage_profile_idx')
+            ]
+        method = PostgresPartitioningMethod.RANGE
+        key = ['created']
+
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField()
