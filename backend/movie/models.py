@@ -10,6 +10,7 @@ class Person(models.Model):
 
 class Movie(models.Model):
     # TODO: Remove CODE
+    code = models.CharField(max_length=50)
     rating = models.IntegerField()
     running_time = models.IntegerField()
     summary = models.TextField()

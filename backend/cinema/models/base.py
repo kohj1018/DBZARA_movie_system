@@ -17,9 +17,9 @@ class Cinema(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='위도')
     longitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='경도')
     grade = models.IntegerField(choices=RANK_CHOICES)
-    schedules = models.ManyToManyField('movie.Movie', through='cinema.Schedule', through_fields=('cinema', 'movie'))
-    inquiries = models.ManyToManyField('accounts.Profile', through='cinema.Question', through_fields=('cinema', 'profile'))
-    stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'))
+    schedules = models.ManyToManyField('movie.Movie', through='cinema.Schedule', through_fields=('cinema', 'movie'), related_name='+')
+    inquiries = models.ManyToManyField('accounts.Profile', through='cinema.Question', through_fields=('cinema', 'profile'), related_name='+')
+    stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'), related_name='+')
     events = models.ManyToManyField('item.Event', related_name='cinema')
 
     # TODO: Fix Function Name
@@ -33,7 +33,7 @@ class Theater(models.Model):
     name = models.CharField(max_length=5, verbose_name='이름')
     category = models.CharField(max_length=10, verbose_name='종류')
     floor = models.IntegerField(verbose_name='층')
-    materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'))
+    materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'), related_name='+')
 
 
 class Seat(models.Model):
@@ -43,34 +43,32 @@ class Seat(models.Model):
 
 class Schedule(PostgresPartitionedModel):
     class PartitioningMeta:
+        method = PostgresPartitioningMethod.RANGE
+        key = ["datetime"]
+
         class Meta:
             indexes = [
                 models.Index(fields=['cinema'], name='schedule_cinema_idx')
             ]
-        method = PostgresPartitioningMethod.RANGE
-        key = ["datetime"]
+            constraints = [
+                models.UniqueConstraint(fields=['id', 'datetime'], name='unique_schedule')
+            ]
 
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
-    reservations = models.ManyToManyField('item.Order', through='Reservation', through_fields=('schedule', 'order'))
 
 
-# TODO: ADD attribute profile id? - with Index
-# TODO: PostgreSQL Partitioning
-class Reservation(PostgresPartitionedModel):
+class Reservation(models.Model):
     class PartitioningMeta:
         method = PostgresPartitioningMethod.RANGE
         key = ["datetime"]
 
-    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    order = models.ForeignKey('item.Order', on_delete=models.CASCADE)
-    datetime = models.DateTimeField()
-    # profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    schedule = models.ForeignKey('cinema.Schedule', on_delete=models.CASCADE, related_name='+', to_field='id')
+    order = models.ForeignKey('item.Order', on_delete=models.CASCADE, related_name='+', to_field='id')
+    datetime = models.DateTimeField(auto_now_add=True)
     reservation_number = models.CharField(max_length=15)
     seat_column = models.IntegerField()
     seat_row = models.IntegerField()
     is_canceled = models.BooleanField(default=False)
-
-
