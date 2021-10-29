@@ -1,5 +1,5 @@
 from .base import (
-    Cinema, Theater, Seat, Schedule
+    Cinema, Theater, Seat, Schedule, Reservation
 )
 
 from .inquiry import (

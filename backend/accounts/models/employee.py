@@ -12,7 +12,6 @@ class Employee(models.Model):
     belong = models.ForeignKey('Department', on_delete=models.CASCADE)
     register_date = models.DateField()
     salary = models.IntegerField(default=0)
-    answers = models.ManyToManyField('cinema.Question', through='cinema.Answer')
 
 
 class Department(models.Model):
@@ -20,15 +19,15 @@ class Department(models.Model):
     department = models.ForeignKey('self', on_delete=models.CASCADE, related_name='direct_department')
 
 
-# TODO: PostgreSQL Partitioning
 class Attendance(PostgresPartitionedModel):
-    class Partitioning:
+    class PartitioningMeta:
+        method = PostgresPartitioningMethod.RANGE
+        key = ['date']
+
         class Meta:
             indexes = [
                 models.Index(fields=['employee'], name='attendance_employee_idx')
             ]
-        method = PostgresPartitioningMethod.RANGE
-        key = ['date']
 
     RESULT_CHOICES = [
         (0, '미정'),
