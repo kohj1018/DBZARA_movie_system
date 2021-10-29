@@ -13,8 +13,8 @@ class User(AbstractUser):
         ('M', '남성'),
         ('F', '여성'),
     ]
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
-    birth_date = models.DateField()
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=1, null=True)
+    birth_date = models.DateField(null=True)
     is_manager = models.BooleanField(default=False)
 
     @property
@@ -26,10 +26,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     grade = models.ForeignKey('accounts.Grade', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='profile/%Y/%m/')
+    # orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
     coupons = models.ManyToManyField('item.Coupon', through='accounts.CouponHold', through_fields=('profile', 'coupon'))
     non_coupons = models.ManyToManyField('item.NonCoupon', through='accounts.NonCouponHold', through_fields=('profile', 'non_coupon'))
-    orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
-    # TODO: Rename ForeignKey Model(Genre, Actor, Director, Movie, Distributor)
     favorite_movies = models.ManyToManyField('movie.Movie')
     favorite_genres = models.ManyToManyField('movie.Genre')
     favorite_actors = models.ManyToManyField('movie.Actor')
@@ -110,7 +109,7 @@ class CouponHold(models.Model):
         indexes = [
             models.Index(fields=['profile'], name='coupon_hold_profile_idx')
         ]
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
     coupon = models.ForeignKey('item.Coupon', on_delete=models.CASCADE)
     issue_date = models.DateField(auto_now_add=True)
     used_date = models.DateField(null=True, default=None)
@@ -132,7 +131,7 @@ class NonCouponHold(models.Model):
         indexes = [
             models.Index(fields=['profile'], name='non_coupon_hold_profile_idx')
         ]
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
     non_coupon = models.ForeignKey('item.NonCoupon', on_delete=models.CASCADE)
     used_date = models.DateField(auto_now_add=True)
 
@@ -152,14 +151,15 @@ class Grade(models.Model):
 # TODO: PostgreSQL Partitioning
 class Mileage(PostgresPartitionedModel):
     class PartitioningMeta:
+        method = PostgresPartitioningMethod.RANGE
+        key = ['created']
+
         class Meta:
             indexes = [
                 models.Index(fields=['profile'], name='mileage_profile_idx')
             ]
-        method = PostgresPartitioningMethod.RANGE
-        key = ['created']
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField()
     content = models.CharField(max_length=10)

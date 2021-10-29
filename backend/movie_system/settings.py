@@ -44,11 +44,12 @@ INSTALLED_APPS = [
 
     # Django Third Party Apps
     'psqlextra',
+    'django_seed',
 
     # Custom Apps
-    'item.apps.ItemConfig',
-    'accounts.apps.AccountsConfig',
     'movie.apps.MovieConfig',
+    'accounts.apps.AccountsConfig',
+    'item.apps.ItemConfig',
     'cinema.apps.CinemaConfig',
 ]
 

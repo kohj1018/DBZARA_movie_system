@@ -1,4 +1,0 @@
-django~=3.2.8
-ipython
-django-postgres-extra
-python-dateutil~=2.8.0
