@@ -11,14 +11,6 @@ const Container = styled.div`
   margin: 10px;
 `;
 
-const Item = styled.div`
-  position: relative;
-  top: 50px;
-  left: 100px;
-  font-size: 10px;
-  color: RGB(0, 174, 224);
-`;
-
 const Btn = styled(Button)`
   && {
     width: 10px;
