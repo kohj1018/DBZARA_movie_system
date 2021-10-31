@@ -8,17 +8,17 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: #ff7eb3;
 `;
 
 const LoginView = styled.div`
   margin-top: 20px;
   margin: 10px;
   width: 80%;
-  height: 10%;
+  height: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #ff7eb3;
 `;
 
 const Btn = styled(Button)`

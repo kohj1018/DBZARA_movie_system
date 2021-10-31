@@ -26,7 +26,6 @@ const Btn = styled(Button)`
 
 const MoviePoster = ({ number }) => {
   const [like, setLike] = useState(10);
-
   return (
     <>
       <Container>

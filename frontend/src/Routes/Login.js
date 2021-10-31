@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
+import { UserContext } from "context";
 
 const Container = styled.div`
   margin-top: 50px;
@@ -17,9 +18,18 @@ const LoginView = styled.div`
   width: 50%;
   height: 50%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #66a6ff;
+`;
+
+const Info = styled.ul`
+  background-color: #293672;
+  margin: 10px 0 0 10px;
+`;
+const Data = styled.li`
+  font-size: 15px;
 `;
 
 const Btn = styled(Button)`
@@ -28,10 +38,18 @@ const Btn = styled(Button)`
 `;
 
 const Login = () => {
+  //  UserContext에서 정보 받아와서 사용
+  const { email, number, name } = useContext(UserContext);
+
   return (
     <Container>
       <LoginView>
         <Btn variant="outlined">로그인</Btn>
+        <Info>
+          <Data>{`email : ${email}`}</Data>
+          <Data>{`학번 : ${number}`}</Data>
+          <Data>{`name : ${name}`}</Data>
+        </Info>
       </LoginView>
     </Container>
   );
