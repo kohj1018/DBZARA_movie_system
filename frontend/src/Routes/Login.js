@@ -1,6 +1,12 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@material-ui/core";
 import { UserContext } from "context";
 
 const Container = styled.div`
@@ -28,6 +34,13 @@ const Info = styled.ul`
   background-color: #293672;
   margin: 10px 0 0 10px;
 `;
+
+const UserSummary = styled(AccordionSummary)``;
+const UserDetails = styled(AccordionDetails)`
+  display: flex;
+  flex-direction: column;
+  background-color: #89f7fe;
+`;
 const Data = styled.li`
   font-size: 15px;
 `;
@@ -46,9 +59,16 @@ const Login = () => {
       <LoginView>
         <Btn variant="outlined">로그인</Btn>
         <Info>
-          <Data>{`email : ${email}`}</Data>
-          <Data>{`학번 : ${number}`}</Data>
-          <Data>{`name : ${name}`}</Data>
+          <Accordion>
+            <UserSummary>
+              <Typography>UserInfo</Typography>
+            </UserSummary>
+            <UserDetails>
+              <Data>{`email : ${email}`}</Data>
+              <Data>{`학번 : ${number}`}</Data>
+              <Data>{`name : ${name}`}</Data>
+            </UserDetails>
+          </Accordion>
         </Info>
       </LoginView>
     </Container>
