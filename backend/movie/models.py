@@ -9,9 +9,8 @@ class Person(models.Model):
 
 
 class Movie(models.Model):
-    # TODO: Remove CODE
-    code = models.CharField(max_length=50)
-    rating = models.IntegerField()
+    code = models.CharField(max_length=8)
+    name = models.CharField(max_length=50)
     running_time = models.IntegerField()
     summary = models.TextField()
     opening_date = models.DateField()
