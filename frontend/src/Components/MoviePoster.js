@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Button } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 
-const Container = styled.div`
-  width: 150px;
-  height: 100px;
-  background-color: RGB(254, 249, 220);
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
+const Container = styled(Box)`
+  && {
+    width: 150px;
+    height: 100px;
+    background-color: RGB(254, 249, 220);
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
 `;
 
 const Btn = styled(Button)`
@@ -24,12 +26,13 @@ const Btn = styled(Button)`
 
 const MoviePoster = ({ number }) => {
   const [like, setLike] = useState(10);
-
   return (
     <>
       <Container>
-        <div>movie{number}</div>
-        <Btn onClick={() => setLike(like + 1)}>좋아요{like}</Btn>
+        <p>movie{number}</p>
+        <Btn size="small" variant="outlined" onClick={() => setLike(like + 1)}>
+          좋아요{like}
+        </Btn>
       </Container>
     </>
   );

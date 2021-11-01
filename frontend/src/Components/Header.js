@@ -13,6 +13,8 @@ const Header = styled.header`
   display: flex;
   align-items: center;
   padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const List = styled.ul`
@@ -51,6 +53,14 @@ export default withRouter(({ location: { pathname } }) => (
       </Item>
       <Item current={pathname === "/material"}>
         <SLink to="/material">Material</SLink>
+      </Item>
+    </List>
+    <List>
+      <Item current={pathname === "/join"}>
+        <SLink to="/join">회원가입</SLink>
+      </Item>
+      <Item current={pathname === "/login"}>
+        <SLink to="/login">로그인</SLink>
       </Item>
     </List>
   </Header>
