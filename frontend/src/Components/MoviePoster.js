@@ -1,41 +1,57 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
 
-const Container = styled(Box)`
-  && {
-    width: 150px;
-    height: 100px;
-    background-color: RGB(254, 249, 220);
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-  }
-`;
-
-const Btn = styled(Button)`
-  && {
-    width: 10px;
-    position: relative;
-    top: 40px;
-    left: 80px;
-    font-size: 10px;
-    color: RGB(0, 174, 224);
-  }
-`;
-
 const MoviePoster = ({ number }) => {
-  const [like, setLike] = useState(10);
   return (
     <>
       <Container>
-        <p>movie{number}</p>
-        <Btn size="small" variant="outlined" onClick={() => setLike(like + 1)}>
-          좋아요{like}
-        </Btn>
+        <BtnContainer>
+          <Btn>
+            <p>예매</p>
+          </Btn>
+          <Btn>
+            <p>정보</p>
+          </Btn>
+        </BtnContainer>
       </Container>
     </>
   );
 };
 
 export default MoviePoster;
+
+const Container = styled(Box)`
+  && {
+    height: 100%;
+    width: 100%;
+    background-color: RGB(254, 249, 220);
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 150, 136, 1);
+    }
+  }
+`;
+const BtnContainer = styled.section`
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  opacity: 0;
+  &:hover {
+    opacity: 1;
+    background-color: rgba(0, 150, 136, 1);
+  }
+`;
+
+const Btn = styled(Button)`
+  && {
+    margin: 2px 0 0 2px;
+    width: 60%;
+    height: 40px;
+    position: relative;
+    font-size: 10px;
+    color: RGB(254, 249, 220);
+
+    background-color: #00b09b;
+  }
+`;

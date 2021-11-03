@@ -50,23 +50,20 @@ class Schedule(PostgresPartitionedModel):
             indexes = [
                 models.Index(fields=['cinema'], name='schedule_cinema_idx')
             ]
-            constraints = [
-                models.UniqueConstraint(fields=['id', 'datetime'], name='unique_schedule')
-            ]
 
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
-    datetime = models.DateTimeField()
+    datetime = models.DateTimeField(unique=True)
 
 
-class Reservation(models.Model):
+class Reservation(PostgresPartitionedModel):
     class PartitioningMeta:
         method = PostgresPartitioningMethod.RANGE
         key = ["datetime"]
 
-    schedule = models.ForeignKey('cinema.Schedule', on_delete=models.CASCADE, related_name='+', to_field='id')
-    order = models.ForeignKey('item.Order', on_delete=models.CASCADE, related_name='+', to_field='id')
+    schedule = models.BigIntegerField()
+    order = models.BigIntegerField()
     datetime = models.DateTimeField(auto_now_add=True)
     reservation_number = models.CharField(max_length=15)
     seat_column = models.IntegerField()

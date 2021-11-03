@@ -152,4 +152,11 @@ cython_debug/
 
 movie_system/secret_settings.py
 .idea
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/django
+fronted/node_modules
+=======
+
+frontend/node_modules
+# End of https://www.toptal.com/developers/gitignore/api/django
+>>>>>>> upstream/develop
