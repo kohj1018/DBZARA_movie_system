@@ -1,8 +1,10 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
+
+from exception.movie_exception import MovieExistException
 
 
 class Cinema(models.Model):
@@ -42,6 +44,17 @@ class Theater(models.Model):
     floor = models.IntegerField(verbose_name='층')
     materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'), related_name='+')
 
+    def add_schedule(self, movie, schedule_time):
+        if Schedule.objects.filter(theater=self, datetime__range=(schedule_time, schedule_time + timedelta(minutes=movie.running_time + 30))).count() == 0:
+            return Schedule.objects.create(
+                cinema=self.cinema,
+                theater=self,
+                movie=movie,
+                datetime=schedule_time
+            )
+        else:
+            raise MovieExistException
+
     def __str__(self):
         return f'{self.cinema}: {self.name}'
 
@@ -67,7 +80,7 @@ class Schedule(PostgresPartitionedModel):
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
-    datetime = models.DateTimeField(unique=True)
+    datetime = models.DateTimeField()
 
 
 class Reservation(PostgresPartitionedModel):
@@ -82,3 +95,4 @@ class Reservation(PostgresPartitionedModel):
     seat_column = models.IntegerField()
     seat_row = models.IntegerField()
     is_canceled = models.BooleanField(default=False)
+
