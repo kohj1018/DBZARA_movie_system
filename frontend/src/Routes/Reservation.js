@@ -13,7 +13,6 @@ const Reservation = () => (
   <>
     <Container>
       <MoviePoster number={1} />
-      <MoviePoster number={2} />
     </Container>
   </>
 );

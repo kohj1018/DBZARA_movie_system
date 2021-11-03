@@ -3,6 +3,14 @@ import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
+/*
+TODO
+header
+  hover -> 창 내려오고 list보이기
+  메뉴 클릭 -> 사이드바
+  서치 클릭 -> 사이드바
+*/
+
 const Header = styled.header`
   z-index: 10;
   position: fixed;
@@ -24,27 +32,25 @@ const List = styled.ul`
 
 const Logo = styled.div`
   width: 100px;
-  height: 50px;
   font-size: 30px;
-  margin: 2px 10px;
+  margin: 0 10px;
 `;
 
 const Item = styled(Button)`
   && {
-    width: 80px;
-    height: 50px;
-    font-size: 15px;
-    margin: 2px 10px;
-    border-bottom: 5px solid
-      ${(props) => (props.current ? "RGB(22, 31, 46)" : "transparent")};
+    font-size: 18px;
+    padding: 0px;
+    margin: 0 10px;
   }
 `;
 
 const SLink = styled(Link)`
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  && {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export default withRouter(({ location: { pathname } }) => (

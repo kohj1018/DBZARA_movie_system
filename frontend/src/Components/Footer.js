@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Container = styled.footer`
   padding-bottom: 40px;
   height: 420px;
-  background-color: RGB(191, 189, 97);
+  background-color: #8aacc8;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */

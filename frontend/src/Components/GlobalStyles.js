@@ -8,9 +8,13 @@ const GlobalStyles = createGlobalStyle`
         color: RGB(251, 251, 251);
     }
 
+    p{
+        margin-right: 30px;
+    }
+
     // 많이 쓰는 flex속성  section의 default로 변경
     section{
-        display: flex;
+        display: flex; 
         justify-content: center;
         align-items: center;
     }
@@ -22,6 +26,7 @@ const GlobalStyles = createGlobalStyle`
         font-size: 30px;
         background-color:RGB(245, 245, 245);
         color: white;
+        line-height: 1;
     }
 `;
 
