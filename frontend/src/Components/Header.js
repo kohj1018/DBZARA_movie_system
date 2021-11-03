@@ -5,27 +5,35 @@ import { Button } from "@material-ui/core";
 
 const Header = styled.header`
   z-index: 10;
-  background-color: RGB(213, 163, 255);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: 70px;
   display: flex;
   align-items: center;
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
+  background-color: ${(props) => (props.current ? "RGB(38, 38, 38)" : "")};
 `;
 
 const List = styled.ul`
   display: flex;
 `;
 
+const Logo = styled.div`
+  width: 100px;
+  height: 50px;
+  font-size: 30px;
+  margin: 2px 10px;
+`;
+
 const Item = styled(Button)`
   && {
-    width: 100px;
+    width: 80px;
     height: 50px;
-    font-size: 20px;
+    font-size: 15px;
     margin: 2px 10px;
     border-bottom: 5px solid
       ${(props) => (props.current ? "RGB(22, 31, 46)" : "transparent")};
@@ -40,19 +48,27 @@ const SLink = styled(Link)`
 `;
 
 export default withRouter(({ location: { pathname } }) => (
-  <Header>
+  <Header current={pathname !== "/"}>
     <List>
-      <Item current={pathname === "/"}>
-        <SLink to="/">Home</SLink>
-      </Item>
+      <Logo>
+        <SLink to="/">Logo</SLink>
+      </Logo>
+    </List>
+    <List>
       <Item current={pathname === "/movies"}>
-        <SLink to="/movies">Movies</SLink>
+        <SLink to="/movies">영화</SLink>
+      </Item>
+      <Item current={pathname === "/reservation"}>
+        <SLink to="/reservation">예매</SLink>
       </Item>
       <Item current={pathname === "/theater"}>
-        <SLink to="/theater">Theater</SLink>
+        <SLink to="/theater">극장</SLink>
       </Item>
-      <Item current={pathname === "/material"}>
-        <SLink to="/material">Material</SLink>
+      <Item current={pathname === "/event"}>
+        <SLink to="/event">이벤트</SLink>
+      </Item>
+      <Item current={pathname === "/store"}>
+        <SLink to="/store">스토어</SLink>
       </Item>
     </List>
     <List>
