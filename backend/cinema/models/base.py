@@ -11,9 +11,13 @@ class Cinema(models.Model):
         (2, 'A 등급'),
         (3, 'B 등급'),
         (4, 'C 등급'),
+        (5, 'D 등급'),
+        (6, 'F 등급')
     ]
     name = models.CharField(max_length=20, unique=True, verbose_name='이름')
-    address = models.CharField(max_length=50, verbose_name='주소')
+    main_region = models.CharField(max_length=10, verbose_name='시도명')
+    sub_region = models.CharField(max_length=10, verbose_name='시군구명')
+    address = models.CharField(max_length=80, verbose_name='주소')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='위도')
     longitude = models.DecimalField(max_digits=9, decimal_places=6, verbose_name='경도')
     grade = models.IntegerField(choices=RANK_CHOICES)
@@ -26,6 +30,9 @@ class Cinema(models.Model):
     def on_time(self):
         return self.schedule_set.filter(datetime__gt=datetime.now())
 
+    def __str__(self):
+        return self.name
+
 
 class Theater(models.Model):
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='영화관')
@@ -35,10 +42,16 @@ class Theater(models.Model):
     floor = models.IntegerField(verbose_name='층')
     materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'), related_name='+')
 
+    def __str__(self):
+        return f'{self.cinema}: {self.name}'
+
 
 class Seat(models.Model):
     columns = models.IntegerField(verbose_name='열')
     rows = models.IntegerField(verbose_name='행')
+
+    def __str__(self):
+        return f'{self.columns} : {self.rows}'
 
 
 class Schedule(PostgresPartitionedModel):
