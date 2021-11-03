@@ -25,7 +25,7 @@ const TypoGraphy = styled(Typography)`
   }
 `;
 
-const Material = () => {
+const Event = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -49,4 +49,4 @@ const Material = () => {
 
 // const SimpleDialog = ({, open}) => {};
 
-export default Material;
+export default Event;
