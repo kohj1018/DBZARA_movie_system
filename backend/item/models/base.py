@@ -41,14 +41,10 @@ class Order(PostgresPartitionedModel):
                 models.Index(fields=['profile'], name='order_profile_idx')
             ]
 
-            constraints = [
-                models.UniqueConstraint(fields=['id', 'datetime'], name='unique_order')
-            ]
-
     profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, verbose_name='프로필')
     item = models.ForeignKey('item.Item', on_delete=models.CASCADE, verbose_name='상품')
     coupon_hold = models.ForeignKey('accounts.CouponHold', on_delete=models.CASCADE, verbose_name='쿠폰 내역')
     non_coupon_hold = models.ForeignKey('accounts.NonCouponHold', on_delete=models.CASCADE, verbose_name='비쿠폰 내역')
-    datetime = models.DateTimeField(auto_now_add=True)
+    datetime = models.DateTimeField(auto_now_add=True, unique=True)
     price = models.IntegerField(verbose_name='지불액')
     is_canceled = models.BooleanField(default=False, verbose_name='취소여부')
