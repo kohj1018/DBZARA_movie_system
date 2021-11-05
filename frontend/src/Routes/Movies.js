@@ -9,7 +9,7 @@ const Container = styled.div`
   display: grid;
 `;
 
-const Home = () => (
+const Movies = () => (
   <>
     <Container>
       <MoviePoster number={1} />
@@ -18,4 +18,4 @@ const Home = () => (
   </>
 );
 
-export default Home;
+export default Movies;
