@@ -1,7 +1,7 @@
 from django.core.files import File
 from datetime import date, timedelta
 from movie_system import secret_settings
-from movie.models import Movie, Actor, Director, Distributor, Image
+from movie.models import Movie, Actor, Director, Distributor, Image, Genre
 import requests
 import os
 
@@ -22,6 +22,10 @@ class KobisAPI:
             'targetDt': str(self.start_date).replace('-', '')
         })
         return data.json()['boxOfficeResult']['dailyBoxOfficeList']
+
+    def parse_schedule_data(self):
+        elements = self.collect_daily_movie()
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(int(element['showCnt']) / 7)) for element in elements], self.start_date
 
     def parse_movie_data(self):
         elements = self.collect_daily_movie()
@@ -95,15 +99,19 @@ class TMDBAPI:
             movie.images.add(backdrop)
             os.remove(f'{movie_id}_backdrop.jpg')
 
+        genres = data['genres']
+        for element in genres:
+            genre_name = element['name']
+            genre, created = Genre.objects.get_or_create(
+                name=genre_name
+            )
+            movie.genres.add(genre)
+
         distributors = data['production_companies']
         for element in distributors:
             distributor_id = element['id']
             distributor_name = element['name']
             logo_path = element['logo_path']
-            if logo_path:
-                logo_image = open(f'{distributor_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + logo_path)
-                logo_image.write(response.content)
             distributor, created = Distributor.objects.get_or_create(
                 distributor_id=distributor_id,
                 defaults={
@@ -111,6 +119,9 @@ class TMDBAPI:
                 }
             )
             if created and logo_path:
+                logo_image = open(f'{distributor_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + logo_path)
+                logo_image.write(response.content)
                 distributor.image.save(f'{distributor_id}.jpg', File(open(f'{distributor_id}.jpg', 'rb')))
                 os.remove(f'{distributor_id}.jpg')
             movie.distributors.add(distributor)
@@ -131,10 +142,6 @@ class TMDBAPI:
             name = element['name']
             character_name = element['character']
             profile_image = element['profile_path']
-            if profile_image:
-                actor_image = open(f'{actor_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
-                actor_image.write(response.content)
             actor, created = Actor.objects.get_or_create(
                 code=actor_id,
                 defaults={
@@ -142,6 +149,9 @@ class TMDBAPI:
                 }
             )
             if created and profile_image:
+                actor_image = open(f'{actor_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
+                actor_image.write(response.content)
                 actor.image.save(f'{actor_id}.jpg', File(open(f'{actor_id}.jpg', 'rb')))
                 os.remove(f'{actor_id}.jpg')
             movie.actors.add(actor, through_defaults={
@@ -153,10 +163,6 @@ class TMDBAPI:
             director_id = element['id']
             name = element['name']
             profile_image = element['profile_path']
-            if profile_image:
-                director_image = open(f'{director_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
-                director_image.write(response.content)
             director, created = Director.objects.get_or_create(
                 code=director_id,
                 defaults={
@@ -164,6 +170,9 @@ class TMDBAPI:
                 }
             )
             if created and profile_image:
+                director_image = open(f'{director_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
+                director_image.write(response.content)
                 director.image.save(f'{director_id}.jpg', File(open(f'{director_id}.jpg', 'rb')))
                 os.remove(f'{director_id}.jpg')
             movie.directors.add(director)
