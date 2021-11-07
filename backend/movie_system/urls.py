@@ -15,13 +15,23 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.views.generic import TemplateView
 
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), name='index')
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+
+    path('api/token/', obtain_jwt_token),
+    path('api/token/verify/', verify_jwt_token),
+    path('api/token/refresh/', refresh_jwt_token),
+
+    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:

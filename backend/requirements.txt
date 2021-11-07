@@ -10,3 +10,5 @@ numpy
 django-storages[azure]
 django-allauth
 django-rest-framework
+pyjwt~=1.7.1
+djangorestframework-jwt
