@@ -1,9 +1,11 @@
-from django.core.files import File
 from datetime import date, timedelta
+import os
+
+from django.core.files import File
+
+import requests
 from movie_system import secret_settings
 from movie.models import Movie, Actor, Director, Distributor, Image, Genre
-import requests
-import os
 
 
 class KobisAPI:
@@ -44,6 +46,7 @@ class KobisAPI:
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
                 self.tmdb.get_movie_detail(movie_id, movie)
                 self.tmdb.get_movie_credits(movie_id, movie)
+                # self.tmdb.get_movie_videos(movie_id, movie)
                 movie.tmdb_id = movie_id
                 movie.save()
             else:
@@ -69,6 +72,14 @@ class TMDBAPI:
         }).json()
         return data['results'][0]['id']
 
+    def get_movie_videos(self, movie_id, movie):
+        path = f'/movie/{movie_id}/videos'
+        data = requests.get(TMDBAPI.BASE_URL + path, params={
+            'api_key': self.SECRET_KEY,
+            'language': self.language
+        }).json()
+        return data
+
     def get_movie_detail(self, movie_id, movie):
         path = f'/movie/{movie_id}'
         data = requests.get(TMDBAPI.BASE_URL + path, params={
@@ -79,6 +90,7 @@ class TMDBAPI:
         movie.running_time = data['runtime']
         movie.tmdb_id = movie_id
         movie.imdb_id = data['imdb_id']
+        movie.summary = data['overview']
         poster_path = data['poster_path']
         if poster_path:
             poster_image = File(open(f'{movie_id}_poster.jpg', 'wb'))

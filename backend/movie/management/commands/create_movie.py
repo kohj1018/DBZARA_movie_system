@@ -1,6 +1,7 @@
+from datetime import date, timedelta
+
 from django.core.management.base import BaseCommand
 from functions.collect_movie_data import KobisAPI
-from datetime import date, timedelta
 
 
 class Command(BaseCommand):

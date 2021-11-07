@@ -1,11 +1,11 @@
+from datetime import datetime, timedelta
+from random import choice
+
 from django.core.management.base import BaseCommand
 from cinema.models import Theater
 
 from exception.movie_exception import MovieExistException
 from functions.collect_movie_data import KobisAPI
-
-from datetime import datetime, timedelta
-from random import choice
 
 
 class Command(BaseCommand):
