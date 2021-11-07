@@ -4,9 +4,9 @@ import Reservation from "Routes/Reservation";
 import Theater from "Routes/Theater";
 import Event from "Routes/Event";
 import Store from "Routes/Store/Store";
-// import StoreTicket from "Routes/Store/Ticket";
-// import StorePopcorn from "Routes/Store/Popcorn";
-// import StorePointMall from "Routes/Store/Pointmall";
+import StoreTicket from "Routes/Store/Ticket";
+import StorePopcorn from "Routes/Store/Popcorn";
+import StorePointMall from "Routes/Store/Pointmall";
 import Login from "Routes/Login";
 import join from "Routes/Join";
 
@@ -17,43 +17,48 @@ export default [
     component: Home,
   },
   {
-    path: "/movies",
+    path: "/Movies",
+    component: Movies,
+  },
+  // TODO Create Movies Detail page
+  {
+    path: "/MoviesInfo/Index/:id",
     component: Movies,
   },
   {
-    path: "/reservation",
+    path: "/Reservation",
     component: Reservation,
   },
   {
-    path: "/theater",
+    path: "/Theater",
     component: Theater,
   },
   {
-    path: "/event",
+    path: "/Event",
     component: Event,
   },
   {
-    path: "/store",
+    path: "/Store",
     component: Store,
   },
-  //   {
-  //     path: "/store/ticket",
-  //     component: StoreTicket,
-  //   },
-  //   {
-  //     path: "/store/popcorn",
-  //     component: StorePopcorn,
-  //   },
-  //   {
-  //     path: "/store/pointmall",
-  //     component: StorePointMall,
-  //   },
   {
-    path: "/login",
+    path: "/Store/Ticket",
+    component: StoreTicket,
+  },
+  {
+    path: "/Store/Popcorn",
+    component: StorePopcorn,
+  },
+  {
+    path: "/Store/Pointmall",
+    component: StorePointMall,
+  },
+  {
+    path: "/Login",
     component: Login,
   },
   {
-    path: "/join",
+    path: "/Join",
     component: join,
   },
 ];

@@ -10,7 +10,6 @@ header
   메뉴 클릭 -> 사이드바
   서치 클릭 -> 사이드바
 */
-
 const Header = styled.header`
   z-index: 10;
   position: fixed;
@@ -23,7 +22,8 @@ const Header = styled.header`
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
-  background-color: ${(props) => (props.current ? "RGB(38, 38, 38)" : "")};
+  background-color: ${(props) =>
+    props.current ? "RGB(38, 38, 38)" : "transparent"};
 `;
 
 const List = styled.ul`
@@ -61,28 +61,28 @@ export default withRouter(({ location: { pathname } }) => (
       </Logo>
     </List>
     <List>
-      <Item current={pathname === "/movies"}>
-        <SLink to="/movies">영화</SLink>
+      <Item current={pathname === "/Movies"}>
+        <SLink to="/Movies">영화</SLink>
       </Item>
-      <Item current={pathname === "/reservation"}>
-        <SLink to="/reservation">예매</SLink>
+      <Item current={pathname === "/Reservation"}>
+        <SLink to="/Reservation">예매</SLink>
       </Item>
-      <Item current={pathname === "/theater"}>
-        <SLink to="/theater">극장</SLink>
+      <Item current={pathname === "/Theater"}>
+        <SLink to="/Theater">극장</SLink>
       </Item>
-      <Item current={pathname === "/event"}>
-        <SLink to="/event">이벤트</SLink>
+      <Item current={pathname === "/Event"}>
+        <SLink to="/Event">이벤트</SLink>
       </Item>
-      <Item current={pathname === "/store"}>
-        <SLink to="/store">스토어</SLink>
+      <Item current={pathname === "/Store"}>
+        <SLink to="/Store">스토어</SLink>
       </Item>
     </List>
     <List>
-      <Item current={pathname === "/join"}>
-        <SLink to="/join">회원가입</SLink>
+      <Item current={pathname === "/Join"}>
+        <SLink to="/Join">회원가입</SLink>
       </Item>
-      <Item current={pathname === "/login"}>
-        <SLink to="/login">로그인</SLink>
+      <Item current={pathname === "/Login"}>
+        <SLink to="/Login">로그인</SLink>
       </Item>
     </List>
   </Header>

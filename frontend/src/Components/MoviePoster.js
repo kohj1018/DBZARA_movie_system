@@ -1,57 +1,80 @@
 import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
-const MoviePoster = ({ number }) => {
+const MoviePoster = ({ key, id, bgUrl, index }) => {
   return (
     <>
-      <Container>
-        <BtnContainer>
+      <MovieImg
+        bgUrl={
+          bgUrl
+            ? `https://image.tmdb.org/t/p/w300${bgUrl}`
+            : require("../assets/noPosterSmall.png").default
+        }
+      >
+        <Index>{index}</Index>
+        <Background>
           <Btn>
+            {/* TODO 버튼 Link로 만들기 */}
+            {/* <Link>예매</Link> */}
             <p>예매</p>
           </Btn>
           <Btn>
+            {/* <Link>정보</Link> */}
             <p>정보</p>
           </Btn>
-        </BtnContainer>
-      </Container>
+        </Background>
+      </MovieImg>
     </>
   );
 };
 
 export default MoviePoster;
-
-const Container = styled(Box)`
+const MovieImg = styled(Box)`
   && {
     height: 100%;
     width: 100%;
-    background-color: RGB(254, 249, 220);
-    &:hover {
-      opacity: 1;
-      background-color: rgba(0, 150, 136, 1);
-    }
+    background-image: url(${(props) => props.bgUrl});
+    background-size: cover;
+    background-position: center;
   }
 `;
-const BtnContainer = styled.section`
+const Index = styled.div`
+  z-index: 1;
+  width: 40px;
+  height: 35px;
+  position: absolute;
+  opacity: 0.7;
+  background-color: #0f0c29;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const Background = styled.section`
   width: 100%;
   height: 100%;
   flex-direction: column;
   opacity: 0;
+  transition: all 0.3s ease-in-out;
+  background-color: #000000;
   &:hover {
-    opacity: 1;
-    background-color: rgba(0, 150, 136, 1);
+    opacity: 0.75;
   }
 `;
 
 const Btn = styled(Button)`
   && {
-    margin: 2px 0 0 2px;
+    margin: 3px 0;
     width: 60%;
     height: 40px;
     position: relative;
-    font-size: 10px;
+    font-size: 16px;
     color: RGB(254, 249, 220);
-
-    background-color: #00b09b;
+    border: 1px solid RGB(254, 249, 220);
+    &:hover {
+      border: 1px solid red;
+      color: red;
+    }
   }
 `;

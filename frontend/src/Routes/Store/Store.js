@@ -1,25 +1,31 @@
 import React from "react";
 import styled from "styled-components";
+import StoreNav from "Components/StoreNav";
+import { HashRouter as Router } from "react-router-dom";
+
+// TODO 라우터 공부 + 안에만 바뀌는지 확인
 
 const StoreContainer = styled.div`
   padding-top: 80px;
   height: 100vh;
   color: blue;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   background-color: #ff7eb3;
 `;
-const StoreTitle = styled.h2`
+const StoreTitle = styled.div`
   min-width: 1200px;
   height: 30px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 26px;
+  display: flex;
   background-color: #764ba2;
 `;
-const StoreMain = styled.div`
+const StoreMain = styled.section`
   display: flex;
-`;
-
-const StoreNavList = styled.p`
-  width: 280px;
+  flex-direction: column;
+  min-width: 1200px;
 `;
 
 const StoreMainItem = styled.section`
@@ -30,12 +36,13 @@ const StoreMainItem = styled.section`
 const Store = () => (
   <>
     <StoreContainer>
-      <StoreTitle>스토어</StoreTitle>
+      <StoreTitle>
+        <p>스토어</p>
+      </StoreTitle>
       <StoreMain>
-        {["새로운 상품", "티켓", "매점", "포인트몰"].map((i) => {
-          return <StoreNavList>{i}</StoreNavList>;
-        })}
-        {/* <StoreNav /> */}
+        <Router>
+          <StoreNav />
+        </Router>
         <StoreMainItem></StoreMainItem>
       </StoreMain>
     </StoreContainer>

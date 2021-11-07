@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
-const StoreNavItem = styled.section`
-  width: 280px;
-`;
+const StoreNavItem = styled.section``;
 
 const List = styled.ul`
   height: 42px;
@@ -19,7 +17,7 @@ const Item = styled(Button)`
     width: 280px;
     height: 100%;
     font-size: 15px;
-    margin: 2px 10px;
+    margin: -2px;
     border-top: 1px solid
       ${(props) => (props.current ? "RGB(38, 38, 38)" : "transparent")};
     border-left: 1px solid
@@ -27,11 +25,12 @@ const Item = styled(Button)`
     border-right: 1px solid
       ${(props) => (props.current ? "RGB(38, 38, 38)" : "transparent")};
     border-bottom: 1px solid
-      ${(props) => (props.current ? "RGB(38, 38, 38)" : "transparent")};
+      ${(props) => (props.current ? "transparent" : "RGB(38, 38, 38)")};
   }
 `;
 
 const SLink = styled(Link)`
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;

@@ -8,10 +8,6 @@ const GlobalStyles = createGlobalStyle`
         color: RGB(251, 251, 251);
     }
 
-    p{
-        margin-right: 30px;
-    }
-
     // 많이 쓰는 flex속성  section의 default로 변경
     section{
         display: flex; 

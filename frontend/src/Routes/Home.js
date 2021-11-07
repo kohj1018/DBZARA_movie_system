@@ -1,9 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
+import { moviesApi } from "api";
 
 /*
-TODO 
+TODO
 
 css추가
 
@@ -20,7 +21,7 @@ Randking
   view기준 양 사이드 흐릿
   양 사이드 넘김 버튼
 
-estPlay
+bestPlay
   스크롤 -> 사이드 3개 보이기
   사이드 hover -> 흐릿
 
@@ -29,99 +30,160 @@ Evnet
 
 */
 
-const Home = () => (
-  <HomePage>
-    {/* 메인 배너 */}
-    <FirstImg>
-      <FirstPosterContainer>
-        <p>영화포스터</p>
-        {/* TODO api로 data받아오기  */}
-        <FirstPosters>
-          {[1, 2, 3, 4, 5].map((i) => {
-            return (
-              <FirstSize>
-                <MoviePoster>i</MoviePoster>
-              </FirstSize>
-            );
+// TODO MoviePoster hover시  FirstImg baUrl변경 실패 ㅅㅂ
+// TODO styled-component 컴포넌트화 만들기
+
+const Home = () => {
+  let [movies, setMovies] = useState({
+    popular: null,
+    error: null,
+    loading: true,
+  });
+
+  async function feactApi() {
+    try {
+      const {
+        data: { results: popular },
+      } = await moviesApi.popular();
+      // console.log(data);
+      setMovies((movies) => ({ ...movies, popular }));
+      // console.log(popular);
+    } catch {
+      setMovies((movies) => ({
+        ...movies,
+        error: "영화 정보를 찾을 수 없습니다.",
+      }));
+    } finally {
+      setMovies((movies) => ({ ...movies, loading: false }));
+    }
+  }
+  useEffect(() => {
+    feactApi();
+  }, []);
+
+  // hover시 bg변경해야함
+  let [onMouse, setOnMouse] = useState({
+    hover: false,
+    item: 0,
+  });
+
+  const handleHover = (e) => {
+    setOnMouse({ hover: true, item: e });
+  };
+
+  return (
+    <HomePage>
+      {/* 메인 배너 */}
+      {/* {console.log(`test: ${movies.popular}`)} */}
+      {/* {console.log(`test: ${movies.popular[${item}].backdrop_path}`)} */}
+      <FirstImg>
+        <FirstPosterContainer>
+          <FirstPosters>
+            {movies.popular &&
+              movies.popular.length > 0 &&
+              movies.popular.slice(0, 5).map((movies, index) => {
+                return (
+                  // TODO 아래 코드로 하면 리렌더가 너무 많다고 에러뜸
+                  // <FirstSize onMouseOver={handleHover(index)}>
+                  <FirstSize>
+                    {/* // TODO 애니메이션 왜 안먹힘? */}
+                    <TurnYPoster>
+                      <MoviePoster
+                        key={movies.id}
+                        id={movies.id}
+                        bgUrl={movies.poster_path}
+                        index={index + 1}
+                      />
+                    </TurnYPoster>
+                  </FirstSize>
+                );
+              })}
+          </FirstPosters>
+        </FirstPosterContainer>
+      </FirstImg>
+      {/* 랭킹 */}
+      <Ranking>
+        <RankingMenu>
+          {/* //TODO nav만들기 */}
+          {["예매순위", "박스오피스", "개봉예정작", "영화제영화"].map((i) => {
+            return <Rankingli>{i}</Rankingli>;
           })}
-        </FirstPosters>
-      </FirstPosterContainer>
-    </FirstImg>
-    {/* 랭킹 */}
-    <Ranking>
-      <RankingMenu>
-        {/* TODO nav만들기 */}
-        {["예매순위", "박스 오피스", "개봉예정작", "영화제영화"].map((i) => {
-          return <p>{i}</p>;
-        })}
-      </RankingMenu>
-      <RankingContainer>
-        {/* TODO 1,7번째 흐리게 && 양 사이드 흐리게*/}
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
-          return (
-            <RankingSize>
-              <MoviePoster>1</MoviePoster>
-            </RankingSize>
-          );
-        })}
-      </RankingContainer>
-    </Ranking>
-    {/* 베스트다운로드 */}
-    <BestPlay>
-      <BestMainTitle>
-        <p>BEST PLAY</p>
-      </BestMainTitle>
-      <BestMainBox>
-        <BestMainContainer>
-          {/* TODO 영화component로 변경 */}
-          <MoviePoster></MoviePoster>
-        </BestMainContainer>
-        <BestSubContainer>
+        </RankingMenu>
+        <RankingContainer>
+          {/* //TODO 1,7번째 흐리게 && 양 사이드 흐리게*/}
+          {movies.popular &&
+            movies.popular.length > 0 &&
+            movies.popular.slice(0, 10).map((movies, index) => {
+              return (
+                <RankingSize>
+                  <MoviePoster
+                    key={movies.id}
+                    id={movies.id}
+                    bgUrl={movies.poster_path}
+                    index={index + 1}
+                  ></MoviePoster>
+                </RankingSize>
+              );
+            })}
+        </RankingContainer>
+      </Ranking>
+      {/* 베스트다운로드 */}
+      <BestPlay>
+        <BestMainTitle>
+          <p>BEST PLAY</p>
+        </BestMainTitle>
+        <BestMainBox>
+          <BestMainContainer>
+            {/* //TODO 영화component로 변경 */}
+            <MoviePoster></MoviePoster>
+          </BestMainContainer>
+          <BestSubContainer>
+            {[1, 2, 3].map((i) => {
+              return (
+                <BestSubMovie>
+                  <MoviePoster key={i}>i</MoviePoster>
+                </BestSubMovie>
+              );
+            })}
+          </BestSubContainer>
+        </BestMainBox>
+      </BestPlay>
+      {/* 이벤트 */}
+      <Event>
+        <EventTitle>Event</EventTitle>
+        <EventImgs>
           {[1, 2, 3].map((i) => {
             return (
-              <BestSubMovie>
-                <MoviePoster>i</MoviePoster>
-              </BestSubMovie>
+              <EventImg>
+                <MoviePoster key={i}></MoviePoster>
+              </EventImg>
             );
           })}
-        </BestSubContainer>
-      </BestMainBox>
-    </BestPlay>
-    {/* 이벤트 */}
-    <Event>
-      <EventTitle>Event</EventTitle>
-      <EventImgs>
-        {[1, 2, 3].map((i) => {
-          return (
-            <EventImg>
-              <MoviePoster></MoviePoster>
-            </EventImg>
-          );
-        })}
-      </EventImgs>
-    </Event>
-    {/* 공지사항 */}
-    <Notice>
-      <NoticeInner>
-        <NoticeTitle>
-          {/* 링크 걸기 */}
-          <p>공지사항</p>
-          <p>[안내] 어쩌구 저쩌구</p>
-        </NoticeTitle>
-      </NoticeInner>
-      <NoticeInfo>
-        {/* nav 사용 */}
-        <NoticeInfoList>
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <NoticeInfoItem>
-              <MoviePoster></MoviePoster>
-            </NoticeInfoItem>
-          ))}
-        </NoticeInfoList>
-      </NoticeInfo>
-    </Notice>
-  </HomePage>
-);
+        </EventImgs>
+      </Event>
+      {/* 공지사항 */}
+      <Notice>
+        <NoticeInner>
+          <NoticeTitle>
+            {/* 링크 걸기 */}
+            <p>공지사항</p>
+            <NoticeTitleItem>[안내] 어쩌구 저쩌구...</NoticeTitleItem>
+          </NoticeTitle>
+        </NoticeInner>
+        <NoticeInfo>
+          {/* nav 사용 */}
+          <NoticeInfoList>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <NoticeInfoItem>
+                <MoviePoster key={i}></MoviePoster>
+              </NoticeInfoItem>
+            ))}
+          </NoticeInfoList>
+        </NoticeInfo>
+      </Notice>
+    </HomePage>
+  );
+};
 
 export default Home;
 
@@ -140,13 +202,35 @@ const FirstPosterContainer = styled.section`
   position: relative;
   background-color: #2286c3;
   flex-direction: column;
-  opacity: 0.8;
 `;
+
 const FirstSize = styled.div`
   margin: 0 5px 0 5px;
   width: 130px;
   height: 180px;
 `;
+
+const turnY = keyframes`
+0%{
+  transfrom: rotateY(0)
+}
+50%{
+  transfrom: rotateY(90deg)
+}
+100%{
+  transfrom: rotateY(0)
+}`;
+
+const TurnYPoster = styled.div`
+  height: 100%;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+  animation: ${turnY} 0.5s ease-in-out; // TODO 아니 왜 안돼?
+  &:hover {
+    transform: rotateY(180deg);
+  }
+`;
+
 const FirstPosters = styled.div`
   height: 180px;
   display: flex;
@@ -161,8 +245,14 @@ const Ranking = styled.div`
   height: 600px;
   background-color: #9be7ff;
 `;
-const RankingMenu = styled.section`
+const RankingMenu = styled.ul`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 92px;
+`;
+const Rankingli = styled.li`
+  margin-right: 30px;
 `;
 const RankingContainer = styled.div`
   min-width: 1200px;
@@ -264,7 +354,10 @@ const NoticeTitle = styled.div`
   height: 24px;
   display: flex;
 `;
-
+const NoticeTitleItem = styled.p`
+  margin-left: 10px;
+  font-size: 20px;
+`;
 const NoticeInfo = styled.section`
   margin: 60px 0;
   height: 75px;
