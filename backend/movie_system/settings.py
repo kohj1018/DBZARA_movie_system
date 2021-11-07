@@ -148,7 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DEFAULT_FILE_STORAGE = 'movie_system.storages.MediaAzureStorage'
 #
 # AZURE_ACCOUNT_NAME = 'dbzarastorage'
-# AZURE_ACCOUNT_KEY = 'GlCCM7opuDNdUnaIR++7oOQ6LoEOuEhgIGtsZY8xwUFu1anzRgSm3b2vfd+8dvLQjRQUw1rBriR4m0bhi96v/w=='
 
 LOGIN_REDIRECT_URL = 'index'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
