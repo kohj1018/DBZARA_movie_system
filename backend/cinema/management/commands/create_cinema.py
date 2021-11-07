@@ -1,8 +1,9 @@
+from random import randint, choice
+import json
+
 from django.core.management.base import BaseCommand
 from cinema.models import Cinema, Theater, Seat
 from functions.collect_cinema_data import NaverMapAPI
-from random import randint, choice
-import json
 
 
 class Command(BaseCommand):
