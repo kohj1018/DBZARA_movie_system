@@ -7,3 +7,6 @@ pillow
 psycopg-binary
 requests~=2.26.0
 numpy
+django-storages[azure]
+django-allauth
+django-rest-framework
