@@ -52,10 +52,11 @@ const Btn = styled(Button)`
 
 const Login = () => {
   //  UserContext에서 정보 받아와서 사용
-  const { email, number, name } = useContext(UserContext);
+  const { username, password, token } = useContext(UserContext);
 
   return (
     <Container>
+      {console.log(username, password, token)}
       <LoginView>
         <Btn variant="outlined">로그인</Btn>
         <Info>
@@ -64,9 +65,9 @@ const Login = () => {
               <Typography>UserInfo</Typography>
             </UserSummary>
             <UserDetails>
-              <Data>{`email : ${email}`}</Data>
-              <Data>{`학번 : ${number}`}</Data>
-              <Data>{`name : ${name}`}</Data>
+              <Data>{`name : ${username}`}</Data>
+              <Data>{`password : ${password}`}</Data>
+              <Data>{`token : ${token.substring(0, 18)}...`}</Data>
             </UserDetails>
           </Accordion>
         </Info>
