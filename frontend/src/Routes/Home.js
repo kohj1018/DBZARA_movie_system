@@ -51,7 +51,7 @@ const Home = () => {
     } catch {
       setMovies((movies) => ({
         ...movies,
-        error: "영화 정보를 찾을 수 없습니다.",
+        error: "영화 정보를 찾을 수 없습니다!",
       }));
     } finally {
       setMovies((movies) => ({ ...movies, loading: false }));
