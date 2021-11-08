@@ -6,14 +6,14 @@ const api = axios.create({
   baseURL: "http://dbzara.kro.kr/",
 });
 
-// TODO input으로 받아오기
+//  TODO user input으로 받아오기
 const data = {
   username: "test",
   password: "1234",
 };
 
 export const info = {
-  userLogin: () => api.post("api/token/", { data }),
+  userLogin: () => api.post("api/token/", { ...data }),
 };
 
 // 데이터 저장소

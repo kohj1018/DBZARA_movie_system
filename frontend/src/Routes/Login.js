@@ -52,7 +52,7 @@ const Btn = styled(Button)`
 
 const Login = () => {
   //  UserContext에서 정보 받아와서 사용
-  const { username, password, token } = useContext(UserContext);
+  const { username, password, token, error } = useContext(UserContext);
 
   return (
     <Container>
@@ -67,7 +67,9 @@ const Login = () => {
             <UserDetails>
               <Data>{`name : ${username}`}</Data>
               <Data>{`password : ${password}`}</Data>
-              <Data>{`token : ${token.substring(0, 18)}...`}</Data>
+              <Data>
+                {token ? `token : ${token.substring(0, 18)}...` : error}
+              </Data>
             </UserDetails>
           </Accordion>
         </Info>
