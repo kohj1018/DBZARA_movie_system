@@ -54,7 +54,6 @@ const Login = () => {
   //  UserContext에서 정보 받아와서 사용
   const { username, password, token, error } = useContext(UserContext);
   console.log(useContext(UserContext));
-
   return (
     <Container>
       {/* {console.log(username, password, token)} */}
