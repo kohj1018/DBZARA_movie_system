@@ -6,7 +6,7 @@ import { moviesApi } from "api";
 /*
 TODO
 
-css추가
+css추가sS
 
 firstimg 
   컨테이너 hover -> 양 사이드 넘김 버튼 
@@ -67,15 +67,15 @@ const Home = () => {
     item: 0,
   });
 
-  const handleHover = (e) => {
-    setOnMouse({ hover: true, item: e });
+  const handleHover = (index) => {
+    setOnMouse({ hover: true, item: index });
   };
 
   return (
     <HomePage>
       {/* 메인 배너 */}
       {/* {console.log(`test: ${movies.popular}`)} */}
-      {/* {console.log(`test: ${movies.popular[${item}].backdrop_path}`)} */}
+      {/* {console.log(`test: ${movies.popular[onMouse.item].backdrop_path}`)} */}
       <FirstImg>
         <FirstPosterContainer>
           <FirstPosters>
@@ -83,9 +83,10 @@ const Home = () => {
               movies.popular.length > 0 &&
               movies.popular.slice(0, 5).map((movies, index) => {
                 return (
-                  // TODO 아래 코드로 하면 리렌더가 너무 많다고 에러뜸
-                  // <FirstSize onMouseOver={handleHover(index)}>
-                  <FirstSize>
+                  // TODO 아래 코드로 하면 리렌더가 너무 많다고 에러뜸 => 호버로 만들기
+                  <FirstSize onMouseOver={() => handleHover(index)}>
+                    {console.log(onMouse)}
+                    {/* <FirstSize> */}
                     {/* // TODO 애니메이션 왜 안먹힘? */}
                     <TurnYPoster>
                       <MoviePoster
