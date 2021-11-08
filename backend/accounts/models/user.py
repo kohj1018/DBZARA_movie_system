@@ -13,6 +13,13 @@ class User(AbstractUser):
         ('M', '남성'),
         ('F', '여성'),
     ]
+    PLATFORM_CHOICES = [
+        (1, 'Django'),
+        (2, 'Naver'),
+        (3, 'Google'),
+        (4, 'Kakao')
+    ]
+    platform = models.SmallIntegerField(choices=PLATFORM_CHOICES, default=1)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1, null=True)
     birth_date = models.DateField(null=True)
     is_manager = models.BooleanField(default=False)
@@ -21,19 +28,23 @@ class User(AbstractUser):
     def age(self):
         return datetime.now().year - self.birth_date.year + 1
 
+    @property
+    def is_social(self):
+        return True if self.platform != 1 else False
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    grade = models.ForeignKey('accounts.Grade', on_delete=models.CASCADE)
+    grade = models.ForeignKey('accounts.Grade', on_delete=models.CASCADE, default=1)
     image = models.ImageField(upload_to='profile/%Y/%m/')
     # orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
     coupons = models.ManyToManyField('item.Coupon', through='accounts.CouponHold', through_fields=('profile', 'coupon'))
     non_coupons = models.ManyToManyField('item.NonCoupon', through='accounts.NonCouponHold', through_fields=('profile', 'non_coupon'))
-    favorite_movies = models.ManyToManyField('movie.Movie')
-    favorite_genres = models.ManyToManyField('movie.Genre')
-    favorite_actors = models.ManyToManyField('movie.Actor')
-    favorite_directors = models.ManyToManyField('movie.Director')
-    favorite_distributors = models.ManyToManyField('movie.Distributor')
+    favorite_movies = models.ManyToManyField('movie.Movie', blank=True)
+    favorite_genres = models.ManyToManyField('movie.Genre', blank=True)
+    favorite_actors = models.ManyToManyField('movie.Actor', blank=True)
+    favorite_directors = models.ManyToManyField('movie.Director', blank=True)
+    favorite_distributors = models.ManyToManyField('movie.Distributor', blank=True)
 
     def add_coupons(self, coupon):
         # FIXME: 둘 중 어떤걸 사용해야될지 모르겠음.
