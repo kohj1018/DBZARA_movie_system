@@ -3,6 +3,13 @@ import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
+/*
+TODO
+header
+  hover -> 창 내려오고 list보이기
+  메뉴 클릭 -> 사이드바
+  서치 클릭 -> 사이드바
+*/
 const Header = styled.header`
   z-index: 10;
   position: fixed;
@@ -15,7 +22,8 @@ const Header = styled.header`
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
-  background-color: ${(props) => (props.current ? "RGB(38, 38, 38)" : "")};
+  background-color: ${(props) =>
+    props.current ? "RGB(38, 38, 38)" : "transparent"};
 `;
 
 const List = styled.ul`
@@ -24,27 +32,25 @@ const List = styled.ul`
 
 const Logo = styled.div`
   width: 100px;
-  height: 50px;
   font-size: 30px;
-  margin: 2px 10px;
+  margin: 0 10px;
 `;
 
 const Item = styled(Button)`
   && {
-    width: 80px;
-    height: 50px;
-    font-size: 15px;
-    margin: 2px 10px;
-    border-bottom: 5px solid
-      ${(props) => (props.current ? "RGB(22, 31, 46)" : "transparent")};
+    font-size: 18px;
+    padding: 0px;
+    margin: 0 10px;
   }
 `;
 
 const SLink = styled(Link)`
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  && {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export default withRouter(({ location: { pathname } }) => (
@@ -55,28 +61,28 @@ export default withRouter(({ location: { pathname } }) => (
       </Logo>
     </List>
     <List>
-      <Item current={pathname === "/movies"}>
-        <SLink to="/movies">영화</SLink>
+      <Item current={pathname === "/Movies"}>
+        <SLink to="/Movies">영화</SLink>
       </Item>
-      <Item current={pathname === "/reservation"}>
-        <SLink to="/reservation">예매</SLink>
+      <Item current={pathname === "/Reservation"}>
+        <SLink to="/Reservation">예매</SLink>
       </Item>
-      <Item current={pathname === "/theater"}>
-        <SLink to="/theater">극장</SLink>
+      <Item current={pathname === "/Theater"}>
+        <SLink to="/Theater">극장</SLink>
       </Item>
-      <Item current={pathname === "/event"}>
-        <SLink to="/event">이벤트</SLink>
+      <Item current={pathname === "/Event"}>
+        <SLink to="/Event">이벤트</SLink>
       </Item>
-      <Item current={pathname === "/store"}>
-        <SLink to="/store">스토어</SLink>
+      <Item current={pathname === "/Store"}>
+        <SLink to="/Store">스토어</SLink>
       </Item>
     </List>
     <List>
-      <Item current={pathname === "/join"}>
-        <SLink to="/join">회원가입</SLink>
+      <Item current={pathname === "/Join"}>
+        <SLink to="/Join">회원가입</SLink>
       </Item>
-      <Item current={pathname === "/login"}>
-        <SLink to="/login">로그인</SLink>
+      <Item current={pathname === "/Login"}>
+        <SLink to="/Login">로그인</SLink>
       </Item>
     </List>
   </Header>
