@@ -16,7 +16,19 @@ class Employee(models.Model):
 
 class Department(models.Model):
     name = models.CharField(max_length=30)
-    department = models.ForeignKey('self', on_delete=models.CASCADE, related_name='direct_department')
+    department = models.ForeignKey('self', on_delete=models.CASCADE, related_name='direct_department', blank=True, null=True)
+
+    @property
+    def full_department_name(self):
+        department_name = self.name
+        root = self
+        while root.department is not None:
+            root = root.department
+            department_name = f'{root.name} - {department_name}'
+        return department_name
+
+    def __str__(self):
+        return self.full_department_name
 
 
 class Attendance(PostgresPartitionedModel):

@@ -151,4 +151,7 @@ dmypy.json
 cython_debug/
 
 movie_system/secret_settings.py
+backend/movie_system/secret_settings.py
+.idea
+
 fronted/node_modules
