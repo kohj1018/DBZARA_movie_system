@@ -1,9 +1,11 @@
-from django.core.files import File
 from datetime import date, timedelta
-from movie_system import secret_settings
-from movie.models import Movie, Actor, Director, Distributor, Image
-import requests
 import os
+
+from django.core.files import File
+
+import requests
+from movie_system import secret_settings
+from movie.models import Movie, Actor, Director, Distributor, Image, Genre
 
 
 class KobisAPI:
@@ -23,6 +25,10 @@ class KobisAPI:
         })
         return data.json()['boxOfficeResult']['dailyBoxOfficeList']
 
+    def parse_schedule_data(self):
+        elements = self.collect_daily_movie()
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(int(element['showCnt']) / 7)) for element in elements], self.start_date
+
     def parse_movie_data(self):
         elements = self.collect_daily_movie()
         for element in elements:
@@ -40,6 +46,7 @@ class KobisAPI:
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
                 self.tmdb.get_movie_detail(movie_id, movie)
                 self.tmdb.get_movie_credits(movie_id, movie)
+                # self.tmdb.get_movie_videos(movie_id, movie)
                 movie.tmdb_id = movie_id
                 movie.save()
             else:
@@ -65,6 +72,14 @@ class TMDBAPI:
         }).json()
         return data['results'][0]['id']
 
+    def get_movie_videos(self, movie_id, movie):
+        path = f'/movie/{movie_id}/videos'
+        data = requests.get(TMDBAPI.BASE_URL + path, params={
+            'api_key': self.SECRET_KEY,
+            'language': self.language
+        }).json()
+        return data
+
     def get_movie_detail(self, movie_id, movie):
         path = f'/movie/{movie_id}'
         data = requests.get(TMDBAPI.BASE_URL + path, params={
@@ -75,6 +90,7 @@ class TMDBAPI:
         movie.running_time = data['runtime']
         movie.tmdb_id = movie_id
         movie.imdb_id = data['imdb_id']
+        movie.summary = data['overview']
         poster_path = data['poster_path']
         if poster_path:
             poster_image = File(open(f'{movie_id}_poster.jpg', 'wb'))
@@ -95,15 +111,19 @@ class TMDBAPI:
             movie.images.add(backdrop)
             os.remove(f'{movie_id}_backdrop.jpg')
 
+        genres = data['genres']
+        for element in genres:
+            genre_name = element['name']
+            genre, created = Genre.objects.get_or_create(
+                name=genre_name
+            )
+            movie.genres.add(genre)
+
         distributors = data['production_companies']
         for element in distributors:
             distributor_id = element['id']
             distributor_name = element['name']
             logo_path = element['logo_path']
-            if logo_path:
-                logo_image = open(f'{distributor_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + logo_path)
-                logo_image.write(response.content)
             distributor, created = Distributor.objects.get_or_create(
                 distributor_id=distributor_id,
                 defaults={
@@ -111,6 +131,9 @@ class TMDBAPI:
                 }
             )
             if created and logo_path:
+                logo_image = open(f'{distributor_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + logo_path)
+                logo_image.write(response.content)
                 distributor.image.save(f'{distributor_id}.jpg', File(open(f'{distributor_id}.jpg', 'rb')))
                 os.remove(f'{distributor_id}.jpg')
             movie.distributors.add(distributor)
@@ -131,10 +154,6 @@ class TMDBAPI:
             name = element['name']
             character_name = element['character']
             profile_image = element['profile_path']
-            if profile_image:
-                actor_image = open(f'{actor_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
-                actor_image.write(response.content)
             actor, created = Actor.objects.get_or_create(
                 code=actor_id,
                 defaults={
@@ -142,6 +161,9 @@ class TMDBAPI:
                 }
             )
             if created and profile_image:
+                actor_image = open(f'{actor_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
+                actor_image.write(response.content)
                 actor.image.save(f'{actor_id}.jpg', File(open(f'{actor_id}.jpg', 'rb')))
                 os.remove(f'{actor_id}.jpg')
             movie.actors.add(actor, through_defaults={
@@ -153,10 +175,6 @@ class TMDBAPI:
             director_id = element['id']
             name = element['name']
             profile_image = element['profile_path']
-            if profile_image:
-                director_image = open(f'{director_id}.jpg', 'wb')
-                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
-                director_image.write(response.content)
             director, created = Director.objects.get_or_create(
                 code=director_id,
                 defaults={
@@ -164,6 +182,9 @@ class TMDBAPI:
                 }
             )
             if created and profile_image:
+                director_image = open(f'{director_id}.jpg', 'wb')
+                response = requests.get(TMDBAPI.IMAGE_URL + profile_image)
+                director_image.write(response.content)
                 director.image.save(f'{director_id}.jpg', File(open(f'{director_id}.jpg', 'rb')))
                 os.remove(f'{director_id}.jpg')
             movie.directors.add(director)
