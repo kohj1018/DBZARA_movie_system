@@ -1,8 +1,17 @@
 import React from "react";
 import GlobalStyles from "Components/GlobalStyles";
-import Router from "Components/Router";
+
 import UserInfo from "context";
 import Footer from "Components/Footer";
+import {
+  HashRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+
+import Header from "Components/Header";
+import routeURL from "Routes/RouteURL";
 
 function App() {
   return (
@@ -10,7 +19,15 @@ function App() {
     <>
       <GlobalStyles />
       <UserInfo>
-        <Router />
+        <Router>
+          <Header />
+          <Switch>
+            {routeURL.map((route) => (
+              <Route path={route.path} exact component={route.component} />
+            ))}
+            <Redirect from="*" to="/" />
+          </Switch>
+        </Router>
       </UserInfo>
       <Footer />
     </>

@@ -9,7 +9,7 @@ const Container = styled.div`
   display: grid;
 `;
 
-const Reservation = () => (
+const Ticket = () => (
   <>
     <Container>
       <MoviePoster number={1} />
@@ -17,4 +17,4 @@ const Reservation = () => (
   </>
 );
 
-export default Reservation;
+export default Ticket;
