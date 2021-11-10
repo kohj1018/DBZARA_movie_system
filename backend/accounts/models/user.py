@@ -23,6 +23,7 @@ class User(AbstractUser):
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1, null=True)
     birth_date = models.DateField(null=True)
     is_manager = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=False)
 
     @property
     def age(self):
@@ -31,6 +32,13 @@ class User(AbstractUser):
     @property
     def is_social(self):
         return True if self.platform != 1 else False
+
+    @property
+    def full_name(self):
+        return f'{self.last_name}{self.first_name}'
+
+    def __str__(self) -> str:
+        return self.full_name
 
 
 class Profile(models.Model):

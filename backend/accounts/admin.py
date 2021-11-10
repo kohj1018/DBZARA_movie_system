@@ -21,6 +21,7 @@ class GradeAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'cinema', 'user', 'belong']
     pass
 
 

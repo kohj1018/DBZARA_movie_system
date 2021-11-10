@@ -13,6 +13,9 @@ class Employee(models.Model):
     register_date = models.DateField()
     salary = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.cinema} - {self.user.full_name}'
+
 
 class Department(models.Model):
     name = models.CharField(max_length=30)
