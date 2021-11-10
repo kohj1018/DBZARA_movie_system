@@ -47,8 +47,6 @@ class KobisAPI:
                 self.tmdb.get_movie_detail(movie_id, movie)
                 self.tmdb.get_movie_credits(movie_id, movie)
                 # self.tmdb.get_movie_videos(movie_id, movie)
-                movie.tmdb_id = movie_id
-                movie.save()
             else:
                 movie.closing_date = self.start_date
 
