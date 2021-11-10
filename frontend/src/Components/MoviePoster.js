@@ -3,41 +3,50 @@ import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
+// TODO bgimg => img태그 변경
+
 const MoviePoster = ({ key, id, bgUrl, index }) => {
   return (
-    <>
-      <MovieImg
-        bgUrl={
+    <MovieImg>
+      <MovieBgImg
+        src={
           bgUrl
             ? `https://image.tmdb.org/t/p/w300${bgUrl}`
             : require("../assets/noPosterSmall.png").default
         }
-      >
-        <Index>{index}</Index>
-        <Background>
-          <Btn>
-            {/* TODO 버튼 Link로 만들기 */}
-            {/* <Link>예매</Link> */}
-            <p>예매</p>
-          </Btn>
-          <Btn>
-            {/* <Link>정보</Link> */}
-            <p>정보</p>
-          </Btn>
-        </Background>
-      </MovieImg>
-    </>
+      />
+      {/* <MovieImg> */}
+      <Index>{index}</Index>
+      <Background>
+        <Btn>
+          {/* TODO 버튼 Link로 만들기 */}
+          {/* <Link>예매</Link> */}
+          <p>예매</p>
+        </Btn>
+        <Btn>
+          {/* <Link>정보</Link> */}
+          <p>정보</p>
+        </Btn>
+      </Background>
+      {/* </MovieImg> */}
+    </MovieImg>
   );
 };
 
 export default MoviePoster;
+
+const MovieBgImg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+`;
+
 const MovieImg = styled(Box)`
   && {
+    position: relative;
     height: 100%;
     width: 100%;
-    background-image: url(${(props) => props.bgUrl});
-    background-size: cover;
-    background-position: center;
   }
 `;
 const Index = styled.div`
