@@ -21,8 +21,9 @@ class Command(BaseCommand):
             cinemas = json.load(json_file)['cinemas']
             for element in cinemas:
                 latitude, longitude = self.naver_api.get_geo_by_location(element['주소'])
+                cinema_name = element['영화상영관명'].replace('메가박스 ', '메가박스').replace('메가박스', '디비자라 ')
                 cinema, created = Cinema.objects.get_or_create(
-                    name=element['영화상영관명'],
+                    name=cinema_name,
                     defaults={
                         'main_region': element['광역단체'],
                         'sub_region': element['기초단체'],
