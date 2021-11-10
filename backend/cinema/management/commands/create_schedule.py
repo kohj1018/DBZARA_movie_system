@@ -22,13 +22,12 @@ class Command(BaseCommand):
             except_count = 0
             for _ in range(counts):
                 hour = choice(list(range(1, 3)) + list(range(6, 24)))
-                minute = choice(list(range(0, 61, 5)))
+                minute = choice(list(range(0, 56, 5)))
                 theater, schedule_time = choice(theaters), datetime(year=base_date.year, month=base_date.month, day=base_date.day) + timedelta(hours=hour) + timedelta(minutes=minute)
                 try:
                     theater.add_schedule(movie, schedule_time)
                 except MovieExistException:
                     except_count += 1
-                    continue
 
             print(f'{movie}: {base_date} 일 {counts - except_count}개 데이터 생성 완료')
 

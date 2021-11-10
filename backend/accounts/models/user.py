@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
-from datetime import datetime, timedelta
+from psqlextra.types import PostgresPartitioningMethod
+
 from . import Attendance
 
 
@@ -37,7 +38,7 @@ class User(AbstractUser):
 =======
     @property
     def full_name(self):
-        return f'{self.last_name}{self.first_name}'
+        return self.last_name + self.first_name
 
     def __str__(self) -> str:
         return self.full_name
@@ -47,7 +48,8 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     grade = models.ForeignKey('accounts.Grade', on_delete=models.CASCADE, default=1)
-    image = models.ImageField(upload_to='profile/%Y/%m/')
+    # TODO: 이미지가 null 이면 pydenticon 등을 사용하여 이미지 반환 예정
+    image = models.ImageField(upload_to='profile/%Y/%m/', null=True, blank=True)
     # orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
     coupons = models.ManyToManyField('item.Coupon', through='accounts.CouponHold', through_fields=('profile', 'coupon'))
     non_coupons = models.ManyToManyField('item.NonCoupon', through='accounts.NonCouponHold', through_fields=('profile', 'non_coupon'))
