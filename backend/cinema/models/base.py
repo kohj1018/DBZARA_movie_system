@@ -26,7 +26,7 @@ class Cinema(models.Model):
     schedules = models.ManyToManyField('movie.Movie', through='cinema.Schedule', through_fields=('cinema', 'movie'), related_name='+')
     inquiries = models.ManyToManyField('accounts.Profile', through='cinema.Question', through_fields=('cinema', 'profile'), related_name='+')
     stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'), related_name='+')
-    events = models.ManyToManyField('item.Event', related_name='cinema')
+    events = models.ManyToManyField('item.Event', blank=True, related_name='cinema')
 
     # TODO: Fix Function Name
     def on_time(self):

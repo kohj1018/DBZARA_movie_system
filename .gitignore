@@ -150,6 +150,12 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+movie_system/secret_settings.py
 backend/movie_system/secret_settings.py
 .idea
+<<<<<<< HEAD
+
 fronted/node_modules
+=======
+fronted/node_modules
+>>>>>>> upstream/develop
