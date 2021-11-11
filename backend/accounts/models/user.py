@@ -33,6 +33,8 @@ class User(AbstractUser):
     def is_social(self):
         return True if self.platform != 1 else False
 
+<<<<<<< HEAD
+=======
     @property
     def full_name(self):
         return f'{self.last_name}{self.first_name}'
@@ -40,6 +42,7 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return self.full_name
 
+>>>>>>> upstream/develop
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
