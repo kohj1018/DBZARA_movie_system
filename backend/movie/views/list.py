@@ -1,13 +1,12 @@
 from django.views.generic import ListView
 
-from movie.models import Movie, Actor, Director
+from movie.models import Movie, Actor, Director, Distributor, Genre
 # Create your views here.
 
 
 class MovieListView(ListView):
     model = Movie
     context_object_name = 'movies'
-    template_name = 'movie/movie_list.html'
     paginate_by = 12
 
 
@@ -23,3 +22,25 @@ class DirectorListView(ListView):
     context_object_name = 'persons'
     template_name = 'movie/person_list.html'
     paginate_by = 12
+
+
+class DistributorListView(ListView):
+    model = Distributor
+    context_object_name = 'distributors'
+    paginate_by = 13
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DistributorListView, self).get_context_data(**kwargs)
+        context['title'] = '배급사'
+        return context
+
+
+class GenreListView(ListView):
+    model = Genre
+    context_object_name = 'genres'
+    paginate_by = 13
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(GenreListView, self).get_context_data(**kwargs)
+        context['title'] = '장르'
+        return context

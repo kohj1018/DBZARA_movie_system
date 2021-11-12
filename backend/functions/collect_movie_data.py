@@ -1,15 +1,15 @@
 from datetime import date, timedelta
+import requests
 import os
 
 from django.core.files import File
 
-import requests
 from movie_system import secret_settings
 from movie.models import Movie, Actor, Director, Distributor, Image, Genre
 
 
 class KobisAPI:
-    BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json'
+    BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest'
 
     def __init__(self):
         self.start_date = date(2018, 1, 1)
@@ -18,7 +18,8 @@ class KobisAPI:
         self.tmdb = TMDBAPI()
 
     def collect_daily_movie(self):
-        data = requests.get(KobisAPI.BASE_URL, params={
+        path = '/boxoffice/searchDailyBoxOfficeList.json'
+        data = requests.get(KobisAPI.BASE_URL + path, params={
             'key': self.SECRET_KEY,
             'itemPerPage': self.ITEM_PAGE,
             'targetDt': str(self.start_date).replace('-', '')
@@ -44,13 +45,45 @@ class KobisAPI:
             )
             if created:
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
-                self.tmdb.get_movie_detail(movie_id, movie)
-                self.tmdb.get_movie_credits(movie_id, movie)
+                if movie_id != 0:
+                    self.tmdb.get_movie_detail(movie_id, movie)
+                    actors, directors = self.get_movie_credits(element['movieCd'])
+                    self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
+                else:
+                    self.get_movie_detail(movie, element['movieCd'])
                 # self.tmdb.get_movie_videos(movie_id, movie)
             else:
                 movie.closing_date = self.start_date
 
         self.start_date = self.start_date + timedelta(days=1)
+
+    def get_movie_info(self, movie_id):
+        path = '/movie/searchMovieInfo.json'
+        return requests.get(KobisAPI.BASE_URL + path, params={
+            'key': self.SECRET_KEY,
+            'movieCd': movie_id
+        }).json()['movieInfoResult']['movieInfo']
+
+    def get_movie_detail(self, movie, movie_id):
+        data = self.get_movie_info(movie_id=movie_id)
+        movie.running_time = data['showTm']
+
+    def get_movie_credits(self, movie_id):
+        data = self.get_movie_info(movie_id)
+        actor_dicts = dict()
+        director_dicts = dict()
+        actor_data = data['actors']
+        for actor in actor_data:
+            eng_name = actor['peopleNmEn'].replace('-', '').replace(' ', '').lower()
+            kor_name = actor['peopleNm']
+            character_name = actor['cast']
+            actor_dicts[eng_name] = [kor_name, character_name]
+        director_data = data['directors']
+        for director in director_data:
+            eng_name = director['peopleNmEn'].replace('-', '').replace(' ', '').lower()
+            kor_name = director['peopleNm']
+            director_dicts[eng_name] = kor_name
+        return actor_dicts, director_dicts
 
 
 class TMDBAPI:
@@ -59,7 +92,7 @@ class TMDBAPI:
 
     def __init__(self):
         self.SECRET_KEY = secret_settings.TMDB_SECRET_KEY
-        self.language = 'kr'
+        self.language = 'ko'
 
     def get_movie_id_by_name(self, name):
         path = '/search/movie'
@@ -68,7 +101,12 @@ class TMDBAPI:
             'language': self.language,
             'query': name
         }).json()
-        return data['results'][0]['id']
+        try:
+            movie_id = data['results'][0]['id']
+        except IndexError:
+            movie_id = 0
+        finally:
+            return movie_id
 
     def get_movie_videos(self, movie_id, movie):
         path = f'/movie/{movie_id}/videos'
@@ -137,7 +175,7 @@ class TMDBAPI:
             movie.distributors.add(distributor)
         movie.save()
 
-    def get_movie_credits(self, movie_id, movie):
+    def get_movie_credits(self, movie_id, movie, actor_dict, director_dict):
         path = f'/movie/{movie_id}/credits'
         data = requests.get(TMDBAPI.BASE_URL + path, params={
             'api_key': self.SECRET_KEY,
@@ -151,6 +189,10 @@ class TMDBAPI:
             actor_id = element['id']
             name = element['name']
             character_name = element['character']
+            lower_name = name.replace('-', '').replace(' ', '').lower()
+            if lower_name in actor_dict:
+                name = actor_dict[lower_name][0]
+                character_name = actor_dict[lower_name][1]
             profile_image = element['profile_path']
             actor, created = Actor.objects.get_or_create(
                 code=actor_id,
@@ -172,6 +214,9 @@ class TMDBAPI:
         for element in directors:
             director_id = element['id']
             name = element['name']
+            lower_name = name.replace('-', '').replace(' ', '').lower()
+            if lower_name in director_dict:
+                name = director_dict[lower_name]
             profile_image = element['profile_path']
             director, created = Director.objects.get_or_create(
                 code=director_id,

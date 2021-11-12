@@ -32,14 +32,16 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-film"></i>
-            <span>Movies</span>
+            <span>영화</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Configure Movie Data</h6>
-                <a class="collapse-item" href="{% url 'movie:movie-list' %}">Movies</a>
-                <a class="collapse-item" href="{% url 'movie:actor-list' %}">Actors</a>
-                <a class="collapse-item" href="{% url 'movie:director-list' %}">Directors</a>
+                <h6 class="collapse-header">영화 데이터 조회</h6>
+                <a class="collapse-item" href="{% url 'movie:movie-list' %}">영화</a>
+                <a class="collapse-item" href="{% url 'movie:actor-list' %}">배우</a>
+                <a class="collapse-item" href="{% url 'movie:director-list' %}">감독</a>
+                <a class="collapse-item" href="{% url 'movie:distributor-list' %}">배급사</a>
+                <a class="collapse-item" href="{% url 'movie:genre-list' %}">장르</a>
             </div>
         </div>
     </li>
@@ -48,8 +50,8 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
             aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>Utilities</span>
+            <i class="fas fa-store"></i>
+            <span>영화관</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
             data-parent="#accordionSidebar">
@@ -101,7 +103,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="_table.html">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
     </li>

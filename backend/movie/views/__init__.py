@@ -1,5 +1,5 @@
 from .api import MovieAPIView
 
 from .list import (
-    MovieListView, ActorListView, DirectorListView
+    MovieListView, ActorListView, DirectorListView, DistributorListView, GenreListView
 )

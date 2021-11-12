@@ -38,13 +38,23 @@ class Movie(models.Model):
 
 
 class Genre(models.Model):
+    class Meta:
+        ordering = ['id']
+
     name = models.CharField(max_length=30, unique=True)
+
+    @property
+    def count(self):
+        return self.movie_set.count()
 
     def __str__(self):
         return self.name
 
 
 class Actor(Person):
+    class Meta:
+        ordering = ['id']
+
     image = models.ImageField(upload_to='movie/actors', null=True)
 
     def image_tag(self):
@@ -69,6 +79,9 @@ class Character(models.Model):
 
 
 class Director(Person):
+    class Meta:
+        ordering = ['id']
+
     image = models.ImageField(upload_to='movie/directors', null=True)
 
     def image_tag(self):
@@ -83,6 +96,9 @@ class Director(Person):
 
 
 class Distributor(models.Model):
+    class Meta:
+        ordering = ['id']
+
     distributor_id = models.CharField(max_length=10)
     name = models.CharField(max_length=60)
     image = models.ImageField(upload_to='movie/distributors', null=True)
