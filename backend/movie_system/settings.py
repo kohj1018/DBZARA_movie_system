@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
     'corsheaders',
+    'rest_framework',
 
     # Custom Apps
     'movie.apps.MovieConfig',
