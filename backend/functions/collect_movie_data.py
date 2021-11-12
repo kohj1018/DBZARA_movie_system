@@ -170,7 +170,7 @@ class TMDBAPI:
                 'character_name': character_name
             })
 
-        directors = data['cast']
+        directors = data['crew']
         for element in directors:
             director_id = element['id']
             name = element['name']

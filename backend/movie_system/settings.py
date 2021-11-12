@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'dbzara.kro.kr']
+ALLOWED_HOSTS = ['0.0.0.0', 'dbzara.kro.kr', '127.0.0.1']
 
 
 # Application definition
@@ -167,7 +167,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 SITE_ID = 1
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'movie_system', 'static'),
-    os.path.join(BASE_DIR, 'accounts', 'static')
+    os.path.join(BASE_DIR, 'accounts', 'static'),
+    os.path.join(BASE_DIR, 'movie', 'static'),
 ]
 
 REST_FRAMEWORK = {

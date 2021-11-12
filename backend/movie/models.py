@@ -13,7 +13,7 @@ class Person(models.Model):
 class Movie(models.Model):
     kobis_id = models.CharField(max_length=8)
     tmdb_id = models.CharField(max_length=10)
-    imdb_id = models.CharField(max_length=10)
+    imdb_id = models.CharField(max_length=10, null=True)
     name = models.CharField(max_length=50)
     running_time = models.IntegerField(null=True)
     summary = models.TextField()
@@ -30,11 +30,14 @@ class Movie(models.Model):
 
     @property
     def poster(self):
-        return self.images.get(category=1).image.url
+        return self.images.get(category=2).image.url
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Actor(Person):

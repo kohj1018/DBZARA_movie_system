@@ -23,7 +23,7 @@ class Command(BaseCommand):
         all_user = get_user_model().objects.exclude(is_staff=True)
         all_cinema = Cinema.objects.all()
         departments = self.create_department()
-        cinemas = sum([ [element] * randint((7 - element.grade) * 10, (8 - element.grade) * 10) for element in all_cinema], [])
+        cinemas = sum([[element] * randint((7 - element.grade) * 10, (8 - element.grade) * 10) for element in all_cinema], [])
 
         print(len(cinemas))
         for cinema in cinemas:
@@ -59,5 +59,4 @@ class Command(BaseCommand):
                     }
                 )
             print(f'-- 부서 데이터 {count}개 생성 완료 --')
-            # departments = Department.objects.exclude(Q(department__isnull=True) | Q(name__icontains='경영'))
         return Department.objects.exclude(department__isnull=True)
