@@ -13,4 +13,3 @@ pyjwt~=1.7.1
 djangorestframework-jwt~=1.11.0
 django-cors-headers
 djangorestframework~=3.12.4
-faker~=9.5.2
