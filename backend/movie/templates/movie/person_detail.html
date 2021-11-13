@@ -1,0 +1,14 @@
+<div class="profile-card">
+    <div class="profile-back"></div><img class="img-circle profile-pic" src="{{ person.image }}" />
+    <h3 class="profile-name">{{ person.name }}</h3>
+
+    {% for filmography in filmographies %}
+        {% include 'movie/_card.html' with person=filmography %}
+    {% endfor %}
+
+    <ul class="social-list">
+        <li><i class="fa fa-facebook-official"></i></li>
+        <li><i class="fa fa-twitter-square"></i></li>
+        <li><i class="fa fa-linkedin-square"></i></li>
+    </ul>
+</div>

@@ -8,6 +8,9 @@ from exception.movie_exception import MovieExistException
 
 
 class Cinema(models.Model):
+    class Meta:
+        ordering = ['id']
+
     RANK_CHOICES = [
         (1, 'S 등급'),
         (2, 'A 등급'),
@@ -27,6 +30,14 @@ class Cinema(models.Model):
     inquiries = models.ManyToManyField('accounts.Profile', through='cinema.Question', through_fields=('cinema', 'profile'), related_name='+')
     stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'), related_name='+')
     events = models.ManyToManyField('item.Event', blank=True, related_name='cinema')
+
+    @property
+    def two_dimension_count(self):
+        return self.theater_set.filter(category='2D').count()
+
+    @property
+    def three_dimension_count(self):
+        return self.theater_set.filter(category='3D').count()
 
     # TODO: Fix Function Name
     def on_time(self):

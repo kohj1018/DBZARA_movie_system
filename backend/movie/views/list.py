@@ -7,7 +7,7 @@ from movie.models import Movie, Actor, Director, Distributor, Genre
 class MovieListView(ListView):
     model = Movie
     context_object_name = 'movies'
-    paginate_by = 12
+    paginate_by = 15
 
 
 class ActorListView(ListView):

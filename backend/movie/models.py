@@ -65,6 +65,10 @@ class Actor(Person):
 
     image_tag.short_description = 'Image'
 
+    @property
+    def filmography(self):
+        return self.movie_set.all()
+
     def __str__(self):
         return self.name
 

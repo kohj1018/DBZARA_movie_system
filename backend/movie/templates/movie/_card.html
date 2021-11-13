@@ -2,11 +2,11 @@
 
 <link rel="stylesheet" href="{% static 'css/model-card.css' %}">
 
-<div class="col-sm-2 model-card"><a href="#">
+<div class="rounded col-sm-2 model-card"><a href="#">
     </a>
-    <div class="bsblox-image-effect16"><a href="#">
+    <div class="rounded bsblox-image-effect16"><a href="#">
         {% if person.image %}
-            <img class="img-fluid" src="{{ person.image.url }}" />
+            <img class="rounded img-fluid" src="{{ person.image.url }}" />
         {% else %}
             <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
         {% endif %}
