@@ -1,0 +1,26 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/movie-card.css' %}">
+
+<figure class="snip1253 hover">
+    <div class="image">
+        {% if movie.poster %}
+            <img src="{{ movie.poster }}" alt="sample66" />
+        {% else %}
+            <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
+        {% endif %}
+    </div>
+    <figcaption>
+        <div class="date"><span class="day">{{ movie.opening_date.day }}</span><span class="month">{{ movie.opening_date.month }}</span></div>
+        <h3>{{ movie.name }}</h3>
+        <p>
+            {{ movie.summary }}
+        </p>
+    </figcaption>
+    <footer>
+        <div class="views"><i class="bi bi-alarm"></i>{{ movie.running_time }}</div>
+        <div class="views"><i class="ion-eye"></i>1,870</div>
+        <div class="love"><i class="ion-heart"></i>973</div>
+        <div class="comments"><i class="ion-chatboxes"></i>85</div>
+    </footer><a href="#"></a>
+</figure>

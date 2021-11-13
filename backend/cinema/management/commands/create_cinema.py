@@ -21,9 +21,14 @@ class Command(BaseCommand):
             cinemas = json.load(json_file)['cinemas']
             for element in cinemas:
                 latitude, longitude = self.naver_api.get_geo_by_location(element['주소'])
+<<<<<<< HEAD
+                cinema, created = Cinema.objects.get_or_create(
+                    name=element['영화상영관명'],
+=======
                 cinema_name = element['영화상영관명'].replace('메가박스 ', '메가박스').replace('메가박스', '디비자라 ')
                 cinema, created = Cinema.objects.get_or_create(
                     name=cinema_name,
+>>>>>>> upstream/develop
                     defaults={
                         'main_region': element['광역단체'],
                         'sub_region': element['기초단체'],
@@ -39,7 +44,7 @@ class Command(BaseCommand):
                     three_dimension_count = int(element['3D 상영관수'])
                     count = 1
                     while Theater.objects.filter(cinema=cinema, category='2D').count() < two_dimension_count:
-                        Theater.objects.get_or_create(
+                        theater, created = Theater.objects.get_or_create(
                             cinema=cinema,
                             seat=choice(self.two_dimension_seat),
                             defaults={
@@ -48,10 +53,11 @@ class Command(BaseCommand):
                                 'floor': randint(1, 9),
                             }
                         )
-                        count += 1
+                        if created:
+                            count += 1
 
                     while Theater.objects.filter(cinema=cinema, category='3D').count() < three_dimension_count:
-                        Theater.objects.get_or_create(
+                        theater, created = Theater.objects.get_or_create(
                             cinema=cinema,
                             seat=choice(self.two_dimension_seat),
                             defaults={
@@ -60,7 +66,8 @@ class Command(BaseCommand):
                                 'floor': randint(1, 9),
                             }
                         )
-                        count += 1
+                        if created:
+                            count += 1
                     print(f'--{cinema.name}의 상영관 2D: {two_dimension_count}개, 3D: {three_dimension_count}개 생성완료--')
 
     def create_seat(self):
