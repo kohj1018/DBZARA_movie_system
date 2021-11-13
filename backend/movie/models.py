@@ -1,5 +1,9 @@
+import datetime
+
 from django.db import models
 from django.utils.html import mark_safe
+
+from cinema.models import Reservation
 
 
 class Person(models.Model):
