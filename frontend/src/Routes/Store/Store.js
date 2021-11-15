@@ -11,7 +11,7 @@ const StoreContainer = styled.div`
   color: blue;
   display: flex;
   flex-direction: column;
-  background-color: #ff7eb3;
+  background-color: #a30d0d;
 `;
 const StoreTitle = styled.div`
   min-width: 1200px;

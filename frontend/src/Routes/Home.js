@@ -5,20 +5,18 @@ import { moviesApi } from "api";
 import { Link } from "react-router-dom";
 
 // TODO styled-component 컴포넌트화 만들기
-// TODO bgimg => img태그 변경
 // TODO CSS 추가 항목들
 /*
+ToDo 스크롤 이벤트, 슬라이드 이벤트
+
+header 
+  스크롤 -> 받아서 색 변경
+
 firstimg 
-  컨테이너 hover -> 양 사이드 넘김 버튼 
-  컴포넌트 hovet -> 뒤집히는 효과, 중간에 제목, 순위, %띄우기 && 
-  자동으로 넘기기 
+  양 사이드 넘김 버튼, 슬라이드 효과,자동으로 넘기기 
   밑에 현재 위치 표시 + 중지
 
 Randking
-  뒤에 현재 어디인지 보이기
-  nav만들기 (페이지 이동 없이 state 변경으로? )
-  1,7번째 poster 흐릿
-  view기준 양 사이드 흐릿
   양 사이드 넘김 버튼, 슬라이드 효과
 
 bestPlay
@@ -30,23 +28,18 @@ Evnet
 */
 
 const Home = () => {
+  // 박스 오피스 순위
   let [movies, setMovies] = useState({
     popular: null,
     error: null,
     loading: true,
   });
 
+  // 개봉 예정작
   let [upComingMovies, setUpComingMovies] = useState({
     upComing: null,
     error: null,
     loading: true,
-  });
-
-  // nav 클릭시 바꿀 movies 데이터
-  const NavList = ["RANKING", "BOXOFFICE", "COMING", "FESTIVAL"];
-  const [onNav, setOnNav] = useState({
-    data: null,
-    navList: NavList[0],
   });
 
   async function feactApi() {
@@ -63,7 +56,7 @@ const Home = () => {
       } = await moviesApi.upComing();
       setUpComingMovies((movies) => ({ ...movies, upComing }));
 
-      setOnNav((onNav) => ({ ...onNav, data: movies.popular }));
+      // setOnNav((onNav) => ({ ...onNav, data: movies.popular }));
     } catch {
       setMovies((movies) => ({
         ...movies,
@@ -78,139 +71,11 @@ const Home = () => {
     feactApi();
   }, []);
 
-  // hover시 bg변경해야함
-  let [onMouse, setOnMouse] = useState({
-    hover: false,
-    item: 0,
-  });
-  const handleHover = (index) => {
-    setOnMouse({ hover: true, item: index });
-  };
-
-  //nav 클릭시 data바꿈
-  const NavChange = (data, index) => {
-    return setOnNav((onNav) => ({
-      ...onNav,
-      data,
-      navList: NavList[index],
-    }));
-  };
-
   return (
     <HomePage>
-      <FirstBgImg
-        src={
-          movies.popular
-            ? `https://image.tmdb.org/t/p/original${
-                movies.popular[onMouse.item].backdrop_path
-              }`
-            : require("../assets/noPosterSmall.png").default
-        }
-      />
-      <FirstContext>
-        <FirstImgInfo>
-          <FirstImgInfoDetail>▶</FirstImgInfoDetail>
-          <FirstImgName>
-            {movies.popular ? movies.popular[onMouse.item].title : ""}
-          </FirstImgName>
-          <FirstImgRank>
-            {movies.popular
-              ? `${onMouse.item + 1}위 ${
-                  movies.popular[onMouse.item].vote_average
-                }`
-              : ""}
-          </FirstImgRank>
-        </FirstImgInfo>
-        <FirstPosterContainer>
-          <FirstPosters>
-            {movies.popular &&
-              movies.popular.length > 0 &&
-              movies.popular.slice(0, 5).map((movies, index) => {
-                return (
-                  // TODO 중앙에 정보 띄우기 + 너무 느림 -> 띄울 5개 데이터는 받아와서 저장 후 보여주기
-                  <FirstSize>
-                    {/* {console.log(onMouse)} */}
-                    {/* <FirstSize> */}
-                    {/* // TODO 애니메이션 왜 안먹힘? */}
-                    <TurnYPoster onMouseOver={() => handleHover(index)}>
-                      <MoviePoster
-                        key={movies.id}
-                        id={movies.id}
-                        bgUrl={movies.poster_path}
-                        index={index + 1}
-                      />
-                    </TurnYPoster>
-                  </FirstSize>
-                );
-              })}
-          </FirstPosters>
-        </FirstPosterContainer>
-      </FirstContext>
+      <MainPoster movies={movies.popular} />
       {/* 랭킹 */}
-      <Ranking>
-        <RankingMenu>
-          <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
-          {/* //TODO component로 변경하기 */}
-          <Rankingli
-            onClick={() => NavChange(movies.popular, 0)}
-            current="RANKING"
-            state={onNav.navList}
-          >
-            예매순위
-          </Rankingli>
-          <Rankingli
-            onClick={() => NavChange(movies.popular, 1)}
-            current="BOXOFFICE"
-            state={onNav.navList}
-          >
-            박스오피스
-          </Rankingli>
-          <Rankingli
-            onClick={() => NavChange(upComingMovies.upComing, 2)}
-            current="COMING"
-            state={onNav.navList}
-          >
-            개봉예정작
-          </Rankingli>
-          <Rankingli
-            onClick={() => NavChange(movies.popular, 3)}
-            current="FESTIVAL"
-            state={onNav.navList}
-          >
-            영화제영화
-          </Rankingli>
-        </RankingMenu>
-        {onNav ? (
-          <RankingContainer>
-            {/* //TODO 1,7번째 흐리게 && 양 사이드 흐리게*/}
-            {/* //TODO 초기 화면 안뜨는 문제 발생 */}
-            {onNav.data &&
-              onNav.data.length > 0 &&
-              onNav.data.slice(0, 10).map((movies, index) => {
-                return (
-                  <RankingSize>
-                    <MoviePoster
-                      key={movies.id}
-                      id={movies.id}
-                      bgUrl={movies.poster_path}
-                      index={index + 1}
-                    />
-                    <MovieInfo>
-                      <MovieName>{movies.title}</MovieName>
-                      <MovieVote>
-                        {onNav.navList === "RANKING"
-                          ? `${movies.vote_average}점`
-                          : ""}
-                      </MovieVote>
-                    </MovieInfo>
-                  </RankingSize>
-                );
-              })}
-          </RankingContainer>
-        ) : (
-          ""
-        )}
-      </Ranking>
+      <MoviesRanking movies={movies.popular} upComingMovies={upComingMovies} />
       {/* 베스트다운로드 */}
       <BestPlay>
         <BestMainTitle>
@@ -218,7 +83,7 @@ const Home = () => {
         </BestMainTitle>
         <BestMainBox>
           <BestMainContainer>
-            {/* //TODO 영화component로 변경 */}
+            {/* //TODO 영상component로 변경 */}
             <MoviePoster></MoviePoster>
           </BestMainContainer>
           <BestSubContainer>
@@ -234,7 +99,9 @@ const Home = () => {
       </BestPlay>
       {/* 이벤트 */}
       <Event>
-        <EventTitle>Event</EventTitle>
+        <EventTitle>
+          <EventTitleSpan>Event</EventTitleSpan>
+        </EventTitle>
         <EventImgs>
           {[1, 2, 3].map((i) => {
             return (
@@ -275,8 +142,95 @@ const HomePage = styled.div`
   overflow-x: hidden;
 `;
 
-// 추천 영화
+// 메인포스터
+const MainPoster = ({ movies }) => {
+  // hover시 bg변경해야함
+  let [onMouse, setOnMouse] = useState({
+    hover: false,
+    item: 0,
+  });
+  const handleHover = (index) => {
+    setOnMouse({ hover: true, item: index });
+  };
 
+  return (
+    <>
+      <FirstBgImg
+        src={
+          movies
+            ? `https://image.tmdb.org/t/p/original${
+                movies[onMouse.item].backdrop_path
+              }`
+            : require("../assets/noPosterSmall.png").default
+        }
+      />
+      <FirstContext>
+        <FirstImgInfo>
+          <FirstImgInfoDetail>▶</FirstImgInfoDetail>
+          <FirstImgName>
+            {movies ? movies[onMouse.item].title : ""}
+          </FirstImgName>
+          <FirstImgRank>
+            {movies
+              ? `${onMouse.item + 1}위 ${movies[onMouse.item].vote_average}`
+              : ""}
+          </FirstImgRank>
+        </FirstImgInfo>
+        <FirstPosterContainer>
+          <FirstPosters>
+            {movies &&
+              movies.length > 0 &&
+              movies.slice(0, 5).map((movies, index) => {
+                return (
+                  <FirstSize>
+                    {/* {console.log(onMouse)} */}
+                    {/* <FirstSize> */}
+                    {/* // TODO 애니메이션 왜 안먹힘? */}
+                    <TurnYPoster onMouseOver={() => handleHover(index)}>
+                      <MoviePoster
+                        key={movies.id}
+                        id={movies.id}
+                        bgUrl={movies.poster_path}
+                        index={index + 1}
+                      />
+                    </TurnYPoster>
+                  </FirstSize>
+                );
+              })}
+          </FirstPosters>
+        </FirstPosterContainer>
+        <PrevBtn>◀</PrevBtn>
+        <NextBtn>▶</NextBtn>
+      </FirstContext>
+    </>
+  );
+};
+
+// 슬라이드 버튼
+const SlideBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  z-index: 10;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: 0.5s ease-in-out;
+`;
+
+const PrevBtn = styled(SlideBtn)`
+  top: 300px;
+  left: 10px;
+`;
+const NextBtn = styled(SlideBtn)`
+  top: 300px;
+  right: 10px;
+`;
+
+// 추천 영화
 const fadeOut = keyframes`{
   from {
   	opacity: 0;
@@ -285,18 +239,27 @@ const fadeOut = keyframes`{
  	  opacity: 1;
   }
 }`;
+
 const FirstBgImg = styled.img`
   width: 100%;
   height: 650px;
   position: absolute;
   z-index: -1;
-  animation: ${fadeOut} 1s;
+  animation: ${fadeOut} 1.5s;
 `;
 
 const FirstContext = styled.section`
   height: 650px;
   flex-direction: column;
   position: relative;
+  &:hover {
+    ${PrevBtn} {
+      opacity: 0.7;
+    }
+    ${NextBtn} {
+      opacity: 0.7;
+    }
+  }
 `;
 
 const FirstImgInfo = styled.section`
@@ -365,11 +328,128 @@ const FirstPosters = styled.div`
   align-items: center;
 `;
 
+// 영화순위
+const MoviesRanking = ({ movies, upComingMovies }) => {
+  // nav 클릭시 바꿀 movies 데이터
+  const NavList = ["RANKING", "BOXOFFICE", "COMING", "FESTIVAL"];
+  const [onNav, setOnNav] = useState({
+    data: null,
+    navList: NavList[0],
+  });
+
+  //nav 클릭시 data바꿈
+  const NavChange = (data, index) => {
+    return setOnNav((onNav) => ({
+      ...onNav,
+      data,
+      navList: NavList[index],
+    }));
+  };
+  return (
+    <>
+      <Ranking>
+        <RankingMenu>
+          <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
+          {/* //TODO component로 변경하기 */}
+          <Rankingli
+            onClick={() => NavChange(movies, 0)}
+            current="RANKING"
+            state={onNav.navList}
+          >
+            예매순위
+          </Rankingli>
+          <Rankingli
+            onClick={() => NavChange(movies, 1)}
+            current="BOXOFFICE"
+            state={onNav.navList}
+          >
+            박스오피스
+          </Rankingli>
+          <Rankingli
+            onClick={() => NavChange(upComingMovies.upComing, 2)}
+            current="COMING"
+            state={onNav.navList}
+          >
+            개봉예정작
+          </Rankingli>
+          <Rankingli
+            onClick={() => NavChange(movies, 3)}
+            current="FESTIVAL"
+            state={onNav.navList}
+          >
+            영화제영화
+          </Rankingli>
+        </RankingMenu>
+        {/* //TODO 슬라이드효과 */}
+        {onNav.data ? (
+          <RankingContainer>
+            {onNav.data.length > 0 &&
+              onNav.data.slice(0, 10).map((movies, index) => {
+                return (
+                  <RankingSize>
+                    <MoviePoster
+                      key={movies.id}
+                      id={movies.id}
+                      bgUrl={movies.poster_path}
+                      index={index + 1}
+                    />
+                    <MovieInfo>
+                      <MovieName>{movies.title}</MovieName>
+                      <MovieVote>
+                        {onNav.navList === "RANKING"
+                          ? `${movies.vote_average}점`
+                          : ""}
+                      </MovieVote>
+                    </MovieInfo>
+                  </RankingSize>
+                );
+              })}
+            <Left />
+            <Right />
+            <PrevBtn>◀</PrevBtn>
+            <NextBtn>▶</NextBtn>
+          </RankingContainer>
+        ) : (
+          // 초기화면
+          <RankingContainer>
+            {movies &&
+              movies.slice(0, 10).map((movies, index) => {
+                return (
+                  <RankingSize>
+                    <MoviePoster
+                      key={movies.id}
+                      id={movies.id}
+                      bgUrl={movies.poster_path}
+                      index={index + 1}
+                    />
+                    <MovieInfo>
+                      <MovieName>{movies.title}</MovieName>
+                      <MovieVote>
+                        {onNav.navList === "RANKING"
+                          ? `${movies.vote_average}점`
+                          : ""}
+                      </MovieVote>
+                    </MovieInfo>
+                  </RankingSize>
+                );
+              })}
+            <Left />
+            <Right />
+            <PrevBtn>◀</PrevBtn>
+            <NextBtn>▶</NextBtn>
+          </RankingContainer>
+        )}
+      </Ranking>
+    </>
+  );
+};
+
 // 랭크별
 const Ranking = styled.div`
   padding: 50px 0 50px 0;
   margin-top: 40px;
   height: 600px;
+  position: relative;
 `;
 
 const RankingMenu = styled.ul`
@@ -397,21 +477,33 @@ const Rankingli = styled.li`
   border-bottom: 3px solid
     ${(props) => (props.current === props.state ? "black" : "transparent")};
 `;
+
 const RankingContainer = styled.div`
   min-width: 1200px;
   margin-top: 35;
   height: 370px;
   top: 280px;
   display: flex;
+  gap: 20px;
+  &:hover {
+    ${PrevBtn} {
+      opacity: 0.7;
+    }
+    ${NextBtn} {
+      opacity: 0.7;
+    }
+  }
 `;
 
 const RankingSize = styled.div`
   position: relative;
-  margin-right: 20px;
   min-width: 256px;
   height: 372px;
   display: flex;
   justify-content: center;
+  /* ${MoviePoster} {
+    border: 10px solid red;
+  } */
 `;
 
 const MovieInfo = styled.div`
@@ -431,6 +523,38 @@ const MovieName = styled.span`
 const MovieVote = styled.span`
   color: red;
   font-size: 15px;
+`;
+
+const Gradient = styled.div`
+  width: 200px;
+  height: 372px;
+  position: absolute;
+  z-index: 1;
+`;
+
+const Left = styled(Gradient)`
+  left: 0;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.7) 70%,
+    rgba(255, 255, 255, 0.4) 90%,
+    rgba(255, 255, 255, 0) 100%
+  );
+`;
+const Right = styled(Gradient)`
+  right: 0;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 10%,
+    rgba(255, 255, 255, 0.7) 30%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 1) 100%
+  );
 `;
 
 // 베스트영상
@@ -486,6 +610,12 @@ const Event = styled.section`
 
 const EventTitle = styled.section`
   height: 170px;
+`;
+
+const EventTitleSpan = styled.span`
+  color: black;
+  font-size: 45px;
+  font-weight: 600;
 `;
 
 const EventImgs = styled.section`
