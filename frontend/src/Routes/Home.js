@@ -7,10 +7,7 @@ import { Link } from "react-router-dom";
 // TODO styled-component 컴포넌트화 만들기
 // TODO CSS 추가 항목들
 /*
-ToDo 스크롤 이벤트, 슬라이드 이벤트
-
-header 
-  스크롤 -> 받아서 색 변경
+ToDo 스크롤에 애니메이션, 슬라이드 이벤트
 
 firstimg 
   양 사이드 넘김 버튼, 슬라이드 효과,자동으로 넘기기 
@@ -41,6 +38,26 @@ const Home = () => {
     error: null,
     loading: true,
   });
+
+  // 스크롤 이벤트
+  const [position, setPosition] = useState({
+    BestPlay: false,
+    Event: false,
+  });
+
+  const onScroll = () => {
+    if (600 <= window.scrollY && window.scrollY >= 700)
+      setPosition((position) => ({ ...position, BestPlay: true }));
+    if (1100 <= window.scrollY && window.scrollY >= 1300)
+      setPosition((position) => ({ ...position, Event: true }));
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll); //메모리누수 방지
+    };
+  }, []);
 
   async function feactApi() {
     try {
@@ -73,6 +90,7 @@ const Home = () => {
 
   return (
     <HomePage>
+      {console.log(window.scrollY)}
       <MainPoster movies={movies.popular} />
       {/* 랭킹 */}
       <MoviesRanking movies={movies.popular} upComingMovies={upComingMovies} />
@@ -86,7 +104,7 @@ const Home = () => {
             {/* //TODO 영상component로 변경 */}
             <MoviePoster></MoviePoster>
           </BestMainContainer>
-          <BestSubContainer>
+          <BestSubContainer scrollY={position.BestPlay}>
             {[1, 2, 3].map((i) => {
               return (
                 <BestSubMovie>
@@ -102,7 +120,7 @@ const Home = () => {
         <EventTitle>
           <EventTitleSpan>Event</EventTitleSpan>
         </EventTitle>
-        <EventImgs>
+        <EventImgs scrollY={position.Event}>
           {[1, 2, 3].map((i) => {
             return (
               <EventImg>
@@ -183,8 +201,6 @@ const MainPoster = ({ movies }) => {
               movies.slice(0, 5).map((movies, index) => {
                 return (
                   <FirstSize>
-                    {/* {console.log(onMouse)} */}
-                    {/* <FirstSize> */}
                     {/* // TODO 애니메이션 왜 안먹힘? */}
                     <TurnYPoster onMouseOver={() => handleHover(index)}>
                       <MoviePoster
@@ -241,7 +257,9 @@ const fadeOut = keyframes`{
 }`;
 
 const FirstBgImg = styled.img`
+  justify-content: center;
   width: 100%;
+  margin: auto;
   height: 650px;
   position: absolute;
   z-index: -1;
@@ -593,6 +611,10 @@ const BestSubContainer = styled.section`
   top: 35px;
   border: 1px solid red;
   flex-direction: column;
+  display: none;
+  ${(prop) => {
+    if (prop.scrollY) return `display: block`;
+  }};
 `;
 
 const BestSubMovie = styled.section`
@@ -621,6 +643,10 @@ const EventTitleSpan = styled.span`
 const EventImgs = styled.section`
   width: 1200px;
   margin: auto;
+  visibility: hidden
+    ${(prop) => {
+      if (prop.scrollY) return `visibility:visible`;
+    }};
 `;
 
 const EventImg = styled.div`

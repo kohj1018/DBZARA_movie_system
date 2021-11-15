@@ -1,6 +1,5 @@
 import React from "react";
 import GlobalStyles from "Components/GlobalStyles";
-
 import UserInfo from "context";
 import Footer from "Components/Footer";
 import {

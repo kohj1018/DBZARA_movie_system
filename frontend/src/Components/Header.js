@@ -1,15 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
-import { Button } from "@material-ui/core";
 
-/*
-TODO
-header
-  hover -> 창 내려오고 list보이기
-  메뉴 클릭 -> 사이드바
-  서치 클릭 -> 사이드바
-*/
+// TODO 메뉴, 서치 클릭 -> 사이드바
 
 const Header = styled.header`
   z-index: 10;
@@ -25,7 +18,11 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   background-color: ${(props) =>
-    props.current ? "RGB(38, 38, 38)" : "transparent"};
+    props.current
+      ? "RGB(38, 38, 38)"
+      : props.scrollY
+      ? "RGB(38, 38, 38)"
+      : "transparent"};
 `;
 
 const Logo = styled.div`
@@ -57,7 +54,7 @@ const SubListBg = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.9;
+  opacity: 0.85;
   z-index: -1;
   display: ${(props) => (props.hover ? "block" : "none")};
 `;
@@ -76,13 +73,13 @@ const LinkText = styled.p`
 
 const List = styled.ul`
   display: flex;
-  margin-top: 10px;
+  margin-top: 20px;
   justify-content: flex-start;
   align-items: flex-start;
 `;
 
 const TabUl = styled.ul`
-  display: flex;
+  display: absolute;
   flex-direction: column;
   margin-right: 10px;
 `;
@@ -104,9 +101,24 @@ export default withRouter(({ location: { pathname } }) => {
   const outHover = () => {
     setHover(false);
   };
+
+  // 스크롤 이벤트
+  const [position, setPosition] = useState(false);
+
+  const onScroll = () => {
+    if (window.scrollY >= 70) setPosition(true);
+    else setPosition(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll); //메모리누수 방지
+    };
+  }, []);
   return (
     <>
-      <Header current={pathname !== "/"}>
+      <Header current={pathname !== "/"} scrollY={position}>
         <List>
           <Logo>
             <SLink to="/">Logo</SLink>
