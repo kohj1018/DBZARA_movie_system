@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 // TODO styled-component 컴포넌트화 만들기
 // TODO CSS 추가 항목들
+// TODO 여러곳에 사용되는 css 항목 styled-component Name = css``;로 따로 빼기
 /*
 ToDo 스크롤에 애니메이션, 슬라이드 이벤트
 
@@ -91,6 +92,7 @@ const Home = () => {
   return (
     <HomePage>
       {console.log(window.scrollY)}
+      {/* 메인 poster */}
       <MainPoster movies={movies.popular} />
       {/* 랭킹 */}
       <MoviesRanking movies={movies.popular} upComingMovies={upComingMovies} />
@@ -356,13 +358,40 @@ const MoviesRanking = ({ movies, upComingMovies }) => {
   });
 
   //nav 클릭시 data바꿈
-  const NavChange = (data, index) => {
-    return setOnNav((onNav) => ({
+  const navChange = (data, index) =>
+    setOnNav((onNav) => ({
       ...onNav,
       data,
       navList: NavList[index],
     }));
+
+  // 초기랭크 셋팅
+  useEffect(() => {
+    navChange(movies, 0);
+  }, [movies]);
+
+  /* 
+TODO 스크롤 이벤트 계획
+1. posterArray를 만든다. (0~10 *3 = 30개 )
+2. posterArray의 10~19 까지 먼저 띄운다. (랭크 10 ~ 9)
+3. 버튼은 클릭하면 focusIdx가 +1,-1이되고 그 값만큼 RankingPosterUl를 x방향 옮긴다. (transform : traslate3d(x,y,z))
+*/
+
+  // 보여줄 poster liset
+  let [focusIdx, setFocusIdx] = useState(0);
+
+  // 이전 poster
+  const prevSlide = () => {
+    if (focusIdx === 10) return setFocusIdx(1);
+    else return setFocusIdx(focusIdx + 1);
   };
+
+  // 이후 poster
+  const nextSlide = () => {
+    if (focusIdx === -9) return setFocusIdx(0);
+    else return setFocusIdx(focusIdx - 1);
+  };
+
   return (
     <>
       <Ranking>
@@ -370,92 +399,68 @@ const MoviesRanking = ({ movies, upComingMovies }) => {
           <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
           {/* //TODO component로 변경하기 */}
           <Rankingli
-            onClick={() => NavChange(movies, 0)}
+            onClick={() => navChange(movies, 0)}
             current="RANKING"
             state={onNav.navList}
           >
             예매순위
           </Rankingli>
           <Rankingli
-            onClick={() => NavChange(movies, 1)}
+            onClick={() => navChange(movies, 1)}
             current="BOXOFFICE"
             state={onNav.navList}
           >
             박스오피스
           </Rankingli>
           <Rankingli
-            onClick={() => NavChange(upComingMovies.upComing, 2)}
+            onClick={() => navChange(upComingMovies.upComing, 2)}
             current="COMING"
             state={onNav.navList}
           >
             개봉예정작
           </Rankingli>
           <Rankingli
-            onClick={() => NavChange(movies, 3)}
+            onClick={() => navChange(movies, 3)}
             current="FESTIVAL"
             state={onNav.navList}
           >
             영화제영화
           </Rankingli>
         </RankingMenu>
+        <Left />
+        <Right />
         {/* //TODO 슬라이드효과 */}
         {onNav.data ? (
           <RankingContainer>
-            {onNav.data.length > 0 &&
-              onNav.data.slice(0, 10).map((movies, index) => {
-                return (
-                  <RankingSize>
-                    <MoviePoster
-                      key={movies.id}
-                      id={movies.id}
-                      bgUrl={movies.poster_path}
-                      index={index + 1}
-                    />
-                    <MovieInfo>
-                      <MovieName>{movies.title}</MovieName>
-                      <MovieVote>
-                        {onNav.navList === "RANKING"
-                          ? `${movies.vote_average}점`
-                          : ""}
-                      </MovieVote>
-                    </MovieInfo>
-                  </RankingSize>
-                );
-              })}
-            <Left />
-            <Right />
-            <PrevBtn>◀</PrevBtn>
-            <NextBtn>▶</NextBtn>
+            <RankingPosterUl current={focusIdx}>
+              {console.log("currentIdx", focusIdx)}
+              {onNav.data.length > 0 &&
+                onNav.data.slice(0, 10).map((movies, index) => {
+                  return (
+                    <RankingPoster>
+                      <MoviePoster
+                        key={movies.id}
+                        id={movies.id}
+                        bgUrl={movies.poster_path}
+                        index={index + 1}
+                      />
+                      <MovieInfo>
+                        <MovieName>{movies.title}</MovieName>
+                        <MovieVote>
+                          {onNav.navList === "RANKING"
+                            ? `${movies.vote_average}점`
+                            : ""}
+                        </MovieVote>
+                      </MovieInfo>
+                    </RankingPoster>
+                  );
+                })}
+            </RankingPosterUl>
+            <PrevBtn onClick={() => prevSlide()}>◀</PrevBtn>
+            <NextBtn onClick={() => nextSlide()}>▶</NextBtn>
           </RankingContainer>
         ) : (
-          // 초기화면
-          <RankingContainer>
-            {movies &&
-              movies.slice(0, 10).map((movies, index) => {
-                return (
-                  <RankingSize>
-                    <MoviePoster
-                      key={movies.id}
-                      id={movies.id}
-                      bgUrl={movies.poster_path}
-                      index={index + 1}
-                    />
-                    <MovieInfo>
-                      <MovieName>{movies.title}</MovieName>
-                      <MovieVote>
-                        {onNav.navList === "RANKING"
-                          ? `${movies.vote_average}점`
-                          : ""}
-                      </MovieVote>
-                    </MovieInfo>
-                  </RankingSize>
-                );
-              })}
-            <Left />
-            <Right />
-            <PrevBtn>◀</PrevBtn>
-            <NextBtn>▶</NextBtn>
-          </RankingContainer>
+          console.log("error")
         )}
       </Ranking>
     </>
@@ -464,7 +469,7 @@ const MoviesRanking = ({ movies, upComingMovies }) => {
 
 // 랭크별
 const Ranking = styled.div`
-  padding: 50px 0 50px 0;
+  padding: 45px 0 50px 0;
   margin-top: 40px;
   height: 600px;
   position: relative;
@@ -497,12 +502,6 @@ const Rankingli = styled.li`
 `;
 
 const RankingContainer = styled.div`
-  min-width: 1200px;
-  margin-top: 35;
-  height: 370px;
-  top: 280px;
-  display: flex;
-  gap: 20px;
   &:hover {
     ${PrevBtn} {
       opacity: 0.7;
@@ -513,15 +512,25 @@ const RankingContainer = styled.div`
   }
 `;
 
-const RankingSize = styled.div`
+const RankingPosterUl = styled.div`
+  height: 370px;
+  display: flex;
+  position: absolute;
+  /* left: 0; */
+  gap: 20px;
+  /* ${(props) => `transform:translateX${props.current * 276}px;`} */
+  ${(props) =>
+    props.current > 0
+      ? `right:${(props.current - 1) * 276 * -1}px;`
+      : `left:${props.current * 276}px;`}
+`;
+
+const RankingPoster = styled.div`
   position: relative;
   min-width: 256px;
   height: 372px;
   display: flex;
   justify-content: center;
-  /* ${MoviePoster} {
-    border: 10px solid red;
-  } */
 `;
 
 const MovieInfo = styled.div`
@@ -547,7 +556,7 @@ const Gradient = styled.div`
   width: 200px;
   height: 372px;
   position: absolute;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const Left = styled(Gradient)`
@@ -653,6 +662,7 @@ const EventImg = styled.div`
   width: 380px;
   height: 265px;
   margin: 0 30px 30px 0;
+  transform: translate();
 `;
 
 // 공지사항
