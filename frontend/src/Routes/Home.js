@@ -1,29 +1,104 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
 import { moviesApi } from "api";
 import { Link } from "react-router-dom";
+import MovieVideo from "Components/MovieVideo";
 
 // TODO styled-component 컴포넌트화 만들기
 // TODO CSS 추가 항목들
 // TODO 여러곳에 사용되는 css 항목 styled-component Name = css``;로 따로 빼기
-/*
-ToDo 스크롤에 애니메이션, 슬라이드 이벤트
+// ToDo 스크롤에 애니메이션, 슬라이드 애니메이션
 
-firstimg 
-  양 사이드 넘김 버튼, 슬라이드 효과,자동으로 넘기기 
-  밑에 현재 위치 표시 + 중지
+const HomePage = styled.div`
+  overflow-x: hidden;
+`;
 
-Randking
-  양 사이드 넘김 버튼, 슬라이드 효과
+// 슬라이드 버튼
+const SlideBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  z-index: 10;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: 0.5s ease-in-out;
+`;
 
-bestPlay
-  스크롤 인 -> 사이드 3개 보이기
-  사이드 hover -> 흐릿
+const PrevBtn = styled(SlideBtn)`
+  top: 300px;
+  left: 10px;
+`;
+const NextBtn = styled(SlideBtn)`
+  top: 300px;
+  right: 10px;
+`;
 
-Evnet
-  스크롤 -> 진행중인 event 보이기
-*/
+const Gradient = styled.div`
+  width: 200px;
+  position: absolute;
+  z-index: 10;
+`;
+
+const MainLeft = styled(Gradient)`
+  left: 0;
+  /* width: 150px; */
+  height: 650px;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 10%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+`;
+
+const MainRight = styled(Gradient)`
+  right: 0;
+  height: 650px;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.4) 30%,
+    rgba(0, 0, 0, 0.7) 60%,
+    rgba(0, 0, 0, 0.9) 90%,
+    rgba(0, 0, 0, 1) 100%
+  );
+`;
+
+const RankingLeft = styled(Gradient)`
+  left: 0;
+  height: 372px;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.7) 70%,
+    rgba(255, 255, 255, 0.4) 90%,
+    rgba(255, 255, 255, 0) 100%
+  );
+`;
+const RankingRight = styled(Gradient)`
+  right: 0;
+  height: 372px;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 10%,
+    rgba(255, 255, 255, 0.7) 30%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 1) 100%
+  );
+`;
 
 const Home = () => {
   // 박스 오피스 순위
@@ -40,26 +115,7 @@ const Home = () => {
     loading: true,
   });
 
-  // 스크롤 이벤트
-  const [position, setPosition] = useState({
-    BestPlay: false,
-    Event: false,
-  });
-
-  const onScroll = () => {
-    if (600 <= window.scrollY && window.scrollY >= 700)
-      setPosition((position) => ({ ...position, BestPlay: true }));
-    if (1100 <= window.scrollY && window.scrollY >= 1300)
-      setPosition((position) => ({ ...position, Event: true }));
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll); //메모리누수 방지
-    };
-  }, []);
-
+  // API 연결
   async function feactApi() {
     try {
       const {
@@ -75,6 +131,7 @@ const Home = () => {
       setUpComingMovies((movies) => ({ ...movies, upComing }));
 
       // setOnNav((onNav) => ({ ...onNav, data: movies.popular }));
+
     } catch {
       setMovies((movies) => ({
         ...movies,
@@ -85,32 +142,185 @@ const Home = () => {
       setUpComingMovies((movies) => ({ ...movies, loading: false }));
     }
   }
+
+  // 스크롤 이벤트
+  const [position, setPosition] = useState({
+    BestPlay: false,
+    Event: false,
+  });
+
+  const onScroll = () => {
+    if (600 <= window.scrollY && window.scrollY >= 700)
+      setPosition((position) => ({ ...position, BestPlay: true }));
+    if (1100 <= window.scrollY && window.scrollY >= 1300)
+      setPosition((position) => ({ ...position, Event: true }));
+  };
+
+
+  // TODO focunIdx ==== -9, +9  : 에니매이션 적용 0.5s후 focunidx = 0, left = -9*276으로 변경
+
+  // 이전 poster
+  const prevSlide = () => {
+    console.log("func전", focusIdx);
+    if (focusIdx === 9) setFocusIdx(0);
+    else setFocusIdx(focusIdx + 1);
+    console.log("func후", focusIdx);
+  };
+
+  // 이후 poster
+  const nextSlide = () => {
+    if (focusIdx === -9) setTimeout(() => setFocusIdx(0), 500);
+    else setFocusIdx(focusIdx - 1);
+  };
+
+  // nav 클릭시 바꿀 movies 데이터
+  const NavList = ["RANKING", "BOXOFFICE", "COMING", "FESTIVAL"];
+  // const Navcontext = ['예매순위','박스오피스','개봉예정작','영화제영화']
+  const [onNav, setOnNav] = useState({
+    data: null,
+    navList: NavList[0],
+  });
+
+    // API연결 렌더링
+    useEffect(() => {
+      feactApi();
+    }, []);
+
+    // unmount 시 scroll 이벤트 제거
   useEffect(() => {
-    feactApi();
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll); //메모리누수 방지
+    };
   }, []);
+
+  //nav 클릭시 data바꿈
+  const navChange = (data, index) =>
+    setOnNav((onNav) => ({
+      ...onNav,
+      data,
+      navList: NavList[index],
+    }));
+
+  // Ranking초기화면;
+  useEffect(() => {
+    navChange(movies.popular, 0);
+  }, [movies]);
+
+
+  // Ranking 현재 위치
+  const [focusIdx, setFocusIdx] = useState(0);
+
+  // const listPoster = useRef(null);
+
+  // const makeClonePoster = (data) => {
+  //   data.map();
+  // };
+
+  // makeClonePoster(onNav.data.slice(0.1));
 
   return (
     <HomePage>
-      {console.log(window.scrollY)}
+      {/* {console.log(window.scrollY)} */}
       {/* 메인 poster */}
       <MainPoster movies={movies.popular} />
       {/* 랭킹 */}
-      <MoviesRanking movies={movies.popular} upComingMovies={upComingMovies} />
+      <Ranking>
+        <RankingMenu>
+          <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
+          {/* //TODO component로 변경하기 */}
+          <Rankingli
+            onClick={() => navChange(movies.popular, 0)}
+            current="RANKING"
+            state={onNav.navList}
+          >
+            예매순위
+          </Rankingli>
+          <Rankingli
+            onClick={() => navChange(movies.popular, 1)}
+            current="BOXOFFICE"
+            state={onNav.navList}
+          >
+            박스오피스
+          </Rankingli>
+          <Rankingli
+            onClick={() => navChange(upComingMovies.upComing, 2)}
+            current="COMING"
+            state={onNav.navList}
+          >
+            개봉예정작
+          </Rankingli>
+          <Rankingli
+            onClick={() => navChange(movies.popular, 3)}
+            current="FESTIVAL"
+            state={onNav.navList}
+          >
+            영화제영화
+          </Rankingli>
+        </RankingMenu>
+        <RankingLeft />
+        <RankingRight />
+        {onNav.data ? (
+          <RankingContainer>
+            <RankingPosterUl current={focusIdx}>
+              {console.log("end", focusIdx)}
+              {[1, 2, 3].map(() =>
+                onNav.data.slice(0, 10).map((movies, index) => {
+                  return (
+                    <RankingPoster>
+                      <MoviePoster
+                        key={movies.id}
+                        id={movies.id}
+                        bgUrl={movies.poster_path}
+                        index={index + 1}
+                      />
+                      <MovieInfo>
+                        <MovieName>{movies.title}</MovieName>
+                        <MovieVote>
+                          {onNav.navList === "RANKING"
+                            ? `${movies.vote_average}점`
+                            : ""}
+                        </MovieVote>
+                      </MovieInfo>
+                    </RankingPoster>
+                  );
+                })
+              )}
+            </RankingPosterUl>
+            <PrevBtn onClick={() => prevSlide()}>◀</PrevBtn>
+            <NextBtn onClick={() => nextSlide()}>▶</NextBtn>
+          </RankingContainer>
+        ) : (
+          //loading화면
+          <RankingContainer>
+            <RankingPosterUl>
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
+                <RankingPoster>
+                  <MoviePoster />
+                </RankingPoster>
+              ))}
+            </RankingPosterUl>
+          </RankingContainer>
+        )}
+      </Ranking>
       {/* 베스트다운로드 */}
       <BestPlay>
         <BestMainTitle>
           <BestMainTilteP>BEST PLAY</BestMainTilteP>
         </BestMainTitle>
         <BestMainBox>
+          {/* //TODO 영상component로 변경 */}
           <BestMainContainer>
-            {/* //TODO 영상component로 변경 */}
-            <MoviePoster></MoviePoster>
+            {movies.popular ?
+            <MovieVideo
+              id={movies.popular.[0].id}
+            />: require("../assets/noPosterSmall.png").default}
           </BestMainContainer>
           <BestSubContainer scrollY={position.BestPlay}>
-            {[1, 2, 3].map((i) => {
+            {movies.popular && movies.popular.slice(1,4).map((movies, idx) => {
               return (
                 <BestSubMovie>
-                  <MoviePoster key={i}>i</MoviePoster>
+                  <MovieVideo key={idx} id={movies.id} />
                 </BestSubMovie>
               );
             })}
@@ -158,10 +368,6 @@ const Home = () => {
 
 export default Home;
 
-const HomePage = styled.div`
-  overflow-x: hidden;
-`;
-
 // 메인포스터
 const MainPoster = ({ movies }) => {
   // hover시 bg변경해야함
@@ -173,33 +379,43 @@ const MainPoster = ({ movies }) => {
     setOnMouse({ hover: true, item: index });
   };
 
+  // TODO 이거 이용해서 animation먹여야 될것 같은데...
+  useEffect(() => {
+    console.log("item", onMouse.item);
+  }, [onMouse.item]);
   return (
+    movies &&(      
     <>
-      <FirstBgImg
-        src={
-          movies
-            ? `https://image.tmdb.org/t/p/original${
-                movies[onMouse.item].backdrop_path
-              }`
-            : require("../assets/noPosterSmall.png").default
-        }
-      />
+      <BgImg>
+        <ImgContainer>
+          <FirstBgImg
+            current={onMouse.item}
+            src={
+              movies
+                ? `https://image.tmdb.org/t/p/original${
+                    movies[onMouse.item].backdrop_path
+                  }`
+                : require("../assets/noPosterSmall.png").default
+            }
+          />
+          <MainLeft />
+          <MainRight />
+        </ImgContainer>
+      </BgImg>
       <FirstContext>
         <FirstImgInfo>
           <FirstImgInfoDetail>▶</FirstImgInfoDetail>
           <FirstImgName>
-            {movies ? movies[onMouse.item].title : ""}
+            {movies[onMouse.item].title }
           </FirstImgName>
           <FirstImgRank>
-            {movies
-              ? `${onMouse.item + 1}위 ${movies[onMouse.item].vote_average}`
-              : ""}
+            {`${onMouse.item + 1}위 ${movies[onMouse.item].vote_average}`
+              }
           </FirstImgRank>
         </FirstImgInfo>
         <FirstPosterContainer>
           <FirstPosters>
-            {movies &&
-              movies.length > 0 &&
+            {
               movies.slice(0, 5).map((movies, index) => {
                 return (
                   <FirstSize>
@@ -220,33 +436,10 @@ const MainPoster = ({ movies }) => {
         <PrevBtn>◀</PrevBtn>
         <NextBtn>▶</NextBtn>
       </FirstContext>
-    </>
+      </>
+      )
   );
 };
-
-// 슬라이드 버튼
-const SlideBtn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 60px;
-  z-index: 10;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  cursor: pointer;
-  opacity: 0;
-  transition: 0.5s ease-in-out;
-`;
-
-const PrevBtn = styled(SlideBtn)`
-  top: 300px;
-  left: 10px;
-`;
-const NextBtn = styled(SlideBtn)`
-  top: 300px;
-  right: 10px;
-`;
 
 // 추천 영화
 const fadeOut = keyframes`{
@@ -258,14 +451,31 @@ const fadeOut = keyframes`{
   }
 }`;
 
+const BgImg = styled.div`
+  width: 100%;
+  height: 650px;
+  position: absolute;
+  z-index: -2;
+  display: flex;
+  justify-content: center;
+  background-color: #000000;
+`;
+const ImgContainer = styled.div`
+  width: 1920px;
+  height: 650px;
+  position: absolute;
+  overflow: hidden;
+  animation: ${fadeOut} 1s;
+`;
+
 const FirstBgImg = styled.img`
   justify-content: center;
   width: 100%;
+  height: 100%;
   margin: auto;
-  height: 650px;
   position: absolute;
+  object-fit: fill;
   z-index: -1;
-  animation: ${fadeOut} 1.5s;
 `;
 
 const FirstContext = styled.section`
@@ -273,10 +483,7 @@ const FirstContext = styled.section`
   flex-direction: column;
   position: relative;
   &:hover {
-    ${PrevBtn} {
-      opacity: 0.7;
-    }
-    ${NextBtn} {
+    ${PrevBtn}, ${NextBtn} {
       opacity: 0.7;
     }
   }
@@ -317,23 +524,10 @@ const FirstSize = styled.div`
   height: 180px;
 `;
 
-// TODO 아니 왜 안돼? */
-const turnY = keyframes`
-0%{
-  transfrom: rotateY(0)
-}
-50%{
-  transfrom: rotateY(90deg)
-}
-100%{
-  transfrom: rotateY(0)
-}`;
-
 const TurnYPoster = styled.div`
   height: 100%;
   width: 100%;
   transition: transform 0.5s ease-in-out;
-  /* animation: ${turnY} 0.5s ease-in-out; */
   &:hover {
     transform: rotateY(
       360deg
@@ -347,125 +541,6 @@ const FirstPosters = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-// 영화순위
-const MoviesRanking = ({ movies, upComingMovies }) => {
-  // nav 클릭시 바꿀 movies 데이터
-  const NavList = ["RANKING", "BOXOFFICE", "COMING", "FESTIVAL"];
-  const [onNav, setOnNav] = useState({
-    data: null,
-    navList: NavList[0],
-  });
-
-  //nav 클릭시 data바꿈
-  const navChange = (data, index) =>
-    setOnNav((onNav) => ({
-      ...onNav,
-      data,
-      navList: NavList[index],
-    }));
-
-  // 초기랭크 셋팅
-  useEffect(() => {
-    navChange(movies, 0);
-  }, [movies]);
-
-  /* 
-TODO 스크롤 이벤트 계획
-1. posterArray를 만든다. (0~10 *3 = 30개 )
-2. posterArray의 10~19 까지 먼저 띄운다. (랭크 10 ~ 9)
-3. 버튼은 클릭하면 focusIdx가 +1,-1이되고 그 값만큼 RankingPosterUl를 x방향 옮긴다. (transform : traslate3d(x,y,z))
-*/
-
-  // 보여줄 poster liset
-  let [focusIdx, setFocusIdx] = useState(0);
-
-  // 이전 poster
-  const prevSlide = () => {
-    if (focusIdx === 10) return setFocusIdx(1);
-    else return setFocusIdx(focusIdx + 1);
-  };
-
-  // 이후 poster
-  const nextSlide = () => {
-    if (focusIdx === -9) return setFocusIdx(0);
-    else return setFocusIdx(focusIdx - 1);
-  };
-
-  return (
-    <>
-      <Ranking>
-        <RankingMenu>
-          <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
-          {/* //TODO component로 변경하기 */}
-          <Rankingli
-            onClick={() => navChange(movies, 0)}
-            current="RANKING"
-            state={onNav.navList}
-          >
-            예매순위
-          </Rankingli>
-          <Rankingli
-            onClick={() => navChange(movies, 1)}
-            current="BOXOFFICE"
-            state={onNav.navList}
-          >
-            박스오피스
-          </Rankingli>
-          <Rankingli
-            onClick={() => navChange(upComingMovies.upComing, 2)}
-            current="COMING"
-            state={onNav.navList}
-          >
-            개봉예정작
-          </Rankingli>
-          <Rankingli
-            onClick={() => navChange(movies, 3)}
-            current="FESTIVAL"
-            state={onNav.navList}
-          >
-            영화제영화
-          </Rankingli>
-        </RankingMenu>
-        <Left />
-        <Right />
-        {/* //TODO 슬라이드효과 */}
-        {onNav.data ? (
-          <RankingContainer>
-            <RankingPosterUl current={focusIdx}>
-              {console.log("currentIdx", focusIdx)}
-              {onNav.data.length > 0 &&
-                onNav.data.slice(0, 10).map((movies, index) => {
-                  return (
-                    <RankingPoster>
-                      <MoviePoster
-                        key={movies.id}
-                        id={movies.id}
-                        bgUrl={movies.poster_path}
-                        index={index + 1}
-                      />
-                      <MovieInfo>
-                        <MovieName>{movies.title}</MovieName>
-                        <MovieVote>
-                          {onNav.navList === "RANKING"
-                            ? `${movies.vote_average}점`
-                            : ""}
-                        </MovieVote>
-                      </MovieInfo>
-                    </RankingPoster>
-                  );
-                })}
-            </RankingPosterUl>
-            <PrevBtn onClick={() => prevSlide()}>◀</PrevBtn>
-            <NextBtn onClick={() => nextSlide()}>▶</NextBtn>
-          </RankingContainer>
-        ) : (
-          console.log("error")
-        )}
-      </Ranking>
-    </>
-  );
-};
 
 // 랭크별
 const Ranking = styled.div`
@@ -516,13 +591,12 @@ const RankingPosterUl = styled.div`
   height: 370px;
   display: flex;
   position: absolute;
-  /* left: 0; */
   gap: 20px;
-  /* ${(props) => `transform:translateX${props.current * 276}px;`} */
+  transition: 0.5s ease-out;
+  ${(props) => console.log("styled", props.current)}
+  ${(props) => `left:${(props.current - 9) * 276}px;`}
   ${(props) =>
-    props.current > 0
-      ? `right:${(props.current - 1) * 276 * -1}px;`
-      : `left:${props.current * 276}px;`}
+    props.current === 8 ? setTimeout(() => `transition: null; `, 500) : ``};
 `;
 
 const RankingPoster = styled.div`
@@ -552,37 +626,42 @@ const MovieVote = styled.span`
   font-size: 15px;
 `;
 
-const Gradient = styled.div`
-  width: 200px;
-  height: 372px;
-  position: absolute;
-  z-index: 10;
-`;
-
-const Left = styled(Gradient)`
-  left: 0;
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 255, 255, 0.7) 70%,
-    rgba(255, 255, 255, 0.4) 90%,
-    rgba(255, 255, 255, 0) 100%
+// 베스트영화영상
+// TODO 모달창 형태로 ifame띄우기
+const BestVideo = ({ movies, scrollY }) => {
+  const [video, setVideo] = useState({ data: null });
+  useEffect(() => {
+    setVideo({ data: movies });
+  }, [movies, scrollY]);
+  return (
+    <BestPlay movies={movies}>
+      <BestMainTitle>
+        <BestMainTilteP>BEST PLAY</BestMainTilteP>
+      </BestMainTitle>
+      <BestMainBox>
+        {video.data &&
+          video.data.length > 0 &&
+          video.data.slice(1, 4).map((movies, index) => {
+            return index === 0 ? (
+              <BestMainContainer>
+                <MoviePoster></MoviePoster>
+              </BestMainContainer>
+            ) : (
+              <BestSubContainer scrollY={scrollY}>
+                <BestSubMovie>
+                  <MoviePoster
+                    key={movies.id}
+                    id={movies.id}
+                    bgUrl={movies.poster_path}
+                  />
+                </BestSubMovie>
+              </BestSubContainer>
+            );
+          })}
+      </BestMainBox>
+    </BestPlay>
   );
-`;
-const Right = styled(Gradient)`
-  right: 0;
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 10%,
-    rgba(255, 255, 255, 0.7) 30%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 255, 255, 1) 100%
-  );
-`;
+};
 
 // 베스트영상
 const BestPlay = styled.section`
@@ -611,6 +690,7 @@ const BestMainContainer = styled.section`
   margin-top: 50px;
   width: 1200px;
   height: 450px;
+  position: relative;
 `;
 
 const BestSubContainer = styled.section`
@@ -618,9 +698,10 @@ const BestSubContainer = styled.section`
   height: 492px;
   position: absolute;
   top: 35px;
-  border: 1px solid red;
+  margin-bottom: 10px;
   flex-direction: column;
   display: none;
+  animation: ${fadeOut} 0.5s ease-out;
   ${(prop) => {
     if (prop.scrollY) return `display: block`;
   }};
@@ -652,17 +733,16 @@ const EventTitleSpan = styled.span`
 const EventImgs = styled.section`
   width: 1200px;
   margin: auto;
-  visibility: hidden
-    ${(prop) => {
-      if (prop.scrollY) return `visibility:visible`;
-    }};
+  visibility: ${(prop) => (prop.scrollY ? "visible" : "hidden")};
+  /* &:visibility {
+    animation: ${fadeOut} 1s ease-in-out;
+  } */
 `;
 
 const EventImg = styled.div`
   width: 380px;
   height: 265px;
   margin: 0 30px 30px 0;
-  transform: translate();
 `;
 
 // 공지사항

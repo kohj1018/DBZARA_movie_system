@@ -163,7 +163,7 @@ const Age = styled.span`
 `;
 
 const TicketSales = styled.span`
-  margint-left: 0;
+  margin-left: 0;
   padding-left: 0;
   border: none;
   display: inline-block;
