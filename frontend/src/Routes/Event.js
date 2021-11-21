@@ -42,8 +42,14 @@ const EventTab = styled.div`
   padding-top: 60px;
   background-color: whitesmoke;
 `;
+const TabMenu = styled.ul`
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 70px;
+`;
 
-const TabBoxContainer = styled.div`
+const TabBoxContainer = styled.li`
   width: 300px;
   height: 77.76px;
   padding-top: 30px;
@@ -126,37 +132,39 @@ const Event = () => {
               );
             })}
           */}
-            <TabBoxContainer>
-              <TabBox
-                onClick={() =>{setTabClick(0)}}
-              >
-                {/* {console.log(tabClick)} */}
-                전체
-              </TabBox>
-            </TabBoxContainer>
-            <TabBoxContainer>
-              <TabBox
-                onClick={() =>{setTabClick(1)}}
-              >
-                시사회
-              </TabBox>
-            </TabBoxContainer>
-            <TabBoxContainer>
-              <TabBox
-                onClick={() =>{setTabClick(2)}}
-              >
-                이벤트
-              </TabBox>
-            </TabBoxContainer>
-            <TabBoxContainer>
-              <TabBox
-                onClick={() =>{setTabClick(3)}}
-              >
-                당첨자발표
-              </TabBox>
+            <TabMenu>
+              <TabBoxContainer>
+                <TabBox
+                  onClick={() =>{setTabClick(0)}}
+                >
+                  전체
+                </TabBox>
+                {/* <a href="javascript:fnShowMenu('ALLEVENT');">전체</a> */}
+              </TabBoxContainer>
+              <TabBoxContainer>
+                <TabBox
+                  onClick={() =>{setTabClick(1)}}
+                >
+                  시사회
+                </TabBox>
+              </TabBoxContainer>
+              <TabBoxContainer>
+                <TabBox
+                  onClick={() =>{setTabClick(2)}}
+                >
+                  이벤트
+                </TabBox>
+              </TabBoxContainer>
+              <TabBoxContainer>
+                <TabBox
+                  onClick={() =>{setTabClick(3)}}
+                >
+                  당첨자발표
+                </TabBox>
 
 
-            </TabBoxContainer>
+              </TabBoxContainer>
+            </TabMenu>
           </EventTab>
           <TabContent tabClick ={tabClick}/>
 
