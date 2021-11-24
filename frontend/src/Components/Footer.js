@@ -5,6 +5,7 @@ import { Button } from "@material-ui/core";
 const FooterCont = styled.div`
   max-width: 100%;
   min-width: 1200px;
+  padding-top: 1px;
   padding-bottom: 40px;
   height: 231.88px;
   background-color: #e7e7e7;
@@ -12,15 +13,10 @@ const FooterCont = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-// const Coupon = styled.section`
-//   width: 100%;
-//   height: 180px;
-//   background-color: #aec4c7;
-// `;
 const FooterInner = styled.div`
   /* margin-top : 60px;
   line-height: 1; */
-  margin:auto;
+  /* margin: 60px; */
   width:1200px;
   height: 131.875px;
   display: block;
@@ -175,20 +171,20 @@ const Footer = () => {
                 <DivDd>
                   <DdTextFirst>
                     {/* <body link ="black" vlink ="red" alink = "darkgreen"> */}
-                    <a href="http://company.yes24.com/" target="_blank">회사소개</a>
+                    <a href="http://company.yes24.com/" style={{color: "#2b2b2b"}} target="_blank">회사소개</a>
                     {/* </body> */}
                   </DdTextFirst>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/service.aspx" target="_blank">이용약관</a>
+                    <a href="http://www.yes24.com/notice/service.aspx" target="_blank" style={{color: "#2b2b2b"}}>이용약관</a>
                   </DdText>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/privacypolicy.aspx" target="_blank">개인정보처리방침</a>
+                    <a href="http://www.yes24.com/notice/privacypolicy.aspx" target="_blank" style={{color: "#2b2b2b"}}>개인정보처리방침</a>
                   </DdText>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/youthpolicy.aspx" target="_blank">청소년보호정책</a>
+                    <a href="http://www.yes24.com/notice/youthpolicy.aspx" target="_blank" style={{color: "#2b2b2b"}}>청소년보호정책</a>
                   </DdText>
                   <DdText>
-                    <a href="/Event/Movie_Prize_Result_Awards">공동체 영화상 CAMP</a>
+                    <a href="/Event/Movie_Prize_Result_Awards" style={{color: "#2b2b2b"}}>공동체 영화상 CAMP</a>
                   </DdText>
                 </DivDd>
                 <AddrInfo>
@@ -196,7 +192,7 @@ const Footer = () => {
                   <CallCont>서울시 영등포구 은행로 11, 5층 ~ 6층, 8층 (여의도동, 일신빌딩)</CallCont>
                   <CallCont>대표 : 김석환        개인정보보호책임자 : 권민석 yes24help@yes24.com</CallCont>
                   <CallCont>사업자등록번호 : 229-81-37000   통신판매업신고 : 제 2005-02682호    
-                      <a href="https://www.ftc.go.kr/www/bizCommList.do?key=232">사업자 정보확인</a>
+                      <a href="https://www.ftc.go.kr/www/bizCommList.do?key=232" style={{margin:"0 0 0 10px", borderBottom:"1px solid #a7a6a6", color: "#2b2b2b"}}>사업자 정보확인</a>
                   </CallCont>
                   <CallCont>Copyright  ⓒ YES24 Corp. All Rights Reserved.</CallCont>
                 </AddrInfo>

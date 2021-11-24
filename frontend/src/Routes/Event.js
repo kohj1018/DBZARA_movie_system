@@ -116,7 +116,9 @@ const Event = () => {
       <Container>
         <EventBanner>
           <Event_image>
-            <img src="https://movie-simg.yes24.com/NYes24//MgrMain//20/06/evthd_attend_090339.png"></img>
+            <a href="https://movie.yes24.com/Event/EventDetail?eventId=100308">
+              <img src="https://movie-simg.yes24.com/NYes24//MgrMain//20/06/evthd_attend_090339.png"></img>
+            </a>
           </Event_image>
         </EventBanner>
         <EventInner>
