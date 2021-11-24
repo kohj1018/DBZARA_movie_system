@@ -18,7 +18,7 @@ const EventPoster = ({key, id, children}) => {
 
 export default EventPoster;
 
-const EventImg = styled.section`
+const EventImg = styled.div`
   position: absolute;
   top: 0;
   z-index: 1;
@@ -41,7 +41,7 @@ const Btn = styled(Button)`
     position: relative;
     font-size: 16px;
     color: RGB(255, 255, 255);
-    border: 1px solid RGB(255, 255, 255);
+    /* border: 1px solid RGB(255, 255, 255); */
     /* &:hover {
       border: 1px solid red;
       /* color: red; */
@@ -49,7 +49,7 @@ const Btn = styled(Button)`
   }
 `;
 
-const Background = styled.section`
+const Background = styled.div`
   width: 380px;
   height: 263.89px;
   /* padding : 40px 40px 0; */

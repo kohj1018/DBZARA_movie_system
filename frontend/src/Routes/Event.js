@@ -23,52 +23,50 @@ const EventBanner = styled.div`
 const Event_image = styled.div`
   width : 1200px;
   height : 420px;
-  /* text-align: center; */
   display: block;
   margin: auto; 
 `;
 
 const EventInner = styled.div`
+  padding: 0 0 120px;
+  margin: 0 105px 0 105px;
   width: 1200px;
-  height: 621px;
-  margin: auto;
-  padding-bottom: 120px;
-  /* background-color : #5b7ec3; */
-  /* flex-direction: column; */
+  height: 621.875px;
 `;
 
 const EventTab = styled.div`
-  height : 137.76px;
+  height : 138px;
   padding-top: 60px;
-  background-color: whitesmoke;
 `;
 const TabMenu = styled.ul`
   display: table;
   table-layout: fixed;
   width: 100%;
   margin-bottom: 70px;
+  position: relative;
+  /* list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px; */
 `;
 
 const TabBoxContainer = styled.li`
   width: 300px;
   height: 77.76px;
   padding-top: 30px;
-  display: inline-flexbox;
-  justify-content: center;
-  align-items: center;
-  /* background-color: violet; */
+  display: table-cell;
+  text-align: center;
+  padding-bottom:2px;
+  border-bottom:1px solid #b4b4b4;
+  &:active{
+    border-bottom: 3px solid #2b2b2b;
+  }
 `;
 
 const TabBox = styled(Button)`
   && {
-    /* margin: 2px 0 0 2px;
-    width: 60%;
-    height: 40px;
-    position: relative;
-    font-size: 10px;
-    color: RGB(254, 249, 220);
-
-    background-color: #00b09b; */
     padding-bottom: 28px;
     display: inline-block;
     vertical-align: top;
@@ -77,10 +75,14 @@ const TabBox = styled(Button)`
 `;
 
 const AllEventList = styled.div`
-  white-space: nowrap;
+  display: block;
   width : 1200px;
   height : 293.89px;
-  background-color: whitesmoke;
+  margin-top: 60px;
+  position: relative;
+  *{        //*의 의미 - 이 태그의 자식들은 모두 이 속성을 따라갈 것이다
+    box-sizing: border-box;
+  }
 `;
 const EventLinkBox = styled.div`
     position: relative;
@@ -136,19 +138,10 @@ const Event = () => {
           */}
             <TabMenu>
               <TabBoxContainer>
-                <TabBox
-                  onClick={() =>{setTabClick(0)}}
-                >
-                  전체
-                </TabBox>
-                {/* <a href="javascript:fnShowMenu('ALLEVENT');">전체</a> */}
+                <TabBox onClick={() =>{setTabClick(0)}}> 전체 </TabBox>
               </TabBoxContainer>
               <TabBoxContainer>
-                <TabBox
-                  onClick={() =>{setTabClick(1)}}
-                >
-                  시사회
-                </TabBox>
+                <TabBox onClick={() =>{setTabClick(1)}}> 시사회 </TabBox>
               </TabBoxContainer>
               <TabBoxContainer>
                 <TabBox
@@ -158,13 +151,11 @@ const Event = () => {
                 </TabBox>
               </TabBoxContainer>
               <TabBoxContainer>
-                <TabBox
-                  onClick={() =>{setTabClick(3)}}
-                >
-                  당첨자발표
-                </TabBox>
-
-
+                <a href="https://movie.yes24.com/Event/Winner" target="_blank">
+                  <TabBox>
+                    당첨자발표
+                  </TabBox>
+                </a>
               </TabBoxContainer>
             </TabMenu>
           </EventTab>
@@ -196,7 +187,7 @@ const TabContent = (props) =>{
         return(
         <EventLinkBox>
             <img src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"
-            width="100%"height="100%"position="relation"></img>
+            width="100%"height="100%"position="relative"></img>
             <EventPoster>
               <div>
                 <DDay>D - 46</DDay>
@@ -227,6 +218,8 @@ const TabContent = (props) =>{
         {[2].map((i)=>{
           return(
           <EventLinkBox>
+            <img src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"
+            width="100%"height="100%"position="relative"></img>
               <EventPoster></EventPoster>
           </EventLinkBox>
           );
