@@ -20,6 +20,7 @@ const FooterInner = styled.div`
   width:1200px;
   height: 131.875px;
   display: block;
+  margin: auto;
 `;
 const FooterArea = styled.div`
   margin-top:60px;
@@ -188,9 +189,9 @@ const Footer = () => {
                   </DdText>
                 </DivDd>
                 <AddrInfo>
-                  <FcName>예스이십사(주)</FcName>
-                  <CallCont>서울시 영등포구 은행로 11, 5층 ~ 6층, 8층 (여의도동, 일신빌딩)</CallCont>
-                  <CallCont>대표 : 김석환        개인정보보호책임자 : 권민석 yes24help@yes24.com</CallCont>
+                  <FcName>디비자라(주)</FcName>
+                  <CallCont>한양대학교 ERICA 솦트웨어학부 (학연산클러스터 5층)</CallCont>
+                  <CallCont>대표 : 누구게        개인정보보호책임자 : 노하준 hajoon0516@naver.com</CallCont>
                   <CallCont>사업자등록번호 : 229-81-37000   통신판매업신고 : 제 2005-02682호    
                       <a href="https://www.ftc.go.kr/www/bizCommList.do?key=232" style={{margin:"0 0 0 10px", borderBottom:"1px solid #a7a6a6", color: "#2b2b2b"}}>사업자 정보확인</a>
                   </CallCont>

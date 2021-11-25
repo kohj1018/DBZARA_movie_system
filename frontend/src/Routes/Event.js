@@ -32,6 +32,7 @@ const EventInner = styled.div`
   margin: 0 105px 0 105px;
   width: 1200px;
   height: 621.875px;
+  margin:auto;
 `;
 
 const EventTab = styled.div`
