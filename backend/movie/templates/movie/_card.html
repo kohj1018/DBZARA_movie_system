@@ -5,22 +5,41 @@
 <div class="rounded col-sm-2 model-card"><a href="#">
     </a>
     <div class="rounded bsblox-image-effect16"><a href="#">
-        {% if person.image %}
-            <img class="rounded img-fluid" src="{{ person.image.url }}" />
+        {% if type == 'movie' %}
+            {% if object.image %}
+                <img class="rounded img-fluid" src="{{ object.image.url }}" />
+            {% else %}
+                <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
+            {% endif %}
         {% else %}
-            <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
+            {% if object.image %}
+                <img class="rounded img-fluid" src="{{ object.image.url }}" />
+            {% else %}
+                <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
+            {% endif %}
         {% endif %}
 
+
         <div class="bsblox-caption">
-            <p>VIEW<strong>PROFILE</strong></p>
+            {% if type == 'movie' %}
+                <p>VIEW <strong>MOVIE</strong></p>
+            {% else %}
+                <p>VIEW <strong>PROFILE</strong></p>
+            {% endif %}
         </div>
         </a>
         <div class="bsblox-links">
             <a href="#"></a>
-            <a class="profile-link" href="#1">
+            {% if type == 'movie' %}
+                <a class="profile-link" href="{% url 'movie:movie-detail' object.pk %}">
+            {% elif type == 'actor' %}
+                <a class="profile-link" href="{% url 'movie:actor-detail' object.pk %}">
+            {% else %}
+                <a class="profile-link" href="{% url 'movie:director-detail' object.pk %}">
+            {% endif %}
                 <i class="fa fa-search fa fa-search"></i>
             </a>
         </div>
-        <div class="text-center model-card-title">{{ person.name }}</div>
+        <div class="text-center model-card-title">{{ object.name }}</div>
     </div>
 </div>

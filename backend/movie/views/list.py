@@ -16,12 +16,22 @@ class ActorListView(ListView):
     template_name = 'movie/person_list.html'
     paginate_by = 12
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ActorListView, self).get_context_data(**kwargs)
+        context['type'] = 'actor'
+        return context
+
 
 class DirectorListView(ListView):
     model = Director
     context_object_name = 'persons'
     template_name = 'movie/person_list.html'
     paginate_by = 12
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DirectorListView, self).get_context_data(**kwargs)
+        context['type'] = 'director'
+        return context
 
 
 class DistributorListView(ListView):
