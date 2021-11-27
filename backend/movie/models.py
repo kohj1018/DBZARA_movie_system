@@ -13,6 +13,10 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     birth_date = models.DateField(null=True)
 
+    @property
+    def filmography(self):
+        return self.movie_set.all()
+
 
 class Movie(models.Model):
     kobis_id = models.CharField(max_length=8)
@@ -33,7 +37,15 @@ class Movie(models.Model):
         return self.name
 
     @property
+    def image(self):
+        return self.images.get(category=1).image
+
+    @property
     def poster(self):
+        return self.images.get(category=1).image.url
+
+    @property
+    def backdrop(self):
         return self.images.get(category=2).image.url
 
 
@@ -64,10 +76,6 @@ class Actor(Person):
             return None
 
     image_tag.short_description = 'Image'
-
-    @property
-    def filmography(self):
-        return self.movie_set.all()
 
     def __str__(self):
         return self.name

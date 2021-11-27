@@ -12,6 +12,18 @@ class Benefit(models.Model):
     type = models.IntegerField(choices=BENEFIT_CHOICES)
     content = models.IntegerField()
 
+    def discount_price(self, price):
+        if self.type == 1:
+            return price - self.content
+        elif self.type == 2:
+            return price * (100 - self.content)
+        else:
+            return price
+
+    @property
+    def point(self):
+        return self.content + int(self.item.price / 20) if self.type == 3 else int(self.item.price / 20)
+
 
 class Event(models.Model):
     title = models.CharField(max_length=50)

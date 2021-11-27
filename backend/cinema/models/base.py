@@ -4,7 +4,9 @@ from datetime import datetime, timedelta
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
 
+from item.models import Order
 from exception.movie_exception import MovieExistException
+from exception.cinema_exception import SeatExistException
 
 
 class Cinema(models.Model):
@@ -56,6 +58,8 @@ class Theater(models.Model):
     materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'), related_name='+')
 
     def add_schedule(self, movie, schedule_time):
+        if movie.running_time is None:
+            movie.running_time = 0
         if Schedule.objects.filter(theater=self, datetime__range=(schedule_time, schedule_time + timedelta(minutes=movie.running_time + 30))).count() == 0:
             return Schedule.objects.create(
                 cinema=self.cinema,
@@ -102,7 +106,6 @@ class Reservation(PostgresPartitionedModel):
     schedule = models.BigIntegerField()
     order = models.BigIntegerField()
     datetime = models.DateTimeField(auto_now_add=True)
-    reservation_number = models.CharField(max_length=15)
     seat_column = models.IntegerField()
     seat_row = models.IntegerField()
     is_canceled = models.BooleanField(default=False)
@@ -114,3 +117,22 @@ class Reservation(PostgresPartitionedModel):
     @property
     def movie_datetime(self):
         return Schedule.objects.get(id=self.schedule).datetime
+
+    @property
+    def reservation_number(self):
+        return ''.join([chr(65+int(element)) for element in str(self.datetime.day).zfill(2)] + [chr(65+int(element)) for element in str(self.datetime.hour).zfill(2)] +
+                       [chr(65+int(element)) for element in str(self.datetime.minute).zfill(2)] + [chr(65+int(element)) for element in str(self.id).zfill(5)] +
+                       [chr(65+int(element)) for element in str(self.seat_column).zfill(2)] + [chr(65+int(element)) for element in str(self.seat_row).zfill(2)])
+
+    @classmethod
+    def create(cls, profile, schedule, item, coupon, non_coupon, column, row):
+        if cls.objects.filter(schedule=schedule, seat_column=column, seat_row=row).count() != 0:
+            raise SeatExistException
+
+        return cls.objects.create(
+            schedule=schedule,
+            order=Order.create(profile, item, coupon, non_coupon).id,
+            seat_column=column,
+            seat_row=row
+        )
+    
