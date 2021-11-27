@@ -13,6 +13,7 @@ class KobisAPI:
 
     def __init__(self):
         self.start_date = date(2018, 1, 1)
+        self.default_date = date(2015, 1, 1)
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
         self.tmdb = TMDBAPI()
@@ -28,7 +29,7 @@ class KobisAPI:
 
     def parse_schedule_data(self):
         elements = self.collect_daily_movie()
-        return [(Movie.objects.get(kobis_id=element['movieCd']), int(int(element['showCnt']) / 7)) for element in elements], self.start_date
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 12, int(element['audiCnt']) // 12) for element in elements], self.start_date
 
     def parse_movie_data(self):
         elements = self.collect_daily_movie()
@@ -39,7 +40,7 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'],
+                    'opening_date': element['openDt'] if element['openDt'] != '' else self.default_date,
                     'closing_date': self.start_date
                 }
             )
@@ -66,7 +67,11 @@ class KobisAPI:
 
     def get_movie_detail(self, movie, movie_id):
         data = self.get_movie_info(movie_id=movie_id)
-        movie.running_time = data['showTm']
+        try:
+            movie.running_time = data['showTm']
+        except TypeError as error:
+            print(error)
+            movie.running_time = 0
 
     def get_movie_credits(self, movie_id):
         data = self.get_movie_info(movie_id)
@@ -123,7 +128,7 @@ class TMDBAPI:
             'language': self.language,
             'append_to_response': 'video'
         }).json()
-        movie.running_time = data['runtime']
+        movie.running_time = data['runtime'] if data['runtime'] is not None else 0
         movie.tmdb_id = movie_id
         movie.imdb_id = data['imdb_id']
         movie.summary = data['overview']
