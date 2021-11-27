@@ -14,7 +14,3 @@ class MovieAPIView(APIView):
         query_set = Movie.objects.all()
         serializer = MovieSerializer(query_set, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-
