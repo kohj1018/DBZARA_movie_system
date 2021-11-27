@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Cinema, Theater, Seat, Schedule
-
+from .models import Cinema, Theater, Seat, Schedule, Reservation
 
 # Register your models here.
+
+
 @admin.register(Cinema)
 class CinemaAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'main_region', 'sub_region', 'address', 'grade']
@@ -22,3 +23,8 @@ class SeatAdmin(admin.ModelAdmin):
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ['id', 'cinema', 'theater', 'movie', 'datetime']
+
+
+@admin.register(Reservation)
+class Reservation(admin.ModelAdmin):
+    list_display = ['id', 'schedule', 'order', 'seat_column', 'seat_row']
