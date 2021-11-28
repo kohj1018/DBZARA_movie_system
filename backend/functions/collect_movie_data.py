@@ -40,7 +40,7 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'] if element['openDt'] != '' else self.default_date,
+                    'opening_date': element['openDt'] if type(element['openDt']) != str else self.default_date,
                     'closing_date': self.start_date
                 }
             )

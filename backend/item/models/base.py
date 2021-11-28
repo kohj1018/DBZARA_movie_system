@@ -88,6 +88,7 @@ class Order(PostgresPartitionedModel):
     @classmethod
     def create(cls, profile, item, coupon, non_coupon):
         price = item.price
+        # FIXME: 비회원 적립 대한 예외 처리
         point = 0
 
         # TODO: 동시 할인 적용 확인 필요

@@ -1,4 +1,4 @@
-from .api import MovieAPIView
+from .api import BoxOfficeMovieAPIListView, NotOpenMovieAPIListView, MovieAPIDetailView
 
 from .list import (
     MovieListView, ActorListView, DirectorListView, DistributorListView, GenreListView

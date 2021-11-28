@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
 
     # Custom Apps
     'movie.apps.MovieConfig',

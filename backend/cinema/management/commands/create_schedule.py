@@ -39,7 +39,8 @@ class Command(BaseCommand):
                         theater, schedule_time = choice(self.theaters), datetime(year=base_date.year, month=base_date.month, day=base_date.day) + timedelta(hours=hour) + timedelta(minutes=minute)
                         try:
                             schedule = theater.add_schedule(movie, schedule_time)
-                            while Reservation.objects.get(schedule=schedule.id).count() <= audience_counts // show_counts:
+                            counts = theater.counts_by_rank(audience_counts // show_counts)
+                            for _ in range(counts):
                                 profile = Profile.objects.get(user=choice(self.users))
 
                                 try:
@@ -55,10 +56,12 @@ class Command(BaseCommand):
                                 except SeatExistException:
                                     continue
 
+                            print(f'-- <Reservation> {schedule} {counts}개 생성 완료 --')
+
                         except MovieExistException:
                             except_count += 1
 
-                print(f'{base_date} 일: <<{movie}>> {show_counts - except_count}개 데이터 생성 완료')
+                print(f'-- <Schedule> {base_date} 일: [{movie}] {show_counts - except_count}개 데이터 생성 완료 --')
 
             kobis.start_date += timedelta(days=1)
 

@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime, timedelta
+from random import randint
 
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
@@ -70,6 +71,10 @@ class Theater(models.Model):
         else:
             raise MovieExistException
 
+    def counts_by_rank(self, count):
+        rate = (1 - (self.cinema.grade * 0.05))
+        return randint(int(count * (rate - 0.1)), int(count * rate))
+
     def __str__(self):
         return f'{self.cinema}: {self.name}'
 
@@ -96,6 +101,9 @@ class Schedule(PostgresPartitionedModel):
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.theater} - {self.movie}'
 
 
 class Reservation(PostgresPartitionedModel):
