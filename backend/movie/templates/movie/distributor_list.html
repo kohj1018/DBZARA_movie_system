@@ -1,0 +1,35 @@
+{% extends '_table.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block table-title %}
+    {{ title }}
+{% endblock table-title %}
+
+{% block headers %}
+    <tr>
+        <th>순번</th>
+        <th>이름</th>
+    </tr>
+{% endblock headers %}
+
+{% block bodies %}
+    {% for distributor in distributors %}
+        <tr>
+            <td>{{ distributor.id }}</td>
+            <td>{{ distributor.name }}</td>
+        </tr>
+    {% endfor %}
+{% endblock bodies %}
+
+<div class="container">
+    <div class="row" >
+        <div class="col"></div>
+        <div class="col">
+            {% include '_pagination.html' with page_obj=page_obj %}
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
