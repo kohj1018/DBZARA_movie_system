@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+from movie.models import Review
+
 
 class CrawlingMovieReview:
     BASE_URL = 'https://movie.naver.com'
