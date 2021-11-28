@@ -3,6 +3,12 @@ import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
 import { moviesApi } from "api";
 import { Link } from "react-router-dom";
+import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import TheatersIcon from '@material-ui/icons/Theaters';
 
 // TODO styled-component 컴포넌트화 만들기
 // TODO bgimg => img태그 변경
@@ -257,11 +263,58 @@ const Home = () => {
         <NoticeInfo>
           {/* nav 사용 */}
           <NoticeInfoList>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {/* {[1, 2, 3, 4, 5, 6].map((i) => ( */}
               <NoticeInfoItem>
-                <MoviePoster key={i}></MoviePoster>
+                <a href="http://www.yes24.com/Mall/Help/CS/Apply" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>1:1상담</span>
+                  <Icon>
+                    <HeadsetMicIcon fontSize="large" style={{height: "48px", width: "48px", margin:"10px 0 0"}}/>
+                  </Icon>
+                </a>
               </NoticeInfoItem>
-            ))}
+              <NoticeInfoItem>
+                <a href="https://movie.yes24.com/HelpDesk/Faq/" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>FAQ</span>
+                  <Icon>
+                    <QuestionAnswerIcon fontSize="large"style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
+                  </Icon>
+                </a>
+              </NoticeInfoItem>
+              <NoticeInfoItem>
+                <a href="https://movie.yes24.com/HelpDesk/DiscountInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>할인안내</span>
+                  <Icon>
+                    <MonetizationOnIcon fontSize="large" style={{height: "46px", width: "46px", margin:"10px 0 0"}}/>
+                  </Icon>
+                </a>
+              </NoticeInfoItem>
+              <NoticeInfoItem>
+                <a href="https://movie.yes24.com/HelpDesk/CouponInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>예매권안내</span>
+                  <Icon style={{margin:"auto"}}>
+                    <DraftsIcon fontSize="large" style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
+                  </Icon>
+                </a>
+              </NoticeInfoItem>
+              <NoticeInfoItem>
+                <a href="https://movie.yes24.com/HelpDesk/GuideInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>예매 안내</span>
+                  <Icon>
+                    <AccessTimeIcon fontSize="large" style={{height: "48px", width: "48px", margin:"10px 0 0"}}/>
+                  </Icon>
+                </a>
+              </NoticeInfoItem>
+              <NoticeInfoItem>
+                <a href="https://movie.yes24.com/HelpDesk/TheaterInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
+                  <span>극장안내</span>
+                  <Icon>
+                    <TheatersIcon fontSize="large" style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
+                  </Icon>
+                </a>
+              </NoticeInfoItem>
+                {/* <MoviePoster key={i}></MoviePoster> */}
+              {/* </NoticeInfoItem> */}
+            {/* ))} */}
           </NoticeInfoList>
         </NoticeInfo>
       </Notice>
@@ -527,18 +580,59 @@ const NoticeTitleItem = styled.p`
   font-size: 18px;
   color: black;
 `;
-const NoticeInfo = styled.section`
+const NoticeInfo = styled.div`
+  width: 1200px;
+  height: 74px;
+  border: 0px solid #2b2b2b;
   margin: 60px 0;
-  height: 75px;
+  /* height: 75px; */
 `;
 
 const NoticeInfoList = styled.ul`
+  height: 74px;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-
-const NoticeInfoItem = styled.li`
-  margin-right: 10px;
-  width: 170px;
+const Icon = styled.div`
+  height: 48px;
+  width: 48px;
+  display: block;
+`;
+const NoticeInfoItem = styled.div`
+  display: flex;
+  vertical-align: top;
+  border-left: 1px solid #e1e1e1;
+  text-align: center;
+  :nth-child(1){
+    border-left: none;
+    padding: 0 58px  0 0;
+    width: 107px;
+    height: 74px;
+  }
+  :nth-child(2){
+    padding: 0 60px 0 68px;
+    width: 177px;
+    height: 74px;
+  }
+  :nth-child(3){
+    padding: 0 62px 0 62px;
+    width: 177px;
+    height: 67px;
+  }
+  :nth-child(4){
+    padding: 0 58px 0 50px;
+    width: 171.56px;
+    height: 70px;
+  }
+  :nth-child(5){
+    padding: 0 53px 0 50px;
+    width: 157.34px;
+    height: 69px;
+  }
+  :nth-child(6){
+    padding: 0 0 0 58px;
+    width: 108.47px;
+    height: 72px;
+  }
 `;
