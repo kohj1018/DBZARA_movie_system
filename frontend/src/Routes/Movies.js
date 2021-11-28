@@ -10,6 +10,7 @@ const Movies = () => (
         {movieData.map(movie => {
           return (
             <MovieView 
+              id={movie.id}
               rank={movie.rank}
               src={movie.src}
               age={movie.age}

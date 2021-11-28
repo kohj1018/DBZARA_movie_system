@@ -1,5 +1,6 @@
 import Home from "Routes/Home";
 import Movies from "Routes/Movies";
+import MoviesInfo from "Routes/MoviesInfo";
 import Reservation from "Routes/Reservation";
 import Theater from "Routes/Theater";
 import Event from "Routes/Event";
@@ -22,8 +23,8 @@ export default [
   },
   // TODO Create Movies Detail page
   {
-    path: "/MoviesInfo/Index/:id",
-    component: Movies,
+    path: "/MoviesInfo/:id",
+    component: MoviesInfo,
   },
   {
     path: "/Reservation",
