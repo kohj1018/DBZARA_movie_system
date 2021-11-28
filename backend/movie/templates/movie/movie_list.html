@@ -1,0 +1,32 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col mb-3">
+                {% include '_search_bar.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
+        <div class="row">
+            {% for movie in movies %}
+                {% include 'movie/movie_card.html' with movie=movie %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" >
+            <div class="col"></div>
+            <div class="col">
+                {% include '_pagination.html' with page_obj=page_obj %}
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+{% endblock content %}

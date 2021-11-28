@@ -32,6 +32,7 @@ const UserInfo = (props) => {
       username: null,
     },
     error: null,
+    favoriteMovies: ["밤샘", "지옥", "종강", "원츄"],
   });
   async function userAPI() {
     try {

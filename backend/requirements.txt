@@ -4,12 +4,12 @@ django-postgres-extra
 python-dateutil~=2.8.0
 django-seed
 pillow
-psycopg2
-psycopg-binary
+psycopg2-binary
 requests~=2.26.0
 numpy
 django-storages[azure]
 django-allauth
-django-rest-framework
 pyjwt~=1.7.1
-djangorestframework-jwt
+djangorestframework-jwt~=1.11.0
+django-cors-headers
+djangorestframework~=3.12.4
