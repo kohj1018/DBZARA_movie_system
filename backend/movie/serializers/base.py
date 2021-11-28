@@ -42,6 +42,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class CharacterSerializer(serializers.ModelSerializer):
+    actor = ActorSerializer()
     class Meta:
-        character = Character
-        fields = ['movie', 'actor', 'character']
+        model = Character
+        fields = ['actor', 'character_name']

@@ -8,5 +8,8 @@ urlpatterns = [
     path('actors/', views.ActorListView.as_view(), name='actor-list'),
     path('directors/', views.DirectorListView.as_view(), name='director-list'),
 
-    path('api/movies/', views.MovieAPIView.as_view(), name='movie-list')
+    path('api/movieRank/', views.MovieRankAPIView.as_view(), name='movie-rank'),
+    path('api/movieInfo/', views.MovieDetailAPIView.as_view(), name='movie-info')
 ]
+
+
