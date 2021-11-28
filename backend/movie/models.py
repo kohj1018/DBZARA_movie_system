@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.db import models
 from django.utils.html import mark_safe
@@ -50,6 +50,11 @@ class Movie(models.Model):
     @property
     def backdrop(self):
         return self.images.get(category=2).image.url
+
+    @property
+    def schedule_by_movie(self):
+        base_date = date(2018, 1, 1)
+        return self.schedule_set.filter(datetime__range=[base_date, base_date + timedelta(days=3)])
 
     @property
     def reservation_rate(self):
@@ -125,7 +130,7 @@ class Distributor(models.Model):
         ordering = ['id']
 
     distributor_id = models.CharField(max_length=10)
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='movie/distributors', null=True)
 
     def image_tag(self):
