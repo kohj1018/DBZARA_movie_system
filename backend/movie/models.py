@@ -3,7 +3,9 @@ from datetime import date
 from django.db import models
 from django.utils.html import mark_safe
 
+from accounts.models import User
 from cinema.models import Reservation, Schedule
+from .validators import validate_score
 
 
 class Person(models.Model):
@@ -32,6 +34,7 @@ class Movie(models.Model):
     directors = models.ManyToManyField('movie.Director')
     distributors = models.ManyToManyField('movie.Distributor')
     images = models.ManyToManyField('movie.Image', related_name='+')
+    review = models.ManyToManyField('accounts.Profile', through='movie.Review', through_fields=('movie', 'profile'))
 
     def __str__(self):
         return self.name
@@ -151,3 +154,12 @@ class Image(models.Model):
             return None
 
     image_tag.short_description = 'Image'
+
+
+class Review(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
+    score = models.IntegerField(validators=[validate_score])
+    comment = models.TextField()
+    sympathy = models.IntegerField()
+    not_sympathy = models.IntegerField()
