@@ -27,8 +27,8 @@ class Item(models.Model):
     category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, verbose_name='소분류')
     name = models.CharField(max_length=30, verbose_name='상품명')
     image = models.ImageField(upload_to='item/%Y/%m', verbose_name='상품 사진')
-    price = models.IntegerField(verbose_name='판매가격')
-    is_sell = models.BooleanField(default=True, verbose_name='취소여부')
+    price = models.IntegerField(verbose_name='판매 가격')
+    is_sell = models.BooleanField(default=True, verbose_name='판매 여부')
 
 
 class Order(PostgresPartitionedModel):

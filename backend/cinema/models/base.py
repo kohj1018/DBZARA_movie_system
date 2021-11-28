@@ -96,3 +96,10 @@ class Reservation(PostgresPartitionedModel):
     seat_row = models.IntegerField()
     is_canceled = models.BooleanField(default=False)
 
+    @property
+    def movie(self):
+        return Schedule.objects.get(id=self.schedule).movie
+
+    @property
+    def movie_datetime(self):
+        return Schedule.objects.get(id=self.schedule).datetime

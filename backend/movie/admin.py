@@ -21,7 +21,6 @@ class CharacterAdmin(admin.ModelAdmin):
     list_display = ['id', 'movie', 'actor', 'character_name']
     search_fields = ['actor']
 
-
 @admin.register(Director)
 class DirectorAdmin(admin.ModelAdmin):
     list_display = ['id', 'image_tag', 'name', 'code']

@@ -11,10 +11,7 @@ class CinemaAdmin(admin.ModelAdmin):
 @admin.register(Theater)
 class TheaterAdmin(admin.ModelAdmin):
     list_display = ['id', 'cinema', 'seat', 'category', 'name', 'floor']
-<<<<<<< HEAD
-=======
     search_fields = ['cinema']
->>>>>>> upstream/develop
 
 
 @admin.register(Seat)
