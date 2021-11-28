@@ -1,9 +1,9 @@
-import datetime
+from datetime import date
 
 from django.db import models
 from django.utils.html import mark_safe
 
-from cinema.models import Reservation
+from cinema.models import Reservation, Schedule
 
 
 class Person(models.Model):
@@ -13,12 +13,16 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     birth_date = models.DateField(null=True)
 
+    @property
+    def filmography(self):
+        return self.movie_set.all()
+
 
 class Movie(models.Model):
     kobis_id = models.CharField(max_length=8)
     tmdb_id = models.CharField(max_length=10)
     imdb_id = models.CharField(max_length=10, null=True)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=80)
     running_time = models.IntegerField(null=True)
     summary = models.TextField()
     opening_date = models.DateField()
@@ -33,18 +37,46 @@ class Movie(models.Model):
         return self.name
 
     @property
+    def image(self):
+        return self.images.get(category=1).image
+
+    @property
     def poster(self):
+        return self.images.get(category=1).image.url
+
+    @property
+    def backdrop(self):
         return self.images.get(category=2).image.url
+
+    @property
+    def reservation_rate(self):
+        # FIXME: Just for Test
+        now_date = date(2018, 1, 1)
+        return round(Reservation.objects.filter(
+            schedule__in=Schedule.objects.filter(movie=self, datetime__month=now_date.month, datetime__day=now_date.day)
+        ).count() / Reservation.objects.filter(
+            schedule__in=Schedule.objects.filter(datetime__month=now_date.month, datetime__day=now_date.day)
+        ).count(), 3) * 100
 
 
 class Genre(models.Model):
+    class Meta:
+        ordering = ['id']
+
     name = models.CharField(max_length=30, unique=True)
+
+    @property
+    def count(self):
+        return self.movie_set.count()
 
     def __str__(self):
         return self.name
 
 
 class Actor(Person):
+    class Meta:
+        ordering = ['id']
+
     image = models.ImageField(upload_to='movie/actors', null=True)
 
     def image_tag(self):
@@ -69,6 +101,9 @@ class Character(models.Model):
 
 
 class Director(Person):
+    class Meta:
+        ordering = ['id']
+
     image = models.ImageField(upload_to='movie/directors', null=True)
 
     def image_tag(self):
@@ -83,6 +118,9 @@ class Director(Person):
 
 
 class Distributor(models.Model):
+    class Meta:
+        ordering = ['id']
+
     distributor_id = models.CharField(max_length=10)
     name = models.CharField(max_length=60)
     image = models.ImageField(upload_to='movie/distributors', null=True)

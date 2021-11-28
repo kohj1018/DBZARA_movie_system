@@ -8,7 +8,7 @@ from movie.models import (
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['name', 'image']
+        fields = ['name', 'poster', 'backdrop']
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -43,6 +43,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class CharacterSerializer(serializers.ModelSerializer):
     actor = ActorSerializer()
+
     class Meta:
         model = Character
-        fields = ['actor', 'character_name']
+        fields = ['movie', 'actor', 'character_name']

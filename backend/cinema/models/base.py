@@ -1,13 +1,19 @@
 from django.db import models
 from datetime import datetime, timedelta
+from random import randint
 
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
 
+from item.models import Order
 from exception.movie_exception import MovieExistException
+from exception.cinema_exception import SeatExistException
 
 
 class Cinema(models.Model):
+    class Meta:
+        ordering = ['id']
+
     RANK_CHOICES = [
         (1, 'S 등급'),
         (2, 'A 등급'),
@@ -28,6 +34,14 @@ class Cinema(models.Model):
     stocks = models.ManyToManyField('item.Item', through='cinema.Stock', through_fields=('cinema', 'item'), related_name='+')
     events = models.ManyToManyField('item.Event', blank=True, related_name='cinema')
 
+    @property
+    def two_dimension_count(self):
+        return self.theater_set.filter(category='2D').count()
+
+    @property
+    def three_dimension_count(self):
+        return self.theater_set.filter(category='3D').count()
+
     # TODO: Fix Function Name
     def on_time(self):
         return self.schedule_set.filter(datetime__gt=datetime.now())
@@ -45,6 +59,8 @@ class Theater(models.Model):
     materials = models.ManyToManyField('item.Item', through='cinema.Material', through_fields=('theater', 'item'), related_name='+')
 
     def add_schedule(self, movie, schedule_time):
+        if movie.running_time is None:
+            movie.running_time = 0
         if Schedule.objects.filter(theater=self, datetime__range=(schedule_time, schedule_time + timedelta(minutes=movie.running_time + 30))).count() == 0:
             return Schedule.objects.create(
                 cinema=self.cinema,
@@ -54,6 +70,10 @@ class Theater(models.Model):
             )
         else:
             raise MovieExistException
+
+    def counts_by_rank(self, count):
+        rate = (1 - (self.cinema.grade * 0.05))
+        return randint(int(count * (rate - 0.1)), int(count * rate))
 
     def __str__(self):
         return f'{self.cinema}: {self.name}'
@@ -82,6 +102,9 @@ class Schedule(PostgresPartitionedModel):
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
 
+    def __str__(self):
+        return f'{self.theater} - {self.movie}'
+
 
 class Reservation(PostgresPartitionedModel):
     class PartitioningMeta:
@@ -91,7 +114,6 @@ class Reservation(PostgresPartitionedModel):
     schedule = models.BigIntegerField()
     order = models.BigIntegerField()
     datetime = models.DateTimeField(auto_now_add=True)
-    reservation_number = models.CharField(max_length=15)
     seat_column = models.IntegerField()
     seat_row = models.IntegerField()
     is_canceled = models.BooleanField(default=False)
@@ -103,3 +125,22 @@ class Reservation(PostgresPartitionedModel):
     @property
     def movie_datetime(self):
         return Schedule.objects.get(id=self.schedule).datetime
+
+    @property
+    def reservation_number(self):
+        return ''.join([chr(65+int(element)) for element in str(self.datetime.day).zfill(2)] + [chr(65+int(element)) for element in str(self.datetime.hour).zfill(2)] +
+                       [chr(65+int(element)) for element in str(self.datetime.minute).zfill(2)] + [chr(65+int(element)) for element in str(self.id).zfill(5)] +
+                       [chr(65+int(element)) for element in str(self.seat_column).zfill(2)] + [chr(65+int(element)) for element in str(self.seat_row).zfill(2)])
+
+    @classmethod
+    def create(cls, profile, schedule, item, coupon, non_coupon, column, row):
+        if cls.objects.filter(schedule=schedule, seat_column=column, seat_row=row).count() != 0:
+            raise SeatExistException
+
+        return cls.objects.create(
+            schedule=schedule,
+            order=Order.create(profile, item, coupon, non_coupon).id,
+            seat_column=column,
+            seat_row=row
+        )
+    

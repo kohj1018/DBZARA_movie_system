@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'this command create user'
 
     def add_arguments(self, parser):
-        parser.add_argument('--days', default=1, type=int)
+        parser.add_argument('--days', default=0, type=int)
 
     def handle(self, *args, **options):
         days = options.get('days')

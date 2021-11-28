@@ -10,7 +10,7 @@
 
         <div class="row">
             {% for person in persons %}
-                {% include 'movie/_card.html' with person=person %}
+                {% include 'movie/_card.html' with object=person type=type %}
             {% endfor %}
         </div>
 

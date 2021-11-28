@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
 
     # Custom Apps
     'movie.apps.MovieConfig',
@@ -170,6 +171,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'movie_system', 'static'),
     os.path.join(BASE_DIR, 'accounts', 'static'),
     os.path.join(BASE_DIR, 'movie', 'static'),
+    os.path.join(BASE_DIR, 'cinema', 'static'),
 ]
 
 REST_FRAMEWORK = {
