@@ -3,7 +3,7 @@ from .list import (
 )
 
 from .api import (
-    CinemaAPIListView, CinemaAPIDetailView, ScheduleAPIView, ScheduleCinemaAPIView, ScheduleMovieAPIView
+    CinemaAPIListView, CinemaAPIDetailView, ScheduleCinemaAPIView, ScheduleMovieAPIView
 )
 
 cinemas = CinemaListView.as_view()
