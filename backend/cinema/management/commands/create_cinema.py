@@ -44,7 +44,7 @@ class Command(BaseCommand):
                     three_dimension_count = int(element['3D 상영관수'])
                     count = 1
                     while Theater.objects.filter(cinema=cinema, category='2D').count() < two_dimension_count:
-                        Theater.objects.get_or_create(
+                        theater, created = Theater.objects.get_or_create(
                             cinema=cinema,
                             seat=choice(self.two_dimension_seat),
                             defaults={
@@ -53,10 +53,11 @@ class Command(BaseCommand):
                                 'floor': randint(1, 9),
                             }
                         )
-                        count += 1
+                        if created:
+                            count += 1
 
                     while Theater.objects.filter(cinema=cinema, category='3D').count() < three_dimension_count:
-                        Theater.objects.get_or_create(
+                        theater, created = Theater.objects.get_or_create(
                             cinema=cinema,
                             seat=choice(self.two_dimension_seat),
                             defaults={
@@ -65,7 +66,8 @@ class Command(BaseCommand):
                                 'floor': randint(1, 9),
                             }
                         )
-                        count += 1
+                        if created:
+                            count += 1
                     print(f'--{cinema.name}의 상영관 2D: {two_dimension_count}개, 3D: {three_dimension_count}개 생성완료--')
 
     def create_seat(self):

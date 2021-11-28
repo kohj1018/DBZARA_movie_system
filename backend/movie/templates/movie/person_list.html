@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container-fluid mt-2 w-100">
+        <div class="row">
+            <div class="col mb-3">
+                {% include '_search_bar.html' %}
+            </div>
+        </div>
+
+        <div class="row">
+            {% for person in persons %}
+                {% include 'movie/_card.html' with person=person %}
+            {% endfor %}
+        </div>
+
+        <div class="row justify-content-md-center" >
+            <div class="col">
+                {% include '_pagination.html' with page_obj=page_obj %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

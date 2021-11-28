@@ -21,11 +21,7 @@ class GradeAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-=======
     list_display = ['id', 'cinema', 'user', 'belong']
->>>>>>> upstream/develop
-    pass
 
 
 @admin.register(Department)
