@@ -5,6 +5,7 @@ from django.utils.html import mark_safe
 
 from accounts.models import User
 from cinema.models import Reservation, Schedule
+from exception.movie_exception import ReviewException
 from .validators import validate_score
 
 
@@ -162,9 +163,23 @@ class Image(models.Model):
 
 
 class Review(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='+')
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
     score = models.IntegerField(validators=[validate_score])
     comment = models.TextField()
     sympathy = models.IntegerField()
     not_sympathy = models.IntegerField()
+
+    @classmethod
+    def create(cls, movie, profile, score, comment, sympathy, not_sympathy):
+        if cls.objects.filter(movie=movie, profile=profile).count() != 0:
+            raise ReviewException
+
+        return cls.objects.create(
+            movie=movie,
+            profile=profile,
+            score=score,
+            comment=comment,
+            sympathy=sympathy,
+            not_sympathy=not_sympathy
+        )

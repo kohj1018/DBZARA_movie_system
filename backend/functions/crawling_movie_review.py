@@ -1,7 +1,10 @@
 import requests
+from random import choice
 from bs4 import BeautifulSoup
 
+from accounts.models import Profile
 from movie.models import Review
+from exception.movie_exception import ReviewException
 
 
 class CrawlingMovieReview:
@@ -22,11 +25,11 @@ class CrawlingMovieReview:
                 return code
         return None
 
-    def get_comment_by_code(self, movie):
-        if movie is None:
+    def get_comment_by_code(self, code, movie):
+        if code is None:
             return
         response = requests.get(
-            self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(movie)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page=1')
+            self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(code)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page=1')
         if response.status_code == 200:
             html = response.text
             soup = BeautifulSoup(html, 'html.parser')
@@ -38,7 +41,7 @@ class CrawlingMovieReview:
 
         for page in range(1, total // 50):
             response = requests.get(
-                self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(movie)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page={str(page)}')
+                self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(code)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page={str(page)}')
             if response.status_code == 200:
                 html = response.text
                 soup = BeautifulSoup(html, 'html.parser')
@@ -56,12 +59,18 @@ class CrawlingMovieReview:
                         score = -1
                     finally:
                         if score != -1:
-                            Review.create(
-                                score=score,
-                                comment=comment,
-                                sympathy=sympathy,
-                                not_sympathy=not_sympathy
-                            )
+                            profile = choice(Profile.objects.all())
+                            try:
+                                Review.create(
+                                    movie=movie,
+                                    profile=profile,
+                                    score=score,
+                                    comment=comment,
+                                    sympathy=sympathy,
+                                    not_sympathy=not_sympathy
+                                )
+                            except ReviewException as e:
+                                print(e)
 
 
 if __name__ == '__main__':
