@@ -9,6 +9,13 @@ import {
 import movieData from "movieData";
 import MoviesInfoTab from "./MoviesInfoTab";
 
+// TODO
+// 1. Tab 전환방식 Router말고 useState써서 index바꾸는 방식으로 하기
+// 2. 사진 넘기는 버튼 띄울 수 있게 하기
+// 3. 예매분석 화살표버튼 접히는 기능 구현
+// 4. MovieInfo로 넘어올 때 MovieInfo/Index? 이렇게 주소 수정
+// 5. 필모그래피 페이지 구현 (배우나 감독 누르면 필모그래피 창 넘어가기)
+
 const MoviesInfo = ({ match }) => {
   const tabHandler = (path) => {
     this.props.history.push(path);
@@ -83,12 +90,18 @@ const MoviesInfo = ({ match }) => {
               </GraphDayAdn>
               <GraphDayAdnCum>
                 <GrTitle>누적 관객수</GrTitle>
-                <GraphChart></GraphChart>
+                {/* <GraphChart></GraphChart> */}
+                <GraphAdnCumView>
+                  <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt>
+                </GraphAdnCumView>
               </GraphDayAdnCum>
               <GraphDaySales>
                 <GrTitle>누적 매출액</GrTitle>
                 <GrsTxt>(단위:천원)</GrsTxt>
-                <GraphChart></GraphChart>
+                {/* <GraphChart></GraphChart> */}
+                <GraphSalesView>
+                  <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt>
+                </GraphSalesView>
               </GraphDaySales>
             </GraphCont>
             <GraphBtnArea>
@@ -500,12 +513,27 @@ const GraphDayAdnCum = styled.div`
   vertical-align: top;
 `;
 
-const GraphChart = styled.div`
-  position: relative;
-  margin: auto;
-  width: 190px;
-  height: 112px;
-  font-size: 0;
+// const GraphChart = styled.div`
+//   position: relative;
+//   margin: auto;
+//   width: 190px;
+//   height: 112px;
+//   font-size: 0;
+// `;
+
+const GraphAdnCumView = styled.div`
+  background: url(//movie-img.yes24.com/NYes24/new/img_graph01.png) no-repeat center 0;
+  padding-top: 36px;
+  height: 100px;
+  text-align: center;
+  color: #2b2b2b;
+`;
+const GraphSalesView = styled.div`
+  background: url(//movie-img.yes24.com/NYes24/new/img_graph03.png) no-repeat center 0;
+  padding-top: 36px;
+  height: 100px;
+  text-align: center;
+  color: #2b2b2b;
 `;
 
 // 

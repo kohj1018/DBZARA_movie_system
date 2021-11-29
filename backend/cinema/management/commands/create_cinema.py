@@ -21,14 +21,9 @@ class Command(BaseCommand):
             cinemas = json.load(json_file)['cinemas']
             for element in cinemas:
                 latitude, longitude = self.naver_api.get_geo_by_location(element['주소'])
-<<<<<<< HEAD
-                cinema, created = Cinema.objects.get_or_create(
-                    name=element['영화상영관명'],
-=======
                 cinema_name = element['영화상영관명'].replace('메가박스 ', '메가박스').replace('메가박스', '디비자라 ')
                 cinema, created = Cinema.objects.get_or_create(
                     name=cinema_name,
->>>>>>> upstream/develop
                     defaults={
                         'main_region': element['광역단체'],
                         'sub_region': element['기초단체'],
@@ -71,9 +66,9 @@ class Command(BaseCommand):
                     print(f'--{cinema.name}의 상영관 2D: {two_dimension_count}개, 3D: {three_dimension_count}개 생성완료--')
 
     def create_seat(self):
-        while Seat.objects.count() < 20:
-            columns = randint(7, 13)
-            rows = randint(10, 20)
+        while Seat.objects.count() < 30:
+            columns = randint(5, 13)
+            rows = randint(8, 20)
             Seat.objects.get_or_create(
                 columns=columns,
                 rows=rows

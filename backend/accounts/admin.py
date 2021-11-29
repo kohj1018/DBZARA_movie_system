@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from accounts.models import User, Employee, Department, Profile, Grade
+from accounts.models import User, Employee, Department, Profile, Grade, CouponHold, NonCouponHold
 # Register your models here.
 
 
@@ -22,8 +22,19 @@ class GradeAdmin(admin.ModelAdmin):
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['id', 'cinema', 'user', 'belong']
+    pass
 
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'full_department_name', 'department']
+
+
+@admin.register(CouponHold)
+class CouponHoldAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(NonCouponHold)
+class NonCouponHoldAdmin(admin.ModelAdmin):
+    pass

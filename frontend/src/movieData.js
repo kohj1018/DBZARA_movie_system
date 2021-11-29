@@ -57,7 +57,52 @@ export default [
             }
         ],
         video: "https://www.youtube.com/embed/BdkSkI61aGo",
-        videoThumb: "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501303_154637.jpg"
+        photos: ["https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501301_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501302_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501303_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501304_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501305_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501306_154637.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M00012501350_144908.jpg/dims/optimize",
+                "https://movie-simg.yes24.com/NYes24//MOVIE//M50/M13/M000125013_135158.jpg/dims/optimize"],
+        review: [
+            {
+                nickName: "msy628",
+                rates: "7",
+                comment: "우주 용병도 어쩔 수 없는 ptsd",
+                date: "2021.11.07"
+            },
+            {
+                nickName: "weborn",
+                rates: "10",
+                comment: "뭐 심하게 재미있지는 않고... 한 4번정도만 봐야겠어요... 아이맥스로..",
+                date: "2021.11.06"
+            },
+            {
+                nickName: "주먹대장",
+                rates: "8",
+                comment: "명불허전 입니다 꼭보세요",
+                date: "2021.11.04"
+            },
+            {
+                nickName: "sms0700",
+                rates: "8",
+                comment: "다음이 기대되는 작품입니다. 보는내내 시간가는줄도 모르고 있었어요.",
+                date: "2021.11.09"
+            },
+            {
+                nickName: "sssatang",
+                rates: "7",
+                comment: "신화와 동화를 절묘하게 히어로 물과 조합을 시켜 이야기를 풀어가는 모습이 재미있게 다가왔다.",
+                date: "2021.11.04"
+            },
+            {
+                nickName: "vpwdywmdihan",
+                rates: "7",
+                comment: "조조예매하고 못일어났다..",
+                date: "2021.11.04"
+            },
+        ]
     },
     {
         id: '1',

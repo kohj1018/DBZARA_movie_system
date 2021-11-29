@@ -2,7 +2,6 @@ import Default from "Routes/MoviesInfoDetail/Default";
 import People from "Routes/MoviesInfoDetail/People";
 import Videos from "Routes/MoviesInfoDetail/Videos";
 import Photos from "Routes/MoviesInfoDetail/Photos";
-import Articles from "Routes/MoviesInfoDetail/Articles";
 import Rates from "Routes/MoviesInfoDetail/Rates";
 
 export default [
@@ -29,12 +28,6 @@ export default [
     path: "/photos/:id",
     pathFetch: "/photos",
     component: Photos
-  },
-  {
-    tabName: "관련기사",
-    path: "/articl/:id",
-    pathFetch: "/articles",
-    component: Articles
   },
   {
     tabName: "평점",

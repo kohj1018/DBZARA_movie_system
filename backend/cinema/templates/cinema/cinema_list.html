@@ -1,0 +1,33 @@
+{% extends '_table.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block table-title %}
+    {{ title }}
+{% endblock table-title %}
+
+{% block headers %}
+    <tr>
+        <th>광역</th>
+        <th>지역</th>
+        <th>이름</th>
+        <th>2D</th>
+        <th>3D</th>
+        <th>주소</th>
+    </tr>
+{% endblock headers %}
+
+{% block bodies %}
+    {% for cinema in cinemas %}
+        <tr>
+            <td>{{ cinema.main_region }}</td>
+            <td>{{ cinema.sub_region }}</td>
+            <td>{{ cinema.name|truncatechars:"15" }}</td>
+            <td>{{ cinema.two_dimension_count }}</td>
+            <td>{{ cinema.three_dimension_count }}</td>
+            <td>{{ cinema.address|truncatechars:"50" }}</td>
+        </tr>
+    {% endfor %}
+{% endblock bodies %}
