@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 // TODO bgimg => img태그 변경
 
-const MoviePoster = ({ key, id, bgUrl, index }) => {
+const MoviePoster = ({ key, id, bgUrl, index }) => { //받아올 데이터
   return (
     <MovieImg>
       <MovieBgImg

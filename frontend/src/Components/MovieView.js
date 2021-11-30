@@ -2,44 +2,46 @@ import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
 
+// TODO movies poster로 연결하고
+
 // 연령별로 색깔 다르게 표시
 const ageColor = {
-  '전체' : {
-    "color" : "#60c9e3",
-    "border" : "1px solid #60c9e3",
-    "font-size" : "12px",
-    "line-height" : "1",
-    "padding" : "5px 25px 0px 0px"
+  전체: {
+    color: "#60c9e3",
+    border: "1px solid #60c9e3",
+    "font-size": "12px",
+    "line-height": "1",
+    padding: "5px 25px 0px 0px",
   },
-  '12' : {
-    "color" : "#6dd551",
-    "border" : "1px solid #6dd551",
-    "font-size" : "15px",
-    "line-height" : "0.7",
-    "padding" : "5px 0px 0px 0px"
+  12: {
+    color: "#6dd551",
+    border: "1px solid #6dd551",
+    "font-size": "15px",
+    "line-height": "0.7",
+    padding: "5px 0px 0px 0px",
   },
-  '15' : {
-    "color" : "#fbac30",
-    "border" : "1px solid #fbac30",
-    "font-size" : "15px",
-    "line-height" : "0.7",
-    "padding" : "5px 0px 0px 0px"
+  15: {
+    color: "#fbac30",
+    border: "1px solid #fbac30",
+    "font-size": "15px",
+    "line-height": "0.7",
+    padding: "5px 0px 0px 0px",
   },
-  '청불' : {
-    "color" : "#d30101",
-    "border" : "1px solid #d30101",
-    "font-size" : "12px",
-    "line-height" : "1",
-    "padding" : "5px 25px 0px 0px"
-  }
-}
+  청불: {
+    color: "#d30101",
+    border: "1px solid #d30101",
+    "font-size": "12px",
+    "line-height": "1",
+    padding: "5px 25px 0px 0px",
+  },
+};
 
-const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {  
+const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {
   return (
     <>
       <Container>
         <ImgThumb>
-          <Poster src={src} alt="poster"/>
+          <Poster src={src} alt="poster" />
           <BtnContainer>
             <OverBtn>
               <Btn>예매</Btn>
@@ -63,7 +65,6 @@ const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {
 };
 
 export default MoviePoster;
-
 
 const Container = styled(Box)`
   && {
@@ -94,9 +95,9 @@ const BtnContainer = styled.div`
   left: 0;
   right: 0;
   opacity: 0;
-  background-color: rgba(0, 0, 0, .7);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   &:hover {
     opacity: 1;
   }
@@ -117,7 +118,7 @@ const Btn = styled(Button)`
     height: 58px;
     font-size: 16px;
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, .5);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     &:hover {
       color: #ec6159;
       border: 1px solid #ec6159;
@@ -150,19 +151,19 @@ const MvTxt = styled.p`
 
 const Age = styled.span`
   margin-right: 5px;
-  color: ${props => props.ageAttr['color']};
-  border: ${props => props.ageAttr['border']};
-  padding: ${props => props.ageAttr['padding']};
+  color: ${(props) => props.ageAttr["color"]};
+  border: ${(props) => props.ageAttr["border"]};
+  padding: ${(props) => props.ageAttr["padding"]};
   display: inline-block;
   width: 25px;
   height: 22px;
-  line-height: ${props => props.ageAttr['line-height']};
+  line-height: ${(props) => props.ageAttr["line-height"]};
   text-align: center;
-  font-size: ${props => props.ageAttr['font-size']};
+  font-size: ${(props) => props.ageAttr["font-size"]};
 `;
 
 const TicketSales = styled.span`
-  margint-left: 0;
+  margin-left: 0;
   padding-left: 0;
   border: none;
   display: inline-block;

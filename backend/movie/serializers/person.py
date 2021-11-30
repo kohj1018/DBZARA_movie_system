@@ -8,7 +8,7 @@ class ActorDetailSerializer(ActorSerializer):
         fields = ['name', 'image', 'birth_date', 'filmography']
 
 
-class DirectorDeatilSerializer(DirectorSerializer):
+class DirectorDetailSerializer(DirectorSerializer):
     filmography = MovieSerializer(many=True)
 
     class Meta:

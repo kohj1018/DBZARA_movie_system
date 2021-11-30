@@ -14,3 +14,4 @@ djangorestframework-jwt~=1.11.0
 django-cors-headers
 djangorestframework~=3.12.4
 drf-yasg
+bs4

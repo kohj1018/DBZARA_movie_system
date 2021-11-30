@@ -6,6 +6,7 @@ from django.core.files import File
 
 from movie_system import secret_settings
 from movie.models import Movie, Actor, Director, Distributor, Image, Genre
+from functions.crawling_movie_review import CrawlingMovieReview
 
 
 class KobisAPI:
@@ -17,6 +18,7 @@ class KobisAPI:
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
         self.tmdb = TMDBAPI()
+        self.review = CrawlingMovieReview()
 
     def collect_daily_movie(self):
         path = '/boxoffice/searchDailyBoxOfficeList.json'
@@ -52,6 +54,9 @@ class KobisAPI:
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
                 else:
                     self.get_movie_detail(movie, element['movieCd'])
+                movie_code = self.review.get_movie_code_by_title(movie.name)
+                self.review.get_comment_by_code(code=movie_code, movie=movie)
+                # self.tmdb.get_movie_videos(movie_id, movie)
             else:
                 movie.closing_date = self.start_date
 
