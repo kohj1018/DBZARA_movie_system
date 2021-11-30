@@ -52,7 +52,6 @@ class KobisAPI:
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
                 else:
                     self.get_movie_detail(movie, element['movieCd'])
-                # self.tmdb.get_movie_videos(movie_id, movie)
             else:
                 movie.closing_date = self.start_date
 
@@ -113,20 +112,12 @@ class TMDBAPI:
         finally:
             return movie_id
 
-    def get_movie_videos(self, movie_id, movie):
-        path = f'/movie/{movie_id}/videos'
-        data = requests.get(TMDBAPI.BASE_URL + path, params={
-            'api_key': self.SECRET_KEY,
-            'language': self.language
-        }).json()
-        return data
-
     def get_movie_detail(self, movie_id, movie):
         path = f'/movie/{movie_id}'
         data = requests.get(TMDBAPI.BASE_URL + path, params={
             'api_key': self.SECRET_KEY,
             'language': self.language,
-            'append_to_response': 'video'
+            'append_to_response': 'videos,images'
         }).json()
         movie.running_time = data['runtime'] if data['runtime'] is not None else 0
         movie.tmdb_id = movie_id
@@ -178,6 +169,30 @@ class TMDBAPI:
                 distributor.image.save(f'{distributor_id}.jpg', File(open(f'{distributor_id}.jpg', 'rb')))
                 os.remove(f'{distributor_id}.jpg')
             movie.distributors.add(distributor)
+
+        videos = data['videos']
+        if videos['results']:
+            for element in videos['results']:
+                key = element['key']
+                site = element['site']
+                video_type = element['type']
+                movie.videos.create(
+                    key=key,
+                    site=site,
+                    category=video_type
+                )
+
+        images = data['images']
+        if images['posters']:
+            for idx, element in enumerate(images['posters']):
+                poster_image = File(open(f'{movie_id}-{idx}_other.jpg', 'wb'))
+                response = requests.get(TMDBAPI.IMAGE_URL + poster_path)
+                poster_image.write(response.content)
+                poster = Image.objects.create(category=3)
+                poster.image.save(f'{movie_id}-{idx}_other.jpg', File(open(f'{movie_id}-{idx}_other.jpg', 'rb')))
+                movie.images.add(poster)
+                os.remove(f'{movie_id}-{idx}_other.jpg')
+
         movie.save()
 
     def get_movie_credits(self, movie_id, movie, actor_dict, director_dict):

@@ -32,9 +32,7 @@ class Movie(models.Model):
     directors = models.ManyToManyField('movie.Director')
     distributors = models.ManyToManyField('movie.Distributor')
     images = models.ManyToManyField('movie.Image', related_name='+')
-
-    def __str__(self):
-        return self.name
+    videos = models.ManyToManyField('movie.Video', related_name='+')
 
     @property
     def image(self):
@@ -62,6 +60,9 @@ class Movie(models.Model):
         ).count() / Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(datetime__month=now_date.month, datetime__day=now_date.day)
         ).count(), 3) * 100
+
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
@@ -144,7 +145,8 @@ class Distributor(models.Model):
 class Image(models.Model):
     CATEGORY_CHOICES = [
         (1, 'Poster'),
-        (2, 'BackDrop')
+        (2, 'BackDrop'),
+        (3, 'Others'),
     ]
     category = models.IntegerField(choices=CATEGORY_CHOICES)
     image = models.ImageField(upload_to='movie/images', null=True)
@@ -156,3 +158,14 @@ class Image(models.Model):
             return None
 
     image_tag.short_description = 'Image'
+
+
+class Video(models.Model):
+    category = models.CharField(max_length=30)
+    site = models.CharField(max_length=20)
+    key = models.CharField(max_length=20)
+
+    @property
+    def video(self):
+        if self.site == 'YouTube':
+            return f'https://www.youtube.com/embed/{self.key}'
