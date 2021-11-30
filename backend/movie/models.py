@@ -13,7 +13,7 @@ class Person(models.Model):
     class Meta:
         abstract = True
     code = models.CharField(max_length=10)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=150)
     birth_date = models.DateField(null=True)
 
     @property
@@ -23,9 +23,10 @@ class Person(models.Model):
 
 class Movie(models.Model):
     kobis_id = models.CharField(max_length=8)
-    tmdb_id = models.CharField(max_length=10)
+    tmdb_id = models.CharField(max_length=10, null=True)
     imdb_id = models.CharField(max_length=10, null=True)
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=100)
+    watch_grade = models.CharField(max_length=20)
     running_time = models.IntegerField(null=True)
     summary = models.TextField()
     opening_date = models.DateField()
@@ -35,6 +36,7 @@ class Movie(models.Model):
     directors = models.ManyToManyField('movie.Director')
     distributors = models.ManyToManyField('movie.Distributor')
     images = models.ManyToManyField('movie.Image', related_name='+')
+    videos = models.ManyToManyField('movie.Video', related_name='+')
     review = models.ManyToManyField('accounts.Profile', through='movie.Review', through_fields=('movie', 'profile'))
 
     def __str__(self):
@@ -66,6 +68,9 @@ class Movie(models.Model):
         ).count() / Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(datetime__month=now_date.month, datetime__day=now_date.day)
         ).count(), 3) * 100
+
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
@@ -103,7 +108,7 @@ class Actor(Person):
 class Character(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
-    character_name = models.CharField(max_length=100)
+    character_name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.character_name
@@ -131,7 +136,7 @@ class Distributor(models.Model):
         ordering = ['id']
 
     distributor_id = models.CharField(max_length=10)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=150)
     image = models.ImageField(upload_to='movie/distributors', null=True)
 
     def image_tag(self):
@@ -148,7 +153,8 @@ class Distributor(models.Model):
 class Image(models.Model):
     CATEGORY_CHOICES = [
         (1, 'Poster'),
-        (2, 'BackDrop')
+        (2, 'BackDrop'),
+        (3, 'Others'),
     ]
     category = models.IntegerField(choices=CATEGORY_CHOICES)
     image = models.ImageField(upload_to='movie/images', null=True)
@@ -162,13 +168,26 @@ class Image(models.Model):
     image_tag.short_description = 'Image'
 
 
+class Video(models.Model):
+    category = models.CharField(max_length=30)
+    site = models.CharField(max_length=20)
+    key = models.CharField(max_length=20)
+
+    @property
+    def video(self):
+        if self.site == 'YouTube':
+            return f'https://www.youtube.com/embed/{self.key}'
+
+
 class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='+')
     profile = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
     score = models.IntegerField(validators=[validate_score])
     comment = models.TextField()
+    # FIXME: 추후 M:N 관계로 생성 하여 관리
     sympathy = models.IntegerField()
     not_sympathy = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
 
     @classmethod
     def create(cls, movie, profile, score, comment, sympathy, not_sympathy):

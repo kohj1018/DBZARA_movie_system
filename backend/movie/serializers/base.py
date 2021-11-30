@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from movie.models import (
-    Movie, Genre, Actor, Character, Director, Distributor, Image
+    Movie, Genre, Actor, Character, Director, Distributor, Image, Video, Review
 )
 
 
@@ -47,3 +47,17 @@ class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
         fields = ['movie', 'actor', 'character_name']
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ['category', 'video']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='profile.user.username')
+
+    class Meta:
+        model = Review
+        fields = ['name', 'comment', 'sympathy', 'not_sympathy', 'created']

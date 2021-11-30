@@ -19,7 +19,6 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -41,15 +40,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
 
-    path('api/token/', obtain_jwt_token),
-    path('api/token/verify/', verify_jwt_token),
-    path('api/token/refresh/', refresh_jwt_token),
 
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
 
     path('movie/', include('movie.urls')),
     path('cinema/', include('cinema.urls')),
+
+    path('api/v1/', include('movie_system.api'))
 ]
 
 if settings.DEBUG:
