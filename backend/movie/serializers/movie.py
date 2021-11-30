@@ -23,7 +23,6 @@ class ReservationChoiceMovieSerializer(ReservationBaseMovieSerializer):
 
 class MovieRankSerializer(MovieSerializer):
     # TODO: 예약 인원을 파악할 수 있는 모델 제작 이후 rank 추가
-    # rank = serializers.FloatField(source='get_reservation_percent')
     class Meta:
         model = Movie
         fields = ['id', 'name', 'images']
@@ -31,11 +30,38 @@ class MovieRankSerializer(MovieSerializer):
 
 class MovieDetailSerializer(MovieSerializer):
     genres = GenreSerializer(many=True)
-    characters = CharacterSerializer(source='character_set', many=True)
-    directors = DirectorSerializer(many=True)
     distributors = DistributorSerializer(many=True)
 
     class Meta:
         model = Movie
         fields = ['name', 'running_time', 'summary', 'opening_date',
-                  'genres', 'characters', 'directors', 'distributors', 'images']
+                  'genres', 'distributors', 'poster', 'backdrop']
+
+
+class MovieStaffSerializer(MovieSerializer):
+    characters = CharacterSerializer(source='character_set', many=True)
+    directors = DirectorSerializer(many=True)
+
+    class Meta(MovieSerializer.Meta):
+        fields = ['characters', 'directors']
+
+
+class MovieImageSerializer(MovieSerializer):
+    images = ImageSerializer(many=True)
+
+    class Meta(MovieSerializer.Meta):
+        fields = ['images']
+
+
+class MovieVideoSerializer(MovieSerializer):
+    videos = VideoSerializer(many=True)
+
+    class Meta(MovieSerializer.Meta):
+        fields = ['videos']
+
+
+class MovieReviewSerializer(MovieSerializer):
+    reviews = ReviewSerializer()
+
+    class Meta(MovieSerializer.Meta):
+        fields = ['reviews']
