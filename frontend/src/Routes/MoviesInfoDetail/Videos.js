@@ -2,26 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import movieData from "movieData";
 
-const Videos = ({ match }) => (
+const Videos = ({ id }) => (
   <>
     <Container>
       <Title>동영상</Title>
       <VodArea>
         {/* <Video
-          poster={movieData[match.params.id].videoThumb}
+          poster={movieData[id].videoThumb}
           controlslist="nodownload"
           preload="none"
-          src={movieData[match.params.id].video} disablepictureinpicture
+          src={movieData[id].video} disablepictureinpicture
         /> */}
         <Video 
-          src={movieData[match.params.id].video} 
+          src={movieData[id].video} 
           frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
         />
         {/* <BannerInfo>
           <PlayBtn/>
           <BannerTxt>
-            <VodTitle>{movieData[match.params.id].title}</VodTitle>
+            <VodTitle>{movieData[id].title}</VodTitle>
             <VodType>메인 예고편</VodType>
           </BannerTxt>
         </BannerInfo> */}

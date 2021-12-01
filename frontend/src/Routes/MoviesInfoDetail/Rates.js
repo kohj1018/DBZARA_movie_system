@@ -4,13 +4,13 @@ import movieData from "movieData";
 import RateEditBox from "Components/RateEditBox";
 import RateViewBox from "Components/RateViewBox";
 
-const Rates = ({ match }) => (
+const Rates = ({ id }) => (
   <>
     <Container>
       <Title>평점</Title>
       <CommentArea>
         <RateEditBox
-          rates={movieData[match.params.id].rates}
+          rates={movieData[id].rates}
         />
         <RatesArea>
           <RatesTypeMenuTxt>
@@ -19,13 +19,14 @@ const Rates = ({ match }) => (
           </RatesTypeMenuTxt>
         </RatesArea>
         <RatesView>
-          {movieData[match.params.id].review.map(review => {
+          {movieData[id].review.map(review => {
             return (
               <RateViewBox
-                nickName={review.nickName}
-                rates={review.rates}
-                comment={review.comment}
-                date={review.date}
+                // nickName={review.nickName}
+                // rates={review.rates}
+                // comment={review.comment}
+                // date={review.date}
+                {...review}
               />
             )
           })}

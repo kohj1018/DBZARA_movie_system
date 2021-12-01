@@ -10,13 +10,14 @@ const Movies = () => (
         {movieData.map(movie => {
           return (
             <MovieView 
-              id={movie.id}
-              rank={movie.rank}
-              src={movie.src}
-              age={movie.age}
-              title={movie.title}
-              ticketSales={movie.ticketSales}
-              rates={movie.rates}
+              // id={movie.id}
+              // rank={movie.rank}
+              // src={movie.src}
+              // age={movie.age}
+              // title={movie.title}
+              // ticketSales={movie.ticketSales}
+              // rates={movie.rates}
+              {...movie}
             />
           )
         })}

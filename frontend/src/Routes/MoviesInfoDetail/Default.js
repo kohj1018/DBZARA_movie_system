@@ -8,7 +8,7 @@ import RateViewBox from "Components/RateViewBox";
 import People from "./People";
 import { Translate } from "@material-ui/icons";
 
-const Default = ({ match }) => {
+const Default = ({ id }) => {
 
   // 사진 카로셀(슬라이더) 설정
   const settings = {
@@ -25,7 +25,7 @@ const Default = ({ match }) => {
   <>
     <Container>
       <Title>시놉시스</Title>
-        {movieData[match.params.id].sysTxt.map(txt => {
+        {movieData[id].sysTxt.map(txt => {
           return (
             <Txt>
             {txt}
@@ -33,16 +33,17 @@ const Default = ({ match }) => {
           )
         })}
       <Title>제작정보</Title>
-      <Txt>수입 : {movieData[match.params.id].studio}</Txt>
-      <Txt>배급 : {movieData[match.params.id].distributor}</Txt>
+      <Txt>수입 : {movieData[id].studio}</Txt>
+      <Txt>배급 : {movieData[id].distributor}</Txt>
       <Title>배우·제작진</Title>
       <ActArea>
-        {movieData[match.params.id].people.map(people => {
+        {movieData[id].people.map(people => {
           return (
             <PeopleView
-              name={people.name}
-              job={people.job}
-              src={people.src}
+              // name={people.name}
+              // job={people.job}
+              // src={people.src}
+              {...people}
             />
           )
         })}    
@@ -50,14 +51,14 @@ const Default = ({ match }) => {
       <Title>동영상</Title>
       <VodArea>
         <Video 
-          src={movieData[match.params.id].video} 
+          src={movieData[id].video} 
           frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
         />
       </VodArea>
       <Title>포토</Title>
       <StyledSlider {...settings}>
-        {movieData[match.params.id].photos.map((photo, index) => {
+        {movieData[id].photos.map((photo, index) => {
           return (
             <PhotoItem>
               <Photo
@@ -70,7 +71,7 @@ const Default = ({ match }) => {
       <Title>평점</Title>
       <CommentArea>
         <RateEditBox
-          rates={movieData[match.params.id].rates}
+          rates={movieData[id].rates}
         />
         <RatesArea>
           <RatesTypeMenuTxt>
@@ -79,13 +80,14 @@ const Default = ({ match }) => {
           </RatesTypeMenuTxt>
         </RatesArea>
         <RatesView>
-          {movieData[match.params.id].review.map(review => {
+          {movieData[id].review.map(review => {
             return (
               <RateViewBox
-                nickName={review.nickName}
-                rates={review.rates}
-                comment={review.comment}
-                date={review.date}
+                // nickName={review.nickName}
+                // rates={review.rates}
+                // comment={review.comment}
+                // date={review.date}
+                {...review}
               />
             )
           })}

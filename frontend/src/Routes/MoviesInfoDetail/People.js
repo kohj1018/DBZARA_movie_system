@@ -3,11 +3,11 @@ import styled from "styled-components";
 import PeopleView from "Components/PeopleView";
 import movieData from "movieData";
 
-const People = ({ match }) => {
-  const directorList = movieData[match.params.id].people.filter(people =>
+const People = ({ id }) => {
+  const directorList = movieData[id].people.filter(people =>
     people.job == "감독"
   );
-  const actorList = movieData[match.params.id].people.filter(people =>
+  const actorList = movieData[id].people.filter(people =>
     people.job == "배우"
   );
   return (
@@ -18,9 +18,10 @@ const People = ({ match }) => {
         {directorList.map(people => {
           return (
             <PeopleView
-              name={people.name}
-              job={people.job}
-              src={people.src}
+              // name={people.name}
+              // job={people.job}
+              // src={people.src}
+              {...people}
             />
           )
         })}
@@ -29,9 +30,10 @@ const People = ({ match }) => {
         {actorList.map(people => {
           return (
             <PeopleView
-              name={people.name}
-              job={people.job}
-              src={people.src}
+              // name={people.name}
+              // job={people.job}
+              // src={people.src}
+              {...people}
             />
           )
         })}

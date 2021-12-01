@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   BrowserRouter as Router,
@@ -8,19 +8,35 @@ import {
 } from "react-router-dom";
 import movieData from "movieData";
 import MoviesInfoTab from "./MoviesInfoTab";
+import Default from "./MoviesInfoDetail/Default";
+import People from "./MoviesInfoDetail/People";
+import Videos from "./MoviesInfoDetail/Videos";
+import Photos from "./MoviesInfoDetail/Photos";
+import Rates from "./MoviesInfoDetail/Rates";
 
 // TODO
 // 0. Api 사용
-// 1. Tab 전환방식 Router말고 useState써서 index바꾸는 방식으로 하기
-// 2. 사진 넘기는 버튼 띄울 수 있게 하기
-// 3. 예매분석 화살표버튼 접히는 기능 구현
+// 1. Tab 전환방식 Router말고 useState써서 index바꾸는 방식으로 하기        => 완료
+// 2. Tab바 밑에 active일때 검은색줄 유지되게 하기                          => 완료
+// 3. 필모그래피 페이지 구현 (배우나 감독 누르면 필모그래피 창 넘어가기)
 // 4. MovieInfo로 넘어올 때 MovieInfo/Index? 이렇게 주소 수정
-// 5. 필모그래피 페이지 구현 (배우나 감독 누르면 필모그래피 창 넘어가기)
+// 5. 예매분석 화살표버튼 접히는 기능 구현
+// 6. 사진 넘기는 버튼 띄울 수 있게 하기
 
 const MoviesInfo = ({ match }) => {
-  const tabHandler = (path) => {
-    this.props.history.push(path);
+  // Tab 변경 시 Tab 인덱스 확인하기 위한 useState
+  const [tabIndex, setTabIndex] = useState(0);
+
+  // Tab 바 active시 스타일 변경하기 위한 변수
+  const originTabStyle = {
+    borderBottom: "1px solid #b4b4b4",
+    color: "#b4b4b4"
   }
+  const activeTabStyle = {
+    borderBottom: "3px solid #2b2b2b",
+    color: "#2b2b2b"
+  }
+
   return (
     <>
       <Container>
@@ -110,7 +126,27 @@ const MoviesInfo = ({ match }) => {
             </GraphBtnArea>
           </GraphArea>
           <DetailTabArea>
-            <Router>
+            {/* 탭 전환 방식 개선 완료 */}
+            <TabMenu>
+              {["기본정보", "배우·제작진", "동영상", "포토", "평점"].map((tabName, idx) => {
+                return (
+                  <>
+                    {tabIndex === idx ? (
+                      <TabMenuItem style={activeTabStyle}>
+                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
+                      </TabMenuItem>
+                    ) : (
+                      <TabMenuItem style={originTabStyle}>
+                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
+                      </TabMenuItem>
+                    )}
+                  </>
+                )
+              })}
+            </TabMenu>
+            {/* 탭 콘텐츠 부분 */}
+            <TabContent tabIndex={tabIndex} id={match.params.id}/>
+            {/* <Router>
               <TabMenu>
                 {MoviesInfoTab.map(tab => {
                   return (
@@ -133,13 +169,43 @@ const MoviesInfo = ({ match }) => {
                   )
                 })}
               </Switch>
-            </Router>
+            </Router> */}
           </DetailTabArea>
         </DetailCont>
       </Container>
     </>
   )
 };
+
+const TabContent = (props) => {
+  switch(props.tabIndex) {
+    case 0:
+      return (
+        <Default id={props.id}/>
+      )
+      break;
+    case 1:
+      return (
+        <People id={props.id}/>
+      )
+      break;
+    case 2:
+      return (
+        <Videos id={props.id}/>
+      )
+      break;
+    case 3:
+      return (
+        <Photos id={props.id}/>
+      )
+      break;
+    case 4:
+      return (
+        <Rates id={props.id}/>
+      )
+      break;
+  }
+}
 
 export default MoviesInfo;
 
@@ -580,12 +646,12 @@ const TabMenuItem = styled.li`
   font-size: 0;
   list-style: none;
   :active {
-    padding-bottom: 0;
     border-bottom: 3px solid #2b2b2b;
+    color: #2b2b2b;
   }
 `;
 
-const TabItemLink = styled(Link)`
+const TabItemLink = styled.a`
   padding-bottom: 28px;
   display: inline-block;
   vertical-align: top;
@@ -594,7 +660,5 @@ const TabItemLink = styled(Link)`
   outline: none;
   text-align: center;
   list-style: none;
-  :active {
-    color: #2b2b2b;
-  }
+  cursor: pointer;
 `;

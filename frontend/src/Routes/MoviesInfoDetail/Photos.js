@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import movieData from "movieData";
 
-const Photos = ({ match }) => {
+const Photos = ({ id }) => {
   // 사진 카로셀(슬라이더) 설정
   const settings = {
     dots: false,
@@ -20,7 +20,7 @@ const Photos = ({ match }) => {
     <Container>
       <Title>포토</Title>
       <StyledSlider {...settings}>
-        {movieData[match.params.id].photos.map((photo, index) => {
+        {movieData[id].photos.map((photo, index) => {
           return (
             <PhotoItem>
               <Photo

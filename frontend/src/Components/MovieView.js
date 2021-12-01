@@ -47,7 +47,7 @@ const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
             <OverBtn>
               <Btn>예매</Btn>
               <Btn>
-                <SLink to={`MoviesInfo/${id}`}>정보</SLink>
+                <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
               </Btn>
             </OverBtn>
           </BtnContainer>

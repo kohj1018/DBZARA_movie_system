@@ -21,9 +21,9 @@ export default [
     path: "/Movies",
     component: Movies,
   },
-  // TODO Create Movies Detail page
+  // 이거 왜 MovieView.js의 Link to랑 같이 "/MoviesInfo/Index?mId=:id"로 바꾸면 안되지?
   {
-    path: "/MoviesInfo/:id",
+    path: "/MoviesInfo/Index/:id",
     component: MoviesInfo,
   },
   {
