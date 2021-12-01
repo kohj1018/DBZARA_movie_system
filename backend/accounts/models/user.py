@@ -64,32 +64,32 @@ class Profile(models.Model):
     def add_non_coupons(self, non_coupon):
         self.non_coupons.create(non_coupon)
 
-    def add_favorite_genre(self, *genre):
-        self.favorite_genres.add(*genre)
+    def add_favorite_genre(self, genre):
+        self.favorite_genres.add(genre)
 
     def delete_favorite_genre(self, genre):
         self.favorite_genres.remove(genre)
 
-    def add_favorite_actor(self, *actor):
-        self.favorite_actors.add(*actor)
+    def add_favorite_actor(self, actor):
+        self.favorite_actors.add(actor)
 
     def delete_favorite_actor(self, actor):
         self.favorite_actors.remove(actor)
 
-    def add_favorite_director(self, *director):
-        self.favorite_actors.add(*director)
+    def add_favorite_director(self, director):
+        self.favorite_directors.add(director)
 
     def delete_favorite_director(self, director):
-        self.favorite_actors.remove(director)
+        self.favorite_directors.remove(director)
 
-    def add_favorite_movie(self, *movie):
-        self.favorite_movies.add(*movie)
+    def add_favorite_movie(self, movie):
+        self.favorite_movies.add(movie)
 
     def delete_favorite_movie(self, movie):
         self.favorite_movies.remove(movie)
 
-    def add_favorite_distributor(self, *distributor):
-        self.favorite_distributors.add(*distributor)
+    def add_favorite_distributor(self, distributor):
+        self.favorite_distributors.add(distributor)
 
     def get_to_work(self):
         # FIXME: 오늘 날짜를 받을 수 있게 수정

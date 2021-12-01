@@ -12,19 +12,24 @@ class Command(BaseCommand):
     def __init__(self):
         super(Command, self).__init__()
         self.profiles = Profile.objects.all()
-        self.movies = Movie.objects.all()
-        self.actors = Actor.objects.all()
-        self.directors = Director.objects.all()
-        self.distributors = Distributor.objects.all()
-        self.genres = Genre.objects.all()
+        self.movies = list(Movie.objects.all())
+        self.actors = list(Actor.objects.all())
+        self.directors = list(Director.objects.all())
+        self.distributors = list(Distributor.objects.all())
+        self.genres = list(Genre.objects.all())
 
     def add_arguments(self, parser):
         pass
 
     def handle(self, *args, **options):
         for profile in self.profiles:
-            profile.add_favorite_actor(sample(self.actors, randint(0, 10)))
-            profile.add_favorite_genre(sample(self.genres, randint(0, 5)))
-            profile.add_favorite_movie(sample(self.movies, randint(0, 10)))
-            profile.add_favorite_director(sample(self.directors, randint(0, 3)))
-            profile.add_favorite_distributor(sample(self.distributors, randint(0, 3)))
+            for actor in sample(self.actors, randint(0, 10)):
+                profile.add_favorite_actor(actor)
+            for genre in sample(self.genres, randint(0, 5)):
+                profile.add_favorite_genre(genre)
+            for movie in sample(self.movies, randint(0, 10)):
+                profile.add_favorite_movie(movie)
+            for director in sample(self.directors, randint(0, 3)):
+                profile.add_favorite_director(director)
+            for distributor in sample(self.distributors, randint(0, 3)):
+                profile.add_favorite_distributor(distributor)
