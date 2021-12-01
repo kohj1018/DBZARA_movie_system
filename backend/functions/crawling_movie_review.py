@@ -1,7 +1,5 @@
-import random
-
 import requests
-from random import choice
+from random import choice, randint
 from bs4 import BeautifulSoup
 
 from accounts.models import Profile
@@ -41,7 +39,8 @@ class CrawlingMovieReview:
             else:
                 return None
 
-        for page in range(1, total // 500):
+        pages = randint(30, 50) if total > 500 else total // 10
+        for page in range(1, pages):
             response = requests.get(
                 self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(code)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page={str(page)}')
             if response.status_code == 200:

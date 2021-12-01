@@ -54,8 +54,8 @@ class KobisAPI:
                     actors, directors = self.get_movie_credits(element['movieCd'])
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
 
-                movie_code = self.review.get_movie_code_by_title(movie.name)
-                self.review.get_comment_by_code(code=movie_code, movie=movie)
+                # movie_code = self.review.get_movie_code_by_title(movie.name)
+                # self.review.get_comment_by_code(code=movie_code, movie=movie)
                 # self.tmdb.get_movie_videos(movie_id, movie)
             else:
                 movie.closing_date = self.start_date + timedelta(days=14)
