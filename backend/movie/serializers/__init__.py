@@ -3,7 +3,7 @@ from .base import (
     ImageSerializer, MovieSerializer, CharacterSerializer, ReviewSerializer
 )
 from .movie import (
-    BoxOfficeMovieSerializer, NotOpenMovieSerializer, MovieDetailSerializer, MovieStaffSerializer,
+    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer,
     MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer
 )
 from .person import ActorDetailSerializer, DirectorSerializer

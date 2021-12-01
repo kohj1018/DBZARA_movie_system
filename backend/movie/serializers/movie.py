@@ -1,14 +1,9 @@
 from movie.serializers.base import *
 
 
-class BoxOfficeMovieSerializer(MovieSerializer):
+class MovieListSerializer(MovieSerializer):
     class Meta(MovieSerializer.Meta):
         fields = ['name', 'poster', 'backdrop', 'reservation_rate']
-
-
-class NotOpenMovieSerializer(MovieSerializer):
-    class Meta(MovieSerializer.Meta):
-        fields = ['name', 'poster', 'backdrop', 'opening_date']
 
 
 class ReservationBaseMovieSerializer(MovieSerializer):
