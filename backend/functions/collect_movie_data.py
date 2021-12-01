@@ -43,22 +43,23 @@ class KobisAPI:
                     'running_time': 0,
                     'summary': '',
                     'opening_date': element['openDt'] if type(element['openDt']) != str else self.default_date,
-                    'closing_date': self.start_date
+                    'closing_date': self.start_date + timedelta(days=14)
                 }
             )
             if created:
+                self.get_movie_detail(movie, element['movieCd'])
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
                 if movie_id != 0:
                     self.tmdb.get_movie_detail(movie_id, movie)
                     actors, directors = self.get_movie_credits(element['movieCd'])
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
-                else:
-                    self.get_movie_detail(movie, element['movieCd'])
+
                 movie_code = self.review.get_movie_code_by_title(movie.name)
                 self.review.get_comment_by_code(code=movie_code, movie=movie)
                 # self.tmdb.get_movie_videos(movie_id, movie)
             else:
-                movie.closing_date = self.start_date
+                movie.closing_date = self.start_date + timedelta(days=14)
+                movie.save()
 
         self.start_date = self.start_date + timedelta(days=1)
 
@@ -72,10 +73,15 @@ class KobisAPI:
     def get_movie_detail(self, movie, movie_id):
         data = self.get_movie_info(movie_id=movie_id)
         try:
+            movie.watch_grade = data['audits'][0]['watchGradeNm']
             movie.running_time = data['showTm']
+
         except TypeError as error:
             print(error)
             movie.running_time = 0
+
+        finally:
+            movie.save()
 
     def get_movie_credits(self, movie_id):
         data = self.get_movie_info(movie_id)
