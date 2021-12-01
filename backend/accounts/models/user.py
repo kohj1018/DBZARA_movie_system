@@ -77,10 +77,10 @@ class Profile(models.Model):
         self.favorite_actors.remove(actor)
 
     def add_favorite_director(self, director):
-        self.favorite_actors.add(director)
+        self.favorite_directors.add(director)
 
     def delete_favorite_director(self, director):
-        self.favorite_actors.remove(director)
+        self.favorite_directors.remove(director)
 
     def add_favorite_movie(self, movie):
         self.favorite_movies.add(movie)
