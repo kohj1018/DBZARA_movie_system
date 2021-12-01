@@ -35,7 +35,7 @@ class MovieDetailSerializer(MovieSerializer):
     class Meta:
         model = Movie
         fields = ['name', 'running_time', 'summary', 'opening_date',
-                  'genres', 'distributors', 'poster', 'backdrop']
+                  'genres', 'distributors', 'poster', 'backdrop', 'watch_grade']
 
 
 class MovieStaffSerializer(MovieSerializer):
