@@ -61,7 +61,7 @@ class MovieVideoSerializer(MovieSerializer):
 
 
 class MovieReviewSerializer(MovieSerializer):
-    reviews = ReviewSerializer()
+    reviews = ReviewSerializer(source='review_set', many=True)
 
     class Meta(MovieSerializer.Meta):
         fields = ['reviews']
