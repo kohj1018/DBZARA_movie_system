@@ -56,7 +56,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField(source='profile.user.username')
+    name = serializers.ReadOnlyField(source='profile.anonymization_name')
 
     class Meta:
         model = Review

@@ -70,7 +70,9 @@ class CrawlingOfficeItem:
                 html = response.text
                 soup = BeautifulSoup(html, 'html.parser')
                 items = soup.find('ul', {'class': 'clearFix'}).find_all('li')
-                for item in items:
+                for idx, item in enumerate(items):
+                    if idx > 10:
+                        break
                     try:
                         name = item['data-item-title']
                         image = item.find('img', {'class': 'grid-img'})['src']
@@ -88,7 +90,12 @@ class CrawlingOfficeItem:
                                 'is_sell': False
                             })
 
-        with open('items.json', 'w', encoding='UTF-8-sig') as items_json:
+        with open('office.json', 'w', encoding='UTF-8-sig') as items_json:
             json.dump({
                 'items': self.items
             }, items_json, indent=4, ensure_ascii=False)
+
+
+if __name__ == '__main__':
+    main = CrawlingOfficeItem()
+    main.run()
