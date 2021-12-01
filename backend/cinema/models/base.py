@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from random import randint
 
 from psqlextra.types import PostgresPartitioningMethod
@@ -42,9 +42,18 @@ class Cinema(models.Model):
     def three_dimension_count(self):
         return self.theater_set.filter(category='3D').count()
 
-    # TODO: Fix Function Name
-    def on_time(self):
-        return self.schedule_set.filter(datetime__gt=datetime.now())
+    @property
+    def main_region_count(self):
+        return Cinema.objects.filter(main_region=self.main_region).count()
+
+    @property
+    def sub_region_count(self):
+        return Cinema.objects.filter(sub_region=self.sub_region).count()
+
+    @property
+    def schedule_by_cinema(self):
+        base_date = date(2018, 1, 1)
+        return Schedule.objects.filter(theater__cinema=self, datetime__range=[base_date, base_date + timedelta(days=3)])
 
     def __str__(self):
         return self.name

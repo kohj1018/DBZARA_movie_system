@@ -6,17 +6,19 @@ from django.core.files import File
 
 from movie_system import secret_settings
 from movie.models import Movie, Actor, Director, Distributor, Image, Genre
+from functions.crawling_movie_review import CrawlingMovieReview
 
 
 class KobisAPI:
     BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest'
 
     def __init__(self):
-        self.start_date = date(2018, 1, 1)
-        self.default_date = date(2015, 1, 1)
+        self.start_date = date(2020, 1, 1)
+        self.default_date = date(2020, 1, 1)
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
         self.tmdb = TMDBAPI()
+        self.review = CrawlingMovieReview()
 
     def collect_daily_movie(self):
         path = '/boxoffice/searchDailyBoxOfficeList.json'
@@ -40,21 +42,24 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'] if type(element['openDt']) != str else self.default_date,
-                    'closing_date': self.start_date
+                    'opening_date': element['openDt'] if element['openDt'] != ' ' else self.default_date,
+                    'closing_date': self.start_date + timedelta(days=14)
                 }
             )
             if created:
+                self.get_movie_detail(movie, element['movieCd'])
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
                 if movie_id != 0:
                     self.tmdb.get_movie_detail(movie_id, movie)
                     actors, directors = self.get_movie_credits(element['movieCd'])
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
-                else:
-                    self.get_movie_detail(movie, element['movieCd'])
+
+                # movie_code = self.review.get_movie_code_by_title(movie.name)
+                # self.review.get_comment_by_code(code=movie_code, movie=movie)
                 # self.tmdb.get_movie_videos(movie_id, movie)
             else:
-                movie.closing_date = self.start_date
+                movie.closing_date = self.start_date + timedelta(days=14)
+                movie.save()
 
         self.start_date = self.start_date + timedelta(days=1)
 
@@ -68,10 +73,19 @@ class KobisAPI:
     def get_movie_detail(self, movie, movie_id):
         data = self.get_movie_info(movie_id=movie_id)
         try:
+            movie.watch_grade = data['audits'][0]['watchGradeNm']
             movie.running_time = data['showTm']
+
         except TypeError as error:
             print(error)
             movie.running_time = 0
+
+        except IndexError as error:
+            print(error)
+            movie.watch_grade = '미정'
+
+        finally:
+            movie.save()
 
     def get_movie_credits(self, movie_id):
         data = self.get_movie_info(movie_id)
@@ -113,20 +127,12 @@ class TMDBAPI:
         finally:
             return movie_id
 
-    def get_movie_videos(self, movie_id, movie):
-        path = f'/movie/{movie_id}/videos'
-        data = requests.get(TMDBAPI.BASE_URL + path, params={
-            'api_key': self.SECRET_KEY,
-            'language': self.language
-        }).json()
-        return data
-
     def get_movie_detail(self, movie_id, movie):
         path = f'/movie/{movie_id}'
         data = requests.get(TMDBAPI.BASE_URL + path, params={
             'api_key': self.SECRET_KEY,
             'language': self.language,
-            'append_to_response': 'video'
+            'append_to_response': 'videos,images'
         }).json()
         movie.running_time = data['runtime'] if data['runtime'] is not None else 0
         movie.tmdb_id = movie_id
@@ -178,6 +184,30 @@ class TMDBAPI:
                 distributor.image.save(f'{distributor_id}.jpg', File(open(f'{distributor_id}.jpg', 'rb')))
                 os.remove(f'{distributor_id}.jpg')
             movie.distributors.add(distributor)
+
+        videos = data['videos']
+        if videos['results']:
+            for element in videos['results']:
+                key = element['key']
+                site = element['site']
+                video_type = element['type']
+                movie.videos.create(
+                    key=key,
+                    site=site,
+                    category=video_type
+                )
+
+        images = data['images']
+        if images['posters']:
+            for idx, element in enumerate(images['posters']):
+                poster_image = File(open(f'{movie_id}-{idx}_other.jpg', 'wb'))
+                response = requests.get(TMDBAPI.IMAGE_URL + poster_path)
+                poster_image.write(response.content)
+                poster = Image.objects.create(category=3)
+                poster.image.save(f'{movie_id}-{idx}_other.jpg', File(open(f'{movie_id}-{idx}_other.jpg', 'rb')))
+                movie.images.add(poster)
+                os.remove(f'{movie_id}-{idx}_other.jpg')
+
         movie.save()
 
     def get_movie_credits(self, movie_id, movie, actor_dict, director_dict):

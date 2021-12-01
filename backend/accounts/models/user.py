@@ -116,6 +116,10 @@ class Profile(models.Model):
             status=3
         )
 
+    @property
+    def anonymization_name(self):
+        return self.user.username[:3] + ("*" * len(self.user.username[3:]))
+
     def __str__(self):
         return self.user.full_name
 

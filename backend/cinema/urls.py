@@ -8,5 +8,6 @@ app_name = 'cinema'
 
 urlpatterns = [
     path('cinemas/', views.cinemas, name='cinema-list'),
-    path('schedule/', TemplateView.as_view(template_name='cinema/scheduler.html'), name='schedule')
+    path('schedule/', TemplateView.as_view(template_name='cinema/scheduler.html'), name='schedule'),
+
 ]
