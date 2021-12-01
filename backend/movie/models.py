@@ -13,7 +13,7 @@ class Person(models.Model):
     class Meta:
         abstract = True
     code = models.CharField(max_length=10)
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=250)
     birth_date = models.DateField(null=True)
 
     @property
@@ -26,7 +26,7 @@ class Movie(models.Model):
     tmdb_id = models.CharField(max_length=10, null=True)
     imdb_id = models.CharField(max_length=10, null=True)
     name = models.CharField(max_length=100)
-    watch_grade = models.CharField(max_length=20)
+    watch_grade = models.CharField(max_length=50)
     running_time = models.IntegerField(null=True)
     summary = models.TextField()
     opening_date = models.DateField()
@@ -60,8 +60,9 @@ class Movie(models.Model):
 
     @property
     def reservation_rate(self):
-        # FIXME: Just for Test
-        now_date = date(2018, 1, 1)
+        now_date = date.today()
+        return 0
+        # TODO: Fix After collect reservation dummy data
         return round(Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(movie=self, datetime__month=now_date.month, datetime__day=now_date.day)
         ).count() / Reservation.objects.filter(
@@ -107,7 +108,7 @@ class Actor(Person):
 class Character(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
-    character_name = models.CharField(max_length=150)
+    character_name = models.CharField(max_length=250)
 
     def __str__(self):
         return self.character_name
@@ -135,7 +136,7 @@ class Distributor(models.Model):
         ordering = ['id']
 
     distributor_id = models.CharField(max_length=10)
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=250)
     image = models.ImageField(upload_to='movie/distributors', null=True)
 
     def image_tag(self):

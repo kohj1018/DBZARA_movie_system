@@ -26,8 +26,7 @@ urlpatterns = [
     path('review/<int:pk>/', movie.review_detail_api_view, name='review-detail'),
 
     # movie api
-    path('movie/box-office/', movie.box_office_movie_api_view, name='movie-box-office'),
-    path('movie/not-open/', movie.not_open_movie_api_view, name='movie-not-open'),
+    path('movie/', movie.movie_list_api_view, name='movie-list'),
     path('movie/<int:pk>/', movie.movie_detail_api_view, name='movie-detail'),
     path('movie/<int:pk>/staff/', movie.movie_staff_api_view, name='movie-staff'),
     path('movie/<int:pk>/images/', movie.movie_image_api_view, name='movie-images'),
