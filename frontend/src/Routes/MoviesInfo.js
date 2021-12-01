@@ -10,6 +10,7 @@ import movieData from "movieData";
 import MoviesInfoTab from "./MoviesInfoTab";
 
 // TODO
+// 0. Api 사용
 // 1. Tab 전환방식 Router말고 useState써서 index바꾸는 방식으로 하기
 // 2. 사진 넘기는 버튼 띄울 수 있게 하기
 // 3. 예매분석 화살표버튼 접히는 기능 구현
