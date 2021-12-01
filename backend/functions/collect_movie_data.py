@@ -42,7 +42,7 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'] if element['openDt'] is not None else self.default_date,
+                    'opening_date': element['openDt'] if element['openDt'] != ' ' else self.default_date,
                     'closing_date': self.start_date + timedelta(days=14)
                 }
             )
@@ -79,6 +79,10 @@ class KobisAPI:
         except TypeError as error:
             print(error)
             movie.running_time = 0
+
+        except IndexError as error:
+            print(error)
+            movie.watch_grade = '미정'
 
         finally:
             movie.save()
