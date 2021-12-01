@@ -37,7 +37,6 @@ class Movie(models.Model):
     distributors = models.ManyToManyField('movie.Distributor')
     images = models.ManyToManyField('movie.Image', related_name='+')
     videos = models.ManyToManyField('movie.Video', related_name='+')
-    review = models.ManyToManyField('accounts.Profile', through='movie.Review', through_fields=('movie', 'profile'))
 
     def __str__(self):
         return self.name
@@ -180,11 +179,10 @@ class Video(models.Model):
 
 
 class Review(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='+')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     profile = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
     score = models.IntegerField(validators=[validate_score])
     comment = models.TextField()
-    # FIXME: 추후 M:N 관계로 생성 하여 관리
     sympathy = models.IntegerField()
     not_sympathy = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)

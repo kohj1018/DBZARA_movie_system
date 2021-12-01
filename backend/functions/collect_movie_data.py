@@ -13,8 +13,8 @@ class KobisAPI:
     BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest'
 
     def __init__(self):
-        self.start_date = date(2018, 1, 1)
-        self.default_date = date(2015, 1, 1)
+        self.start_date = date(2020, 1, 1)
+        self.default_date = date(2020, 1, 1)
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
         self.tmdb = TMDBAPI()
@@ -42,7 +42,7 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'] if type(element['openDt']) != str else self.default_date,
+                    'opening_date': element['openDt'] if element['openDt'] is not None else self.default_date,
                     'closing_date': self.start_date + timedelta(days=14)
                 }
             )

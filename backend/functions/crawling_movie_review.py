@@ -1,3 +1,5 @@
+import random
+
 import requests
 from random import choice
 from bs4 import BeautifulSoup
@@ -39,7 +41,7 @@ class CrawlingMovieReview:
             else:
                 return None
 
-        for page in range(1, total // 50):
+        for page in range(1, total // 500):
             response = requests.get(
                 self.BASE_URL + f'/movie/bi/mi/pointWriteFormList.naver?code={str(code)}&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page={str(page)}')
             if response.status_code == 200:
@@ -71,8 +73,3 @@ class CrawlingMovieReview:
                                 )
                             except ReviewException as e:
                                 print(e)
-
-
-if __name__ == '__main__':
-    main = CrawlingMovieReview()
-    movie = main.get_movie_code_by_title('ㄱㄴㄷㄹㅁㅂㅅ')
