@@ -34,6 +34,9 @@ class Command(BaseCommand):
             for movie, show_counts, audience_counts in schedule_data:
                 except_count = 0
                 while Schedule.objects.filter(movie=movie, datetime__day=base_date.day, datetime__month=base_date.month).count() <= show_counts:
+                    if show_counts == 0:
+                        show_counts = 1
+
                     for _ in range(show_counts):
                         hour = choice(list(range(1, 3)) + list(range(8, 24)))
                         minute = choice(list(range(0, 56, 5)))
