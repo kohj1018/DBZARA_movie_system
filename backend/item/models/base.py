@@ -43,25 +43,31 @@ class Item(models.Model):
         return self.name
 
     @classmethod
-    def get_ticket(cls, age, hour):
-        middle_category = '성인'
-        category_name = '일반'
-        # 티켓 구분
-        if age <= 20:
-            middle_category = '청소년'
+    def get_proper_ticket(cls, age, day, hour, name='2D'):
+        query_set = cls.objects.filter(category__main_category__name='티켓')
 
-        # 시간 구분
-        if 8 <= hour <= 9:
-            category_name = '조조'
-        elif 0 <= hour <= 3:
-            category_name = '심야'
+        if age <= 19:
+            query_set = query_set.filter(category__middle_category__name='청소년')
+        elif age >= 60:
+            query_set = query_set.filter(category__middle_category__name='우대')
+        else:
+            query_set = query_set.filter(category__middle_category__name='성인')
 
-        return cls.objects.get(
-            category__main_category__name='티켓',
-            category__middle_category__name=middle_category,
-            category__name=category_name,
-            name='2D TICKETS'
-        )
+        if day in [5, 6]:
+            sub_category_name = '주말_'
+        else:
+            sub_category_name = '주중_'
+
+        if 0 <= hour <= 3:
+            sub_category_name += '심야'
+        elif 8 <= hour <= 9:
+            sub_category_name += '조조'
+        elif 12 <= hour <= 13:
+            sub_category_name += '브런치'
+        else:
+            sub_category_name += '일반'
+
+        return query_set.get(category__name=sub_category_name, name=name)
 
 
 class Order(PostgresPartitionedModel):

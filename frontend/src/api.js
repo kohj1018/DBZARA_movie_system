@@ -25,11 +25,3 @@ export const moviesApi = {
       },
     }),
 };
-
-const DBZRapi = axios.create({
-  baseURL: null, //준수baseURl,
-});
-
-export const DBZREventApi = {
-  event: () => api.get(""),
-};

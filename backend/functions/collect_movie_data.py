@@ -31,7 +31,7 @@ class KobisAPI:
 
     def parse_schedule_data(self):
         elements = self.collect_daily_movie()
-        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 12, int(element['audiCnt']) // 12) for element in elements], self.start_date
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 100, int(element['audiCnt']) // 100) for element in elements], self.start_date
 
     def parse_movie_data(self):
         elements = self.collect_daily_movie()

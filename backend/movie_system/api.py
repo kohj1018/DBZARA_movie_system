@@ -16,8 +16,7 @@ urlpatterns = [
     # cinema api
     path('cinema/', cinema.cinema_api_list_view, name='cinema'),
     path('cinema/<int:pk>/', cinema.cinema_api_detail_view, name='cinema-detail'),
-    # TODO: Fix schedules api to get default movies & cinemas
-    # path('api/schedules/', views.ScheduleAPIView.as_view(), name='api-reservation-list-cinema'),
+    path('schedule/', cinema.schedule_api_view, name='schedule'),
     path('schedule/cinema/<int:pk>/', cinema.schedule_cinema_api_view, name='schedule-detail-cinema'),
     path('schedule/movie/<int:pk>/', cinema.schedule_movie_api_view, name='schedule-detail-movie'),
 
@@ -28,7 +27,8 @@ urlpatterns = [
     # movie api
     path('movie/', movie.movie_list_api_view, name='movie-list'),
     path('movie/<int:pk>/', movie.movie_detail_api_view, name='movie-detail'),
-    path('movie/<int:pk>/staff/', movie.movie_staff_api_view, name='movie-staff'),
+    path('movie/<int:pk>/info/', movie.movie_info_api_view, name='movie-info'),
+    path('movie/<int:pk>/people/', movie.movie_staff_api_view, name='movie-staff'),
     path('movie/<int:pk>/images/', movie.movie_image_api_view, name='movie-images'),
     path('movie/<int:pk>/videos/', movie.movie_video_api_view, name='movie-videos'),
     path('movie/<int:pk>/reviews/', movie.movie_review_api_view, name='movie-reviews'),

@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.html import mark_safe
 
 from accounts.models import User
+from item.models import Order
 from cinema.models import Reservation, Schedule
 from exception.movie_exception import ReviewException
 from .validators import validate_score
@@ -42,8 +43,15 @@ class Movie(models.Model):
         return self.name
 
     @property
-    def image(self):
-        return self.images.get(category=1).image
+    def grade(self):
+        if self.watch_grade == '전체관람가':
+            return 0
+        elif self.watch_grade == '12세이상관람가':
+            return 12
+        elif self.watch_grade == '15세이상관람가':
+            return 15
+        else:
+            return 19
 
     @property
     def poster(self):
@@ -55,7 +63,7 @@ class Movie(models.Model):
 
     @property
     def schedule_by_movie(self):
-        base_date = date(2018, 1, 1)
+        base_date = date(2020, 1, 1)
         return self.schedule_set.filter(datetime__range=[base_date, base_date + timedelta(days=3)])
 
     @property
@@ -201,3 +209,47 @@ class Review(models.Model):
             sympathy=sympathy,
             not_sympathy=not_sympathy
         )
+
+
+class MovieInfo(models.Model):
+    movie = models.OneToOneField('movie.Movie', on_delete=models.CASCADE)
+    age = models.JSONField(null=True)
+    gender = models.JSONField(null=True)
+    counts = models.IntegerField(default=0)
+    sales = models.IntegerField(default=0)
+    updated = models.DateField(auto_now=True)
+
+    @classmethod
+    def create(cls, movie):
+        return cls.objects.get_or_create(movie=movie)[0]
+
+    def update(self):
+        counts = 0
+        age = {
+            '10': 0,
+            '20': 0,
+            '30': 0,
+            '40': 0,
+            '50': 0
+        }
+        gender = {
+            'M': 0,
+            'F': 0
+        }
+        sales = 0
+        schedules = Schedule.objects.filter(movie=self.movie)
+        for schedule in schedules:
+            reservations = Reservation.objects.filter(schedule=schedule.id)
+            for reservation in reservations:
+                order = Order.objects.get(pk=reservation.order)
+                counts += 1
+                sales += order.price
+                gender[order.profile.user.gender] += 1
+                if 10 <= order.profile.user.age < 60:
+                    age[str(order.profile.user.age // 10 * 10)] += 1
+
+        self.age = age
+        self.gender = gender
+        self.counts = counts
+        self.sales = sales
+        self.save()
