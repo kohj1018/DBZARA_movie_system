@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
     def __init__(self):
         super().__init__()
-        self.theaters = Theater.objects.filter(category__name='2D')
+        self.theaters = Theater.objects.filter(category='2D')
         self.kobis = KobisAPI()
         self.naver_movie = CrawlingMovieAgeRate()
 
@@ -44,13 +44,9 @@ class Command(BaseCommand):
                             movie_code = self.naver_movie.get_movie_code_by_title(movie.name)
                             age_rate = self.naver_movie.get_age_rate_by_code(movie_code)
                             for idx, rate in enumerate(age_rate):
-                                if idx != 4:
-                                    min_age = date(schedule.datetime.year - (idx + 1) * 10, 1, 1)
-                                    max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
-                                    profile = choice(list(Profile.objects.filter(user__birth_date__range=[max_age, min_age])))
-                                else:
-                                    max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
-                                    profile = choice(list(Profile.objects.filter(user__birth_date__lt=max_age)))
+                                min_age = date(schedule.datetime.year - (idx + 1) * 10, 1, 1)
+                                max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
+                                profile = choice(list(Profile.objects.filter(user__birth_date__range=[max_age, min_age])))
                                 for _ in range(int(counts * rate)):
                                     try:
                                         Reservation.create(
@@ -65,7 +61,7 @@ class Command(BaseCommand):
                                     except SeatExistException:
                                         continue
 
-                                print(f'-- <Reservation> {schedule} {counts}개 생성 완료 --')
+                            print(f'-- <Reservation> {schedule} {counts}개 생성 완료 --')
 
                         except MovieExistException:
                             except_count += 1

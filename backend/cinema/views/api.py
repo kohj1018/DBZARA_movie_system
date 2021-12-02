@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
@@ -8,22 +9,16 @@ from cinema.models import Cinema, Theater, Seat
 from movie.models import Movie
 
 
-class CinemaAPIListView(APIView):
+class CinemaListAPIView(ListAPIView):
+    queryset = Cinema.objects.all()
     permission_classes = [AllowAny]
-
-    def get(self, request):
-        query_set = Cinema.objects.all()
-        serializer = CinemaSerializer(query_set, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer_class = CinemaSerializer
 
 
-class CinemaAPIDetailView(APIView):
+class CinemaDetailAPIView(RetrieveAPIView):
+    queryset = Cinema.objects.all()
     permission_classes = [AllowAny]
-
-    def get(self, request, pk):
-        query_set = Cinema.objects.get(pk=pk)
-        serializer = CinemaDetailSerializer(query_set)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer_class = CinemaDetailSerializer()
 
 
 # FIXME: TO GET MOVIES & CINEMAS DATA
@@ -36,20 +31,13 @@ class CinemaAPIDetailView(APIView):
 #         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ScheduleCinemaAPIView(APIView):
+class ScheduleCinemaAPIView(RetrieveAPIView):
+    queryset = Cinema.objects.all()
     permission_classes = [AllowAny]
-
-    def get(self, request, pk):
-        query_set = Cinema.objects.get(pk=pk)
-        serializer = ScheduleCinemaSerializer(query_set)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer_class = ScheduleCinemaSerializer
 
 
-class ScheduleMovieAPIView(APIView):
+class ScheduleMovieAPIView(RetrieveAPIView):
+    queryset = Movie.objects.all()
     permission_classes = [AllowAny]
-
-    def get(self, request, pk):
-        query_set = Movie.objects.get(pk=pk)
-        serializer = ScheduleMovieSerializer(query_set)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    serializer_class = ScheduleMovieSerializer
