@@ -16,8 +16,7 @@ urlpatterns = [
     # cinema api
     path('cinema/', cinema.cinema_api_list_view, name='cinema'),
     path('cinema/<int:pk>/', cinema.cinema_api_detail_view, name='cinema-detail'),
-    # TODO: Fix schedules api to get default movies & cinemas
-    # path('api/schedules/', views.ScheduleAPIView.as_view(), name='api-reservation-list-cinema'),
+    path('schedule/', cinema.schedule_api_view, name='schedule'),
     path('schedule/cinema/<int:pk>/', cinema.schedule_cinema_api_view, name='schedule-detail-cinema'),
     path('schedule/movie/<int:pk>/', cinema.schedule_movie_api_view, name='schedule-detail-movie'),
 
