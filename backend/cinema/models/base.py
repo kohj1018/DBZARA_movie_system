@@ -52,7 +52,7 @@ class Cinema(models.Model):
 
     @property
     def schedule_by_cinema(self):
-        base_date = date(2018, 1, 1)
+        base_date = date(2020, 1, 1)
         return Schedule.objects.filter(theater__cinema=self, datetime__range=[base_date, base_date + timedelta(days=3)])
 
     def __str__(self):

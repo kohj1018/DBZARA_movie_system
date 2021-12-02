@@ -14,14 +14,14 @@ class TheaterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Theater
-        fields = ['name', 'seat', 'category', 'floor']
+        fields = ['id', 'name', 'seat', 'category', 'floor']
 
 
 class CinemaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cinema
-        fields = ['main_region', 'sub_region', 'name']
+        fields = ['id', 'main_region', 'sub_region', 'name']
 
 
 class ScheduleSerializer(serializers.ModelSerializer):

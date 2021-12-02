@@ -55,7 +55,7 @@ class Movie(models.Model):
 
     @property
     def schedule_by_movie(self):
-        base_date = date(2018, 1, 1)
+        base_date = date(2020, 1, 1)
         return self.schedule_set.filter(datetime__range=[base_date, base_date + timedelta(days=3)])
 
     @property
