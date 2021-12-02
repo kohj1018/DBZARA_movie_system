@@ -42,7 +42,7 @@ const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
     <>
       <Container>
         <ImgThumb>
-          <Poster src={src} alt="poster" />
+          <Poster src={`https://dbzarastorage.blob.core.windows.net${src}`} alt="poster" />
           <BtnContainer>
             <OverBtn>
               <Btn>예매</Btn>
