@@ -5,7 +5,7 @@ import movieData from "movieData";
 
 const People = ({ id }) => {
   const directorList = movieData[id].people.filter(people =>
-    people.job == "감독"
+    people.job != "배우"
   );
   const actorList = movieData[id].people.filter(people =>
     people.job == "배우"

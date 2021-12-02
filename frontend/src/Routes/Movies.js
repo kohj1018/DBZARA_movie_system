@@ -1,57 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
 import movieData from "movieData";
-import { dbzaraApi } from "dbzaraapi";
+import { dbzaraApi } from "dbzaraApi";
 
 const Movies = () => {
-  const [ movies, setMovies ] = useState();
-  const getMovie = async () => {
-    const { data: {results: movies} } = await dbzaraApi.boxOffice();
-    setMovies(() => movies);
-    console.log(movies);
-  }
+  // const [movies, setMovies] = useState();
+  // const getMovie = async () => {
+  //   const { data: { results: movies } } = await dbzaraApi.boxOffice();
+  //   setMovies(() => movies);
+  // }
 
-  useEffect(() => {
-    getMovie();
-  }, [])
+  // useEffect(() => {
+  //   getMovie();
+  // }, [])
+  
+
   return (
-    movies ? (
-  <>
-    <Container>
-      <MovieRankCont>
-        {movies.map((movie, idx) => {
-          return (
-            <MovieView 
-              id={idx}
-              rank={movie.idx}
-              src={movie.poster}
-              age={12}
-              title={movie.name}
-              ticketSales={movie.reservation_rate}
-              rates={0}
-              // id={idx}
-              // rank={movie.idx}
-              // src={movie.poster}
-              // age={12}
-              // title={movie.name}
-              // ticketSales={movie.reservation_rate}
-              // rates={0}
-              // id={movie.id}
-              // rank={movie.rank}
-              // src={movie.src}
-              // age={movie.age}
-              // title={movie.title}
-              // ticketSales={movie.ticketSales}
-              // rates={movie.rates}
-              // {...movie}
-            />
-          )
-        })}
-      </MovieRankCont>
-    </Container>
-  </>
-    ) : <div></div>
+    <>
+      <Container>
+        <MovieRankCont>
+          {movieData.map(movie => {
+            return (
+              <MovieView 
+                // id={movie.id}
+                // rank={movie.rank}
+                // src={movie.src}
+                // age={movie.age}
+                // title={movie.title}
+                // ticketSales={movie.ticketSales}
+                // rates={movie.rates}
+                {...movie}
+              />
+            )
+          })}
+        </MovieRankCont>
+      </Container>
+    </>
 )};
 
 export default Movies;
