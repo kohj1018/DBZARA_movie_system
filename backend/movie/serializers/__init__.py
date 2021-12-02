@@ -4,6 +4,7 @@ from .base import (
 )
 from .movie import (
     MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer,
-    MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer
+    MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer,
+    ReservationChoiceMovieSerializer
 )
 from .person import ActorDetailSerializer, DirectorSerializer

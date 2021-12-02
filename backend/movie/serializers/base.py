@@ -8,7 +8,7 @@ from movie.models import (
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'name', 'poster', 'backdrop']
+        fields = ['id', 'grade', 'name', 'poster', 'backdrop']
 
 
 class GenreSerializer(serializers.ModelSerializer):

@@ -26,8 +26,9 @@ class CinemaSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     movie = serializers.ReadOnlyField(source='movie.name')
+    grade = serializers.ReadOnlyField(source='movie.grade')
     cinema = CinemaSerializer()
 
     class Meta:
         model = Schedule
-        fields = ['id', 'datetime', 'movie', 'cinema']
+        fields = ['id', 'datetime', 'movie', 'grade', 'cinema']

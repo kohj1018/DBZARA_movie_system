@@ -1,6 +1,6 @@
 from .api import (
     MovieListAPIView, MovieAPIDetailView, MovieStaffAPIView, MovieImageAPIView,
-    MovieVideoAPIView, MovieReviewAPIView, ReviewAPIView, ReviewDetailAPIView
+    MovieVideoAPIView, MovieReviewAPIView, ReviewAPIView, ReviewDetailAPIView,
 )
 
 from .list import (
