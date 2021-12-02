@@ -17,10 +17,8 @@ export const info = {
 };
 
 // 데이터 저장소
-export const UserContext = React.createContext();
-
-const UserInfo = (props) => {
-  let [userInfo, setUserInfo] = useState({
+export const UserContext = React.createContext({
+  userInfo: {
     username: "test",
     password: "1234",
     token: null,
@@ -32,8 +30,23 @@ const UserInfo = (props) => {
       username: null,
     },
     error: null,
-    favoriteMovies: ["밤샘", "지옥", "종강", "원츄"],
-  });
+  },
+  handleUserInfo: (name, password, tokenId) => {},
+  favoriteMovies: ["밤샘", "지옥", "종강", "원츄"],
+});
+
+const UserInfo = (props) => {
+  const [userInfo, setUserInfo] = useState();
+
+  const handleUserInfo = (name, password, tokenId) => {
+    setUserInfo((prevState) => ({
+      ...prevState,
+      username: name,
+      password: password,
+      token: tokenId
+    }));
+  }
+
   async function userAPI() {
     try {
       const {
@@ -61,7 +74,7 @@ const UserInfo = (props) => {
   }, []);
 
   return (
-    <UserContext.Provider value={userInfo}>
+    <UserContext.Provider value={{userInfo, handleUserInfo}}>
       {props.children}
     </UserContext.Provider>
   );

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
-import { moviesApi } from "api";
+import { dbzaraApi } from "dbzaraApi";
 import { Link } from "react-router-dom";
 import MovieVideo from "Components/MovieVideo";
 import EventPoster from "Components/EventPoster";
@@ -12,9 +12,6 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import DraftsIcon from "@material-ui/icons/Drafts";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import TheatersIcon from "@material-ui/icons/Theaters";
-
-import Reveal from "react-reveal/Reveal";
-
 import Carousel from "react-material-ui-carousel";
 
 // TODO styled-component 컴포넌트화 만들기
@@ -115,14 +112,14 @@ const RankingRight = styled(Gradient)`
 const Home = () => {
   // 박스 오피스 순위
   let [movies, setMovies] = useState({
-    popular: null,
+    boxOffice: null,
     error: null,
     loading: true,
   });
 
   // 개봉 예정작
-  let [upComingMovies, setUpComingMovies] = useState({
-    upComing: null,
+  let [notOpenMovies, setNotOpenMovies] = useState({
+    notOpen: null,
     error: null,
     loading: true,
   });
@@ -131,18 +128,15 @@ const Home = () => {
   async function feactApi() {
     try {
       const {
-        data: { results: popular },
-      } = await moviesApi.popular();
+        data: { results: boxOffice },
+      } = await dbzaraApi.boxOffice();
       // console.log(data);
-      setMovies((movies) => ({ ...movies, popular }));
-      // console.log(popular);
+      setMovies((movies) => ({ ...movies, boxOffice }));
 
       const {
-        data: { results: upComing },
-      } = await moviesApi.upComing();
-      setUpComingMovies((movies) => ({ ...movies, upComing }));
-
-      // setOnNav((onNav) => ({ ...onNav, data: movies.popular }));
+        data: { results: notOpen },
+      } = await dbzaraApi.notOpen();
+      setNotOpenMovies((movies) => ({ ...movies, notOpen }));
     } catch {
       setMovies((movies) => ({
         ...movies,
@@ -150,7 +144,7 @@ const Home = () => {
       }));
     } finally {
       setMovies((movies) => ({ ...movies, loading: false }));
-      setUpComingMovies((movies) => ({ ...movies, loading: false }));
+      setNotOpenMovies((movies) => ({ ...movies, loading: false }));
     }
   }
   // API연결 렌더링
@@ -175,10 +169,10 @@ const Home = () => {
 
   // 이전 poster
   const prevSlide = () => {
-    console.log("func전", focusIdx);
+    // console.log("func전", focusIdx);
     if (focusIdx === 9) setFocusIdx(0);
     else setFocusIdx(focusIdx + 1);
-    console.log("func후", focusIdx);
+    // console.log("func후", focusIdx);
   };
 
   // 이후 poster
@@ -213,7 +207,7 @@ const Home = () => {
 
   // Ranking초기화면;
   useEffect(() => {
-    navChange(movies.popular, 0);
+    navChange(movies.boxOffice, 0);
   }, [movies]);
 
   // Ranking 현재 위치
@@ -224,7 +218,7 @@ const Home = () => {
       {/* {console.log(window.scrollY)} */}
       {/* 메인 poster */}
       <Carousel>
-        <MainPoster movies={movies.popular} />
+        <MainPoster movies={movies.boxOffice} />
       </Carousel>
 
       {/* 랭킹 */}
@@ -233,28 +227,28 @@ const Home = () => {
           <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
           {/* //TODO component로 변경하기 */}
           <Rankingli
-            onClick={() => navChange(movies.popular, 0)}
+            onClick={() => navChange(movies.boxOffice, 0)}
             current="RANKING"
             state={onNav.navList}
           >
             예매순위
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(movies.popular, 1)}
+            onClick={() => navChange(movies.boxOffice, 1)}
             current="BOXOFFICE"
             state={onNav.navList}
           >
             박스오피스
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(upComingMovies.upComing, 2)}
+            onClick={() => navChange(notOpenMovies.notOpen, 2)}
             current="COMING"
             state={onNav.navList}
           >
             개봉예정작
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(movies.popular, 3)}
+            onClick={() => navChange(movies.boxOffice, 3)}
             current="FESTIVAL"
             state={onNav.navList}
           >
@@ -267,7 +261,7 @@ const Home = () => {
           <RankingContainer>
             {/* <Carousel> */}
             <RankingPosterUl current={focusIdx}>
-              {console.log("end", focusIdx)}
+              {/* {console.log("end", focusIdx)} */}
               {[1, 2, 3].map(() =>
                 onNav.data.slice(0, 10).map((movies, index) => {
                   return (
@@ -275,14 +269,14 @@ const Home = () => {
                       <MoviePoster
                         key={movies.id}
                         id={movies.id}
-                        bgUrl={movies.poster_path}
+                        bgUrl={movies.poster}
                         index={index + 1}
                       />
                       <MovieInfo>
-                        <MovieName>{movies.title}</MovieName>
+                        <MovieName>{movies.name}</MovieName>
                         <MovieVote>
                           {onNav.navList === "RANKING"
-                            ? `${movies.vote_average}점`
+                            ? `${movies.reservation_rate}점`
                             : ""}
                         </MovieVote>
                       </MovieInfo>
@@ -310,20 +304,35 @@ const Home = () => {
       </Ranking>
       {/* 베스트다운로드 */}
       <BestPlay>
-        <BestMainTitle>
-          <BestMainTilteP>BEST PLAY</BestMainTilteP>
-        </BestMainTitle>
+        <BestMainname>
+          <BestMainTilteP>Best Preview</BestMainTilteP>
+        </BestMainname>
         <BestMainBox>
           <BestMainContainer>
-            {movies.popular ? (
-              <MovieVideo id={movies.popular[0].id} />
+            {/* {movies.boxOffice ? (
+              <MovieVideo id={movies.boxOffice[0].id} />
             ) : (
               require("../assets/noPosterSmall.png").default
             )}
           </BestMainContainer>
           <BestSubContainer scrollY={position.BestPlay}>
-            {movies.popular &&
-              movies.popular.slice(1, 4).map((movies, idx) => {
+            {movies.boxOffice &&
+              movies.boxOffice.slice(1, 4).map((movies, idx) => {
+                return (
+                  <BestSubMovie>
+                    <MovieVideo key={idx} id={movies.id} />
+                  </BestSubMovie>
+                );
+              })} */}
+            {movies.boxOffice ? (
+              <MovieVideo id={movies.boxOffice[0].id} />
+            ) : (
+              require("../assets/noPosterSmall.png").default
+            )}
+          </BestMainContainer>
+          <BestSubContainer scrollY={position.BestPlay}>
+            {movies.boxOffice &&
+              movies.boxOffice.slice(1, 4).map((movies, idx) => {
                 return (
                   <BestSubMovie>
                     <MovieVideo key={idx} id={movies.id} />
@@ -335,29 +344,27 @@ const Home = () => {
       </BestPlay>
       {/* 이벤트 */}
       <Event>
-        <EventTitle>
-          <EventTitleSpan>Event</EventTitleSpan>
-        </EventTitle>
-        <Reveal effect="fadeInUp">
-          <EventImgs scrollY={position.Event}>
-            {[1, 2, 3].map((event, idx) => {
-              return (
-                <EventImg>
-                  <EventPoster />
-                </EventImg>
-              );
-            })}
-          </EventImgs>
-        </Reveal>
+        <Eventname>
+          <EventnameSpan>Event</EventnameSpan>
+        </Eventname>
+        <EventImgs scrollY={position.Event}>
+          {[1, 2, 3].map((event, idx) => {
+            return (
+              <EventImg>
+                <EventPoster />
+              </EventImg>
+            );
+          })}
+        </EventImgs>
       </Event>
       {/* 공지사항 */}
       <Notice>
         <NoticeInner>
-          <NoticeTitle>
+          <Noticename>
             {/* 링크 걸기 */}
-            <NoticeTitleContext>공지사항</NoticeTitleContext>
-            <NoticeTitleItem>[안내] 어쩌구 저쩌구...</NoticeTitleItem>
-          </NoticeTitle>
+            <NoticenameContext>공지사항</NoticenameContext>
+            <NoticenameItem>[안내] 어쩌구 저쩌구...</NoticenameItem>
+          </Noticename>
         </NoticeInner>
         <NoticeInfo>
           {/* nav 사용 */}
@@ -507,8 +514,8 @@ const MainPoster = ({ movies }) => {
               current={onMouse.item}
               src={
                 movies
-                  ? `https://image.tmdb.org/t/p/original${
-                      movies[onMouse.item].backdrop_path
+                  ? `https://dbzarastorage.blob.core.windows.net${
+                      movies[onMouse.item].backdrop
                     }`
                   : require("../assets/noPosterSmall.png").default
               }
@@ -520,9 +527,9 @@ const MainPoster = ({ movies }) => {
         <FirstContext>
           <FirstImgInfo>
             <FirstImgInfoDetail>▶</FirstImgInfoDetail>
-            <FirstImgName>{movies[onMouse.item].title}</FirstImgName>
+            <FirstImgName>{movies[onMouse.item].name}</FirstImgName>
             <FirstImgRank>
-              {`${onMouse.item + 1}위 ${movies[onMouse.item].vote_average}`}
+              {`${onMouse.item + 1}위 ${movies[onMouse.item].reservation_rate}`}
             </FirstImgRank>
           </FirstImgInfo>
           <FirstPosterContainer>
@@ -535,7 +542,7 @@ const MainPoster = ({ movies }) => {
                       <MoviePoster
                         key={movies.id}
                         id={movies.id}
-                        bgUrl={movies.poster_path}
+                        bgUrl={movies.poster}
                         index={index + 1}
                       />
                     </TurnYPoster>
@@ -742,7 +749,7 @@ const BestPlay = styled.section`
   flex-direction: column;
 `;
 
-const BestMainTitle = styled.section`
+const BestMainname = styled.section`
   min-width: 1200px;
   height: 40px;
 `;
@@ -791,11 +798,11 @@ const Event = styled.section`
   flex-direction: column;
 `;
 
-const EventTitle = styled.section`
+const Eventname = styled.section`
   height: 170px;
 `;
 
-const EventTitleSpan = styled.span`
+const EventnameSpan = styled.span`
   color: black;
   font-size: 45px;
   font-weight: 600;
@@ -832,17 +839,17 @@ const NoticeInner = styled.div`
   border-top: 2px solid #2b2b2b;
   border-bottom: 2px solid #2b2b2b; ;
 `;
-const NoticeTitle = styled.div`
+const Noticename = styled.div`
   height: 24px;
   display: flex;
   align-items: center;
 `;
-const NoticeTitleContext = styled.span`
+const NoticenameContext = styled.span`
   color: black;
   font-size: 25px;
   font-weight: 500;
 `;
-const NoticeTitleItem = styled.p`
+const NoticenameItem = styled.p`
   margin-left: 30px;
   font-size: 18px;
   color: black;

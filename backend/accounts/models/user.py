@@ -28,7 +28,10 @@ class User(AbstractUser):
 
     @property
     def age(self):
-        return datetime.now().year - self.birth_date.year + 1
+        try:
+            return datetime.now().year - self.birth_date.year + 1
+        except AttributeError:
+            return 20
 
     @property
     def is_social(self):
@@ -41,10 +44,10 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return self.full_name
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     grade = models.ForeignKey('accounts.Grade', on_delete=models.CASCADE, default=1)
-    # TODO: 이미지가 null 이면 pydenticon 등을 사용하여 이미지 반환 예정
     image = models.ImageField(upload_to='profile/%Y/%m/', null=True, blank=True)
     # orders = models.ManyToManyField('item.Item', through='item.Order', through_fields=('profile', 'item'))
     coupons = models.ManyToManyField('item.Coupon', through='accounts.CouponHold', through_fields=('profile', 'coupon'))
@@ -56,19 +59,9 @@ class Profile(models.Model):
     favorite_distributors = models.ManyToManyField('movie.Distributor', blank=True)
 
     def add_coupons(self, coupon):
-        # FIXME: 둘 중 어떤걸 사용해야될지 모르겠음.
-        # CouponHold.objects.create(
-        #     profile=self,
-        #     coupon=coupon
-        # )
         self.coupons.create(coupon)
 
     def add_non_coupons(self, non_coupon):
-        # FIXME: 둘 중 어떤걸 사용해야될지 모르겠음.
-        # NonCouponHold.objects.create(
-        #     profile=self,
-        #     non_coupon=non_coupon,
-        # )
         self.non_coupons.create(non_coupon)
 
     def add_favorite_genre(self, genre):
@@ -84,10 +77,10 @@ class Profile(models.Model):
         self.favorite_actors.remove(actor)
 
     def add_favorite_director(self, director):
-        self.favorite_actors.add(director)
+        self.favorite_directors.add(director)
 
     def delete_favorite_director(self, director):
-        self.favorite_actors.remove(director)
+        self.favorite_directors.remove(director)
 
     def add_favorite_movie(self, movie):
         self.favorite_movies.add(movie)
@@ -122,6 +115,13 @@ class Profile(models.Model):
             employee=self,
             status=3
         )
+
+    @property
+    def anonymization_name(self):
+        return self.user.username[:3] + ("*" * len(self.user.username[3:]))
+
+    def __str__(self):
+        return self.user.full_name
 
 
 class CouponHold(models.Model):
@@ -168,7 +168,6 @@ class Grade(models.Model):
     benefits = models.JSONField()
 
 
-# TODO: PostgreSQL Partitioning
 class Mileage(PostgresPartitionedModel):
     class PartitioningMeta:
         method = PostgresPartitioningMethod.RANGE
@@ -180,6 +179,7 @@ class Mileage(PostgresPartitionedModel):
             ]
 
     profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    order = models.BigIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField()
-    content = models.CharField(max_length=10)
+    content = models.CharField(max_length=30)

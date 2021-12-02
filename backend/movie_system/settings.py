@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
 
     # Custom Apps
     'movie.apps.MovieConfig',
@@ -138,7 +139,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -151,11 +152,6 @@ AUTH_USER_MODEL = 'accounts.User'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# STATICFILES_STORAGE = 'movie_system.storages.StaticAzureStorage'
-# DEFAULT_FILE_STORAGE = 'movie_system.storages.MediaAzureStorage'
-#
-# AZURE_ACCOUNT_NAME = 'dbzarastorage'
 
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
@@ -170,6 +166,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'movie_system', 'static'),
     os.path.join(BASE_DIR, 'accounts', 'static'),
     os.path.join(BASE_DIR, 'movie', 'static'),
+    os.path.join(BASE_DIR, 'cinema', 'static'),
 ]
 
 REST_FRAMEWORK = {
@@ -181,6 +178,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
 }
 
 JWT_AUTH = {

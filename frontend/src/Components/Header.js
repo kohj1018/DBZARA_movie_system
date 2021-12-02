@@ -48,7 +48,7 @@ export default withRouter(({ location: { pathname } }) => {
           >
             <SLink to="/Reservation">
               <LinkText>예매</LinkText>
-              {console.log(hover)}
+              {/* {console.log(hover)} */}
             </SLink>
             {["빠른예매", "예매안내", "예매권 등록"].map((item) => (
               <TabLi to="/" hover={hover}>

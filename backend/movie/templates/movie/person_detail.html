@@ -1,0 +1,30 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/profile-card.css' %}">
+{% endblock style %}
+
+{% block content %}
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-back"></div>
+            {% if person.image %}
+{#                <div class="profile-pic" style="background-image: url('{{ person.image.url }}');"/>#}
+                <img class="profile-pic" src="{{ person.image.url }}" />
+            {% else %}
+                <img class="profile-pic" src="{% static 'img/no-photo-available.jpeg' %}" />
+            {% endif %}
+            <h3 class="profile-name">{{ person.name }}</h3>
+
+            <h5 class="text-center">필모그래피</h5>
+            <div class="container">
+                <div class="row">
+                    {% for filmography in person.filmography %}
+                        {% include 'movie/_card.html' with object=filmography type='movie' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

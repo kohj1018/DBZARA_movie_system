@@ -1,0 +1,27 @@
+{% extends '_table.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block table-title %}
+    {{ title }}
+{% endblock table-title %}
+
+{% block headers %}
+    <tr>
+        <th>순번</th>
+        <th>이름</th>
+        <th>작품 갯수</th>
+    </tr>
+{% endblock headers %}
+
+{% block bodies %}
+    {% for genre in genres %}
+        <tr>
+            <td>{{ genre.id }}</td>
+            <td>{{ genre.name }}</td>
+            <td>{{ genre.count }}</td>
+        </tr>
+    {% endfor %}
+{% endblock bodies %}

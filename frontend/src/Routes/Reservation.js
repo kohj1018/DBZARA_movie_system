@@ -21,6 +21,7 @@ import "react-calendar/dist/Calendar.css";
 // api연결
 import { moviesApi } from "api";
 import { UserContext } from "context";
+import { dbzaraApi } from "dbzaraApi";
 
 // 예매page
 const Reservation = () => {
@@ -36,22 +37,40 @@ const Reservation = () => {
     setExpanded2(isExpanded ? panel : false);
   };
 
-  const [value, setValue] = React.useState(0);
+  const [areaValue, setAreaValue] = React.useState(0);
 
   // 상영관
   const tabStyled = tabStyles();
-  const handleChange3 = (event, newValue) => {
-    setValue(newValue);
+  const handleChange3 = (event, areaIdx) => {
+    setAreaValue(areaIdx);
   };
 
   // 달력
   const [toDay, onChange] = useState(new Date());
   // value console찍기
-  const test = (value) => {
+  const toDayValue = (value) => {
     console.log(value);
+    console.dir(value);
   };
 
   // API 연결
+  let [top10, setTop10] = useState({
+    top: null,
+    error: null,
+    loading: true,
+  });
+
+  let [restMovies, setRestMovies] = useState({
+    restMovie: null,
+    error: null,
+    loading: true,
+  });
+
+  let [cinemas, setCinema] = useState({
+    cinema: null,
+    error: null,
+    loading: true,
+  });
 
   let [movies, setMovies] = useState({
     popular: null,
@@ -60,36 +79,50 @@ const Reservation = () => {
   });
   async function feactApi() {
     try {
+      // TOP10
       const {
-        data: { results: popular1 },
-      } = await moviesApi.popularPage(1);
-      console.log("1", popular1);
+        data: { results: boxOffice },
+      } = await dbzaraApi.boxOffice();
+      setTop10((movies) => ({ ...movies, top: boxOffice.slice(0, 10) }));
+      // console.log("boxOffice", boxOffice.slice(0, 10));
+
+      // RestMovies
       const {
         data: { results: popular2 },
       } = await moviesApi.popularPage(2);
-      console.log("2", popular2);
+      // console.log("2", popular2);
       const {
         data: { results: popular3 },
       } = await moviesApi.popularPage(3);
       const {
         data: { results: popular4 },
       } = await moviesApi.popularPage(4);
+      const data = [...popular2, ...popular3, ...popular4];
+      setRestMovies((movies) => ({ ...movies, restMovie: data }));
 
-      const data = [...popular1, ...popular2, ...popular3, ...popular4];
-      // console.log("tmp", data);
-
-      // const {
-      //   data: { results: popular },
-      // } = await moviesApi.popular();
-
-      setMovies((movies) => ({ ...movies, popular: data }));
+      // cinema
+      const {
+        data: { results: cinema },
+      } = await dbzaraApi.cinema();
+      setCinema((cinemas) => ({ ...cinemas, cinema }));
+      console.log(cinemas);
     } catch {
-      setMovies((movies) => ({
+      setTop10((movies) => ({
         ...movies,
         error: "영화 정보를 찾을 수 없습니다!",
       }));
+      setRestMovies((movies) => ({
+        ...movies,
+        error: "영화 정보를 찾을 수 없습니다!",
+      }));
+      setCinema((cinema) => ({
+        ...cinema,
+        error: "상영관 정보를 찾을 수 없습니다!",
+      }));
     } finally {
-      setMovies((movies) => ({ ...movies, loading: false }));
+      setTop10((movies) => ({ ...movies, loading: false }));
+      setRestMovies((movies) => ({ ...movies, loading: false }));
+      setCinema((cinema) => ({ ...cinema, loading: false }));
     }
   }
   // API연결 렌더링
@@ -110,7 +143,7 @@ const Reservation = () => {
     theater: null,
   });
   const [dayChoice, onDayChoice] = useState({
-    choice: true,
+    choice: false,
     day: null,
   });
 
@@ -123,6 +156,8 @@ const Reservation = () => {
     "경남/울산",
     "강원/제주",
   ];
+
+  const areaCinema = [];
 
   return (
     <>
@@ -153,8 +188,8 @@ const Reservation = () => {
                     <AccordionDetails>
                       {/* {console.log(movies.popular)} */}
                       <MovieUl>
-                        {movies.popular &&
-                          movies.popular.slice(0, 10).map((movie, idx) => (
+                        {top10.top &&
+                          top10.top.map((movie, idx) => (
                             <MovieLi
                               key={idx}
                               onClick={() =>
@@ -167,8 +202,15 @@ const Reservation = () => {
                               choice={movie}
                               current={moviesChoice.movie}
                             >
-                              {idx + 1} {movie.adult ? null : ` [성인관람] `}
-                              {movie.title}
+                              <p>{idx + 1}</p>
+                              {movie.age ? (
+                                <Age ageAttr={ageColor[movie.age]}>
+                                  {movie.age}
+                                </Age>
+                              ) : (
+                                <Age ageAttr={ageColor[12]}>12</Age>
+                              )}
+                              <p>{movie.name}</p>
                             </MovieLi>
                           ))}
                       </MovieUl>
@@ -188,8 +230,8 @@ const Reservation = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <MovieUl>
-                        {movies.popular &&
-                          movies.popular.slice(10, 50).map((movie, idx) => {
+                        {restMovies.restMovie &&
+                          restMovies.restMovie.slice(10).map((movie, idx) => {
                             return (
                               <MovieLi
                                 key={idx}
@@ -203,7 +245,14 @@ const Reservation = () => {
                                 choice={movie}
                                 current={moviesChoice.movie}
                               >
-                                {movie.adult ? `성인` : null} {movie.title}
+                                {movie.age ? (
+                                  <Age ageAttr={ageColor[movie.age]}>
+                                    {movie.age}
+                                  </Age>
+                                ) : (
+                                  <Age ageAttr={ageColor[12]}>12</Age>
+                                )}
+                                <p>{movie.title}</p>
                               </MovieLi>
                             );
                           })}
@@ -274,7 +323,7 @@ const Reservation = () => {
                   <Tabs
                     orientation="vertical"
                     variant="scrollable"
-                    value={value}
+                    value={areaValue}
                     onChange={handleChange3}
                     aria-label="Vertical tabs example"
                     className={tabStyled.tabs}
@@ -291,14 +340,17 @@ const Reservation = () => {
                       );
                     })}
                   </Tabs>
+                  {/* 지역상영관 정보 */}
                   {area.map((e, idx) => (
                     <TabPanel
-                      value={value}
+                      value={areaValue}
                       index={idx}
                       className={tabStyled.tabpanel}
                     >
-                      {["가", "나", "다", "라", "마", "바", "사"].map(
-                        (theater, idx) => (
+                      {/* //TODO e == cinemas.cinema.main_region.slice(0,2) */}
+                      {idx}
+                      {cinemas.cinema &&
+                        cinemas.cinema.slice(0, 10).map((theater, idx) => (
                           <MovieLi
                             key={idx}
                             onClick={() =>
@@ -311,11 +363,9 @@ const Reservation = () => {
                             choice={theater}
                             current={theaterChoice.theater}
                           >
-                            test {theater}test {theater}test {theater}test
-                            {theater}
+                            {theater.name}
                           </MovieLi>
-                        )
-                      )}
+                        ))}
                     </TabPanel>
                   ))}
                 </div>
@@ -325,10 +375,17 @@ const Reservation = () => {
                 <div>
                   <CalenderBox
                     onChange={onChange}
-                    onClick={test(toDay)}
+                    onClickDay={(toDay) =>
+                      onDayChoice((data) => ({
+                        ...data,
+                        choice: true,
+                        day: toDay,
+                      }))
+                    }
                     value={toDay}
                     // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
                   />
+                  {/* {console.log(dayChoice)} */}
                   <Explanation>
                     <p>
                       영화, 극장, 관람일을 선택하시면 시간 선택이 아래쪽에
@@ -341,44 +398,47 @@ const Reservation = () => {
             {moviesChoice.choice &&
               theaterChoice.choice &&
               dayChoice.choice && <TheaterDetail>상영관 정보</TheaterDetail>}
-            <MoviesDetail>
-              <MoviesInfo>
-                <div />
-                <div>
-                  <div>movie.title</div>
-                  <div>영화관정보</div>
-                  <div>티켓시간 / 상영관</div>
-                  <div>좌석 정보</div>
-                </div>
-              </MoviesInfo>
-              <TicketInfo>
-                <p>
-                  <span>성인(2)</span>
-                  <span>26,000원</span>
-                </p>
-                <p>
-                  <span>청소년(2)</span>
-                  <span>26,000원</span>
-                </p>
-                <p>
-                  <span>우대(2)</span>
-                  <span>26,000원</span>
-                </p>
-                <p>
-                  <span>예매수수료(2)</span>
-                  <span>26,000원</span>
-                </p>
-                <p>
-                  <span>할인금액</span>
-                  <span>(-) 1000원</span>
-                </p>
-              </TicketInfo>
-              <AmountInfo>
-                <div></div>
-                <div></div>
-              </AmountInfo>
-            </MoviesDetail>
           </MainReservation>
+          <MoviesDetail>
+            <MoviesInfo>
+              <div />
+              <div>
+                <div>movie.title</div>
+                <div>영화관정보</div>
+                <div>티켓시간 / 상영관</div>
+                <div>좌석 정보</div>
+              </div>
+            </MoviesInfo>
+            <TicketInfo>
+              <p>
+                <span>성인(2)</span>
+                <span>26,000원</span>
+              </p>
+              <p>
+                <span>청소년(2)</span>
+                <span>26,000원</span>
+              </p>
+              <p>
+                <span>우대(2)</span>
+                <span>26,000원</span>
+              </p>
+              <p>
+                <span>예매수수료(2)</span>
+                <span>26,000원</span>
+              </p>
+              <p>
+                <span>할인금액</span>
+                <span>(-) 1000원</span>
+              </p>
+            </TicketInfo>
+            <AmountInfo>
+              <div>
+                <p>최종결제금액</p>
+                <p>50,000원</p>
+              </div>
+              <Btn>결제</Btn>
+            </AmountInfo>
+          </MoviesDetail>
         </Main>
       </Container>
     </>
@@ -421,7 +481,7 @@ const Main = styled.div`
 
 const MainReservation = styled.div`
   width: 1200px;
-  height: 650px;
+  /* height: 900px; */
   margin: auto;
   /* border: 1px solid red; */
 `;
@@ -458,8 +518,8 @@ const DayChoice = styled.div`
 `;
 
 const MoviesDetail = styled.div`
-  margin-top: 40px;
-  width: 100%;
+  margin: 40px auto;
+  width: 1200px;
   height: 188px;
   border: 1px solid red;
   background-color: #ffffff;
@@ -523,6 +583,34 @@ const TicketInfo = styled.div`
 
 const AmountInfo = styled.div`
   padding: 42px 30px 0 0;
+  display: flex;
+  > div {
+    width: 210px;
+    height: 80px;
+    padding: 30px 0 0 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: blue;
+    font-size: 13px;
+    > p:last-child {
+      padding-top: 14px;
+      color: red;
+      font-size: 24px;
+    }
+  }
+`;
+
+const Btn = styled(Button)`
+  && {
+    width: 111px;
+    height: 111px;
+    text-align: center;
+    font-size: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    color: rgba(0, 0, 0, 0.125);
+  }
 `;
 
 const TheaterDetail = styled(MoviesDetail)``;
@@ -649,7 +737,55 @@ const MovieLi = styled(Typography)`
   &:hover {
     background: RGB(236, 97, 90);
   }
+  > p {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 `;
+const ageColor = {
+  전체: {
+    color: "#60c9e3",
+    border: "1px solid #60c9e3",
+    "font-size": "12px",
+    "line-height": "1",
+    padding: "5px 25px 0px 0px",
+  },
+  12: {
+    color: "#6dd551",
+    border: "1px solid #6dd551",
+    "font-size": "15px",
+    "line-height": "0.7",
+    padding: "5px 0px 0px 0px",
+  },
+  15: {
+    color: "#fbac30",
+    border: "1px solid #fbac30",
+    "font-size": "15px",
+    "line-height": "0.7",
+    padding: "5px 0px 0px 0px",
+  },
+  청불: {
+    color: "#d30101",
+    border: "1px solid #d30101",
+    "font-size": "12px",
+    "line-height": "1",
+    padding: "5px 25px 0px 0px",
+  },
+};
+
+const Age = styled.span`
+  margin-right: 5px;
+  color: ${(props) => props.ageAttr["color"]};
+  border: ${(props) => props.ageAttr["border"]};
+  padding: ${(props) => props.ageAttr["padding"]};
+  display: inline-block;
+  width: 25px;
+  height: 22px;
+  line-height: ${(props) => props.ageAttr["line-height"]};
+  text-align: center;
+  font-size: ${(props) => props.ageAttr["font-size"]};
+`;
+
 // Tab
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

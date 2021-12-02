@@ -28,7 +28,14 @@ class DirectorAdmin(admin.ModelAdmin):
     search_fields = ['name', 'code']
 
 
+@admin.register(Distributor)
+class DistributorAdmin(admin.ModelAdmin):
+    list_display = ['image_tag', 'name']
+
+
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ['id', 'image_tag', 'category']
     readonly_fields = ['image_tag']
+
+
