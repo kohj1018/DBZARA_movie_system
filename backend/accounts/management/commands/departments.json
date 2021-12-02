@@ -12,7 +12,9 @@
        "pk":2,
        "fields":{
           "name":"사원",
-          "department":1
+          "department":1,
+          "min_salary": 2025,
+          "max_salary": 3165
        }
     },
     {
@@ -20,7 +22,9 @@
        "pk":3,
        "fields":{
           "name":"주임",
-          "department":1
+          "department":1,
+          "min_salary": 3343,
+          "max_salary": 3782
        }
     },
     {
@@ -28,7 +32,9 @@
        "pk":4,
        "fields":{
           "name":"대리",
-          "department":1
+          "department":1,
+          "min_salary": 4036,
+          "max_salary": 4866
        }
     },
     {
@@ -36,7 +42,9 @@
        "pk":5,
        "fields":{
           "name":"과장",
-          "department":1
+          "department":1,
+          "min_salary": 5231,
+          "max_salary": 6024
        }
     },
     {
@@ -44,7 +52,9 @@
        "pk":6,
        "fields":{
           "name":"차장",
-          "department":1
+          "department":1,
+          "min_salary": 6447,
+          "max_salary": 7577
        }
     },
     {
@@ -52,7 +62,9 @@
        "pk":7,
        "fields":{
           "name":"부장",
-          "department":1
+          "department":1,
+          "min_salary": 8090,
+          "max_salary": 9078
        }
     },
     {
@@ -68,7 +80,9 @@
        "pk":9,
        "fields":{
           "name":"사원",
-          "department":8
+          "department":8,
+          "min_salary": 1981,
+          "max_salary": 2995
        }
     },
     {
@@ -76,7 +90,9 @@
        "pk":10,
        "fields":{
           "name":"주임",
-          "department":8
+          "department":8,
+          "min_salary": 3124,
+          "max_salary": 3356
        }
     },
     {
@@ -84,7 +100,9 @@
        "pk":11,
        "fields":{
           "name":"대리",
-          "department":8
+          "department":8,
+          "min_salary": 3438,
+          "max_salary": 3694
        }
     },
     {
@@ -92,7 +110,9 @@
        "pk":12,
        "fields":{
           "name":"과장",
-          "department":8
+          "department":8,
+          "min_salary": 3825,
+          "max_salary": 4086
        }
     },
     {
@@ -100,7 +120,9 @@
        "pk":13,
        "fields":{
           "name":"차장",
-          "department":8
+          "department":8,
+          "min_salary": 4171,
+          "max_salary": 4343
        }
     },
     {
@@ -108,7 +130,9 @@
        "pk":14,
        "fields":{
           "name":"부장",
-          "department":8
+          "department":8,
+          "min_salary": 4472,
+          "max_salary": 4880
        }
     },
     {
@@ -124,7 +148,9 @@
        "pk":16,
        "fields":{
           "name":"사원",
-          "department":15
+          "department":15,
+          "min_salary": 1943,
+          "max_salary": 3059
        }
     },
     {
@@ -132,7 +158,9 @@
        "pk":17,
        "fields":{
           "name":"주임",
-          "department":15
+          "department":15,
+          "min_salary": 3234,
+          "max_salary": 3658
        }
     },
     {
@@ -140,7 +168,9 @@
        "pk":18,
        "fields":{
           "name":"대리",
-          "department":15
+          "department":15,
+          "min_salary": 3895,
+          "max_salary": 4600
        }
     },
     {
@@ -148,7 +178,9 @@
        "pk":19,
        "fields":{
           "name":"과장",
-          "department":15
+          "department":15,
+          "min_salary": 4873,
+          "max_salary": 5401
        }
     },
     {
@@ -156,7 +188,9 @@
        "pk":20,
        "fields":{
           "name":"차장",
-          "department":15
+          "department":15,
+          "min_salary": 5660,
+          "max_salary": 6398
        }
     },
     {
@@ -164,7 +198,9 @@
        "pk":21,
        "fields":{
           "name":"부장",
-          "department":15
+          "department":15,
+          "min_salary": 6790,
+          "max_salary": 7417
        }
     },
     {
@@ -180,7 +216,9 @@
        "pk":23,
        "fields":{
           "name":"사원",
-          "department":22
+          "department":22,
+          "min_salary": 1953,
+          "max_salary": 3228
        }
     },
     {
@@ -188,7 +226,9 @@
        "pk":24,
        "fields":{
           "name":"주임",
-          "department":22
+          "department":22,
+          "min_salary": 3431,
+          "max_salary": 3907
        }
     },
     {
@@ -196,7 +236,9 @@
        "pk":25,
        "fields":{
           "name":"대리",
-          "department":22
+          "department":22,
+          "min_salary": 4162,
+          "max_salary": 5291
        }
     },
     {
@@ -204,7 +246,9 @@
        "pk":26,
        "fields":{
           "name":"과장",
-          "department":22
+          "department":22,
+          "min_salary": 5938,
+          "max_salary": 7128
        }
     },
     {
@@ -212,7 +256,9 @@
        "pk":27,
        "fields":{
           "name":"차장",
-          "department":22
+          "department":22,
+          "min_salary": 7364,
+          "max_salary": 7912
        }
     },
     {
@@ -220,7 +266,9 @@
        "pk":28,
        "fields":{
           "name":"부장",
-          "department":22
+          "department":22,
+          "min_salary": 8742,
+          "max_salary": 11227
        }
     },
     {
@@ -236,7 +284,9 @@
        "pk":30,
        "fields":{
           "name":"사원",
-          "department":29
+          "department":29,
+          "min_salary": 1942,
+          "max_salary": 3077
        }
     },
     {
@@ -244,7 +294,9 @@
        "pk":31,
        "fields":{
           "name":"주임",
-          "department":29
+          "department":29,
+          "min_salary": 3256,
+          "max_salary": 4638
        }
     },
     {
@@ -252,7 +304,9 @@
        "pk":32,
        "fields":{
           "name":"대리",
-          "department":29
+          "department":29,
+          "min_salary": 3820,
+          "max_salary": 4339
        }
     },
     {
@@ -260,7 +314,9 @@
        "pk":33,
        "fields":{
           "name":"과장",
-          "department":29
+          "department":29,
+          "min_salary": 4551,
+          "max_salary": 5000
        }
     },
     {
@@ -268,7 +324,9 @@
        "pk":34,
        "fields":{
           "name":"차장",
-          "department":29
+          "department":29,
+          "min_salary": 5223,
+          "max_salary": 6026
        }
     },
     {
@@ -276,7 +334,9 @@
        "pk":35,
        "fields":{
           "name":"부장",
-          "department":29
+          "department":29,
+          "min_salary": 6590,
+          "max_salary": 7780
        }
     },
     {
@@ -292,7 +352,9 @@
        "pk":37,
        "fields":{
           "name":"사원",
-          "department":36
+          "department":36,
+          "min_salary": 2014,
+          "max_salary": 2996
        }
     },
     {
@@ -300,7 +362,9 @@
        "pk":38,
        "fields":{
           "name":"주임",
-          "department":36
+          "department":36,
+          "min_salary": 3127,
+          "max_salary": 3356
        }
     },
     {
@@ -308,7 +372,9 @@
        "pk":39,
        "fields":{
           "name":"대리",
-          "department":36
+          "department":36,
+          "min_salary": 3417,
+          "max_salary": 3558
        }
     },
     {
@@ -316,7 +382,9 @@
        "pk":40,
        "fields":{
           "name":"과장",
-          "department":36
+          "department":36,
+          "min_salary": 3612,
+          "max_salary": 3802
        }
     },
     {
@@ -324,7 +392,9 @@
        "pk":41,
        "fields":{
           "name":"차장",
-          "department":36
+          "department":36,
+          "min_salary": 3951,
+          "max_salary": 4431
        }
     },
     {
@@ -332,7 +402,9 @@
        "pk":42,
        "fields":{
           "name":"부장",
-          "department":36
+          "department":36,
+          "min_salary": 4645,
+          "max_salary": 4939
        }
     },
     {
@@ -348,7 +420,9 @@
        "pk":44,
        "fields":{
           "name":"사원",
-          "department":43
+          "department":43,
+          "min_salary": 2008,
+          "max_salary": 3087
        }
     },
     {
@@ -356,7 +430,9 @@
        "pk":45,
        "fields":{
           "name":"주임",
-          "department":43
+          "department":43,
+          "min_salary": 3273,
+          "max_salary": 3619
        }
     },
     {
@@ -364,7 +440,9 @@
        "pk":46,
        "fields":{
           "name":"대리",
-          "department":43
+          "department":43,
+          "min_salary": 3743,
+          "max_salary": 4080
        }
     },
     {
@@ -372,7 +450,9 @@
        "pk":47,
        "fields":{
           "name":"과장",
-          "department":43
+          "department":43,
+          "min_salary": 4239,
+          "max_salary": 4605
        }
     },
     {
@@ -380,7 +460,9 @@
        "pk":48,
        "fields":{
           "name":"차장",
-          "department":43
+          "department":43,
+          "min_salary": 4786,
+          "max_salary": 5132
        }
     },
     {
@@ -388,7 +470,9 @@
        "pk":49,
        "fields":{
           "name":"부장",
-          "department":43
+          "department":43,
+          "min_salary": 5043,
+          "max_salary": 5197
        }
     },
     {
@@ -404,7 +488,9 @@
        "pk":51,
        "fields":{
           "name":"사원",
-          "department":50
+          "department":50,
+          "min_salary": 2036,
+          "max_salary": 3301
        }
     },
     {
@@ -412,7 +498,9 @@
        "pk":52,
        "fields":{
           "name":"주임",
-          "department":50
+          "department":50,
+          "min_salary": 3482,
+          "max_salary": 3883
        }
     },
     {
@@ -420,7 +508,9 @@
        "pk":53,
        "fields":{
           "name":"대리",
-          "department":50
+          "department":50,
+          "min_salary": 4087,
+          "max_salary": 4729
        }
     },
     {
@@ -428,7 +518,9 @@
        "pk":54,
        "fields":{
           "name":"과장",
-          "department":50
+          "department":50,
+          "min_salary": 5009,
+          "max_salary": 5738
        }
     },
     {
@@ -436,7 +528,9 @@
        "pk":55,
        "fields":{
           "name":"차장",
-          "department":50
+          "department":50,
+          "min_salary": 6227,
+          "max_salary": 7461
        }
     },
     {
@@ -444,7 +538,9 @@
        "pk":56,
        "fields":{
           "name":"부장",
-          "department":50
+          "department":50,
+          "min_salary": 7758,
+          "max_salary": 8256
        }
     },
     {
@@ -460,7 +556,9 @@
        "pk":58,
        "fields":{
           "name":"사원",
-          "department":57
+          "department":57,
+          "min_salary": 2120,
+          "max_salary": 3353
        }
     },
     {
@@ -468,7 +566,9 @@
        "pk":59,
        "fields":{
           "name":"주임",
-          "department":57
+          "department":57,
+          "min_salary": 3507,
+          "max_salary": 3883
        }
     },
     {
@@ -476,7 +576,9 @@
        "pk":60,
        "fields":{
           "name":"대리",
-          "department":57
+          "department":57,
+          "min_salary": 4103,
+          "max_salary": 4863
        }
     },
     {
@@ -484,7 +586,9 @@
        "pk":61,
        "fields":{
           "name":"과장",
-          "department":57
+          "department":57,
+          "min_salary": 5210,
+          "max_salary": 5855
        }
     },
     {
@@ -492,7 +596,9 @@
        "pk":62,
        "fields":{
           "name":"차장",
-          "department":57
+          "department":57,
+          "min_salary": 6075,
+          "max_salary": 6914
        }
     },
     {
@@ -500,7 +606,9 @@
        "pk":63,
        "fields":{
           "name":"부장",
-          "department":57
+          "department":57,
+          "min_salary": 7691,
+          "max_salary": 9631
        }
     }
  ]
