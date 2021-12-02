@@ -7,7 +7,6 @@ import {
   Link
 } from "react-router-dom";
 import movieData from "movieData";
-import MoviesInfoTab from "./MoviesInfoTab";
 import Default from "./MoviesInfoDetail/Default";
 import People from "./MoviesInfoDetail/People";
 import Videos from "./MoviesInfoDetail/Videos";

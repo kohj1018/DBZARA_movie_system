@@ -1,30 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
 import movieData from "movieData";
+import { dbzaraApi } from "dbzaraApi";
 
-const Movies = () => (
-  <>
-    <Container>
-      <MovieRankCont>
-        {movieData.map(movie => {
-          return (
-            <MovieView 
-              // id={movie.id}
-              // rank={movie.rank}
-              // src={movie.src}
-              // age={movie.age}
-              // title={movie.title}
-              // ticketSales={movie.ticketSales}
-              // rates={movie.rates}
-              {...movie}
-            />
-          )
-        })}
-      </MovieRankCont>
-    </Container>
-  </>
-);
+const Movies = () => {
+  // const [movies, setMovies] = useState();
+  // const getMovie = async () => {
+  //   const { data: { results: movies } } = await dbzaraApi.boxOffice();
+  //   setMovies(() => movies);
+  // }
+
+  // useEffect(() => {
+  //   getMovie();
+  // }, [])
+  
+
+  return (
+    <>
+      <Container>
+        <MovieRankCont>
+          {movieData.map(movie => {
+            return (
+              <MovieView 
+                // id={movie.id}
+                // rank={movie.rank}
+                // src={movie.src}
+                // age={movie.age}
+                // title={movie.title}
+                // ticketSales={movie.ticketSales}
+                // rates={movie.rates}
+                {...movie}
+              />
+            )
+          })}
+        </MovieRankCont>
+      </Container>
+    </>
+)};
 
 export default Movies;
 
