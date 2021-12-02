@@ -3,7 +3,7 @@ from movie.serializers.base import *
 
 class MovieListSerializer(MovieSerializer):
     class Meta(MovieSerializer.Meta):
-        fields = ['name', 'poster', 'backdrop', 'reservation_rate']
+        fields = MovieSerializer.Meta.fields + ['reservation_rate']
 
 
 class ReservationBaseMovieSerializer(MovieSerializer):

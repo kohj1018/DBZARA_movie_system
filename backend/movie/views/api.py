@@ -21,7 +21,7 @@ from movie.serializers import (
 
 class BasicPagination(PageNumberPagination):
     page_size_query_param = 'limit'
-    page_size = 10
+    page_size = 12
     max_page_size = 10
 
 
@@ -36,12 +36,11 @@ class MovieListAPIView(ListModelMixin, GenericAPIView):
 
     def get_queryset(self):
         option = self.request.query_params.get('option', 'box-office')
-        today = date.today()
+        today = date(2021, 11, 10)
         query_set = super().get_queryset()
 
         if option == 'box-office':
             return sorted(query_set.filter(
-                opening_date__lte=today,
                 closing_date__gte=today
             ), key=lambda movie: movie.reservation_rate, reverse=True)
 
