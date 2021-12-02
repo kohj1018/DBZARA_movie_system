@@ -47,7 +47,7 @@ class Command(BaseCommand):
                                 min_age = date(schedule.datetime.year - (idx + 1) * 10, 1, 1)
                                 max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
                                 profile = choice(list(Profile.objects.filter(user__birth_date__range=[max_age, min_age])))
-                                for _ in range(int(counts * rate)):
+                                for _ in range(int(randint(60, 100) * rate)):
                                     try:
                                         Reservation.create(
                                             profile=profile,

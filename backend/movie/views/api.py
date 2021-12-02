@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
@@ -12,10 +12,10 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from accounts.models import Profile
-from movie.models import Movie, Review
+from movie.models import Movie, Review, MovieInfo
 from movie.serializers import (
-    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer,
-    MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer
+    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
+    MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer, MovieInfoSerializer
 )
 
 
@@ -64,6 +64,12 @@ class MovieBaseAPIView (RetrieveModelMixin, GenericAPIView):
 
 class MovieAPIDetailView(MovieBaseAPIView):
     serializer_class = MovieDetailSerializer
+
+
+class MovieInfoAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = MovieInfo.objects.all()
+    serializer_class = MovieInfoSerializer
 
 
 class MovieStaffAPIView(MovieBaseAPIView):
