@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // TODO movies poster로 연결하고
 
@@ -36,7 +37,7 @@ const ageColor = {
   },
 };
 
-const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {
+const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {  
   return (
     <>
       <Container>
@@ -45,7 +46,9 @@ const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {
           <BtnContainer>
             <OverBtn>
               <Btn>예매</Btn>
-              <Btn>정보</Btn>
+              <Btn>
+                <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
+              </Btn>
             </OverBtn>
           </BtnContainer>
         </ImgThumb>
@@ -123,6 +126,14 @@ const Btn = styled(Button)`
       color: #ec6159;
       border: 1px solid #ec6159;
     }
+  }
+`;
+
+const SLink = styled(Link)`
+  && {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

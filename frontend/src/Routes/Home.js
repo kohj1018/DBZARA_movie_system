@@ -319,7 +319,7 @@ const Home = () => {
           <BestMainContainer>
             {movies.popular ?
             <MovieVideo
-              id={movies.popular.[0].id}
+              id={movies.popular[0].id}
             />: require("../assets/noPosterSmall.png").default}
           </BestMainContainer>
           <BestSubContainer scrollY={position.BestPlay}>
