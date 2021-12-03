@@ -1,27 +1,36 @@
 import React from "react";
 import styled from "styled-components";
-import { Box, Button } from "@material-ui/core";
 
-const EventPoster = ({key, id, children}) => {
-    return(
-        <EventImg>
-                    <Btn>
-                        {children}
-                        {/* <img src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"
-                        width="100%"height="100%"position="absolute"></img> */}
-                    </Btn>
-        </EventImg>
-    );
-  };
+const EventPoster = ({ key, id }) => {
+  return (
+    <>
+      <EventBg src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"></EventBg>
+      <EventInfo>
+        <Btn>
+          <DDay>D - 46</DDay>
+          <EventTitle>매일매일 출첵하고 혜택받자!</EventTitle>
+          <EventText>예매권/할인권</EventText>
+        </Btn>
+      </EventInfo>
+    </>
+  );
+};
 
 export default EventPoster;
 
-const EventImg = styled.div`
+const EventBg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+const EventInfo = styled.div`
   position: absolute;
   top: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
+  display: flex;
   flex-direction: column;
   opacity: 0;
   transition: all 0.3s ease-in-out;
@@ -31,27 +40,34 @@ const EventImg = styled.div`
   }
 `;
 
-// const Background = styled.div`
-//   width: 380px;
-//   height: 263.89px;
-//   /* padding : 40px 40px 0; */
-//   /* padding-top: 40px;
-//   padding-right: 40px;
-//   padding-left: 40px; */
-//   background-color: #2b2b2b;
-//   &:hover {
-//     opacity: 0.1;
-//   }
-// `;
-
-const Btn = styled(Button)`
-  && {
-    padding: 0%;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    font-size: 16px;
-    color: RGB(255, 255, 255);
-  }
+const Btn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  font-size: 16px;
+  color: RGB(255, 255, 255);
 `;
 
+const DDay = styled.div`
+  padding-bottom: 15px;
+  font-size: 28px;
+  color: #ec6159;
+  text-align: center;
+`;
+
+const EventTitle = styled.div`
+  padding-bottom: 20px;
+  font-size: 20px;
+  line-height: 26px;
+  text-align: center;
+  vertical-align: baseline;
+`;
+
+const EventText = styled.div`
+  padding-bottom: 10px;
+`;

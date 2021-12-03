@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { moviesApi } from "api";
+import { dbzaraApi } from "dbzaraApi";
 
 const Video = styled.iframe`
   background-position: center center;
@@ -10,6 +10,7 @@ const Video = styled.iframe`
   height: 100%;
   /* position: absolute; */
   background-color: black;
+  /* overflow: hidden; */
 `;
 
 const MovieVideo = ({ id }) => {
@@ -22,11 +23,20 @@ const MovieVideo = ({ id }) => {
 
   async function DetailMoives() {
     try {
-      const { data: result } = await moviesApi.movieDetail(id);
-      setMoviesData((moviesData) => ({ ...moviesData, result }));
-      console.log("vodie API", result);
-      console.log("vodie title", result.title);
-      console.log("vodie URL", result.videos.results[0].key);
+      const {
+        data: { videos: result },
+      } = await dbzaraApi.movieVideo(id);
+      // 예고편 받아오기
+      result.map((videos) =>
+        videos.category === "Trailer"
+          ? setMoviesData((moviesData) => ({
+              ...moviesData,
+              result: videos.video,
+            }))
+          : null
+      );
+      // console.log("moviesData", moviesData);
+      // setMoviesData((moviesData) => ({ ...moviesData, result }));
     } catch {
       setMoviesData((moviesData) => ({ ...moviesData, error: "동영상 실패" }));
     } finally {
@@ -43,8 +53,8 @@ const MovieVideo = ({ id }) => {
     : moviesData.result && (
         <Video
           src={
-            moviesData.result.videos
-              ? `https://www.youtube.com/embed/${moviesData.result.videos.results[0].key}`
+            moviesData.result
+              ? `${moviesData.result}`
               : require("../assets/noPosterSmall.png").default
           }
           frameborder="0"
@@ -53,7 +63,7 @@ const MovieVideo = ({ id }) => {
           allowfullscreen
         >
           {console.log("video id", id)}
-          {console.log("video result", moviesData.result.videos.results)}
+          {/* {console.log("video result", moviesData.result)} */}
         </Video>
       );
 };
