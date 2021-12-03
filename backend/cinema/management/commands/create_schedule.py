@@ -47,10 +47,12 @@ class Command(BaseCommand):
                             movie_code = self.naver_movie.get_movie_code_by_title(movie.name)
                             age_rate = self.naver_movie.get_age_rate_by_code(movie_code)
                             for idx, rate in enumerate(age_rate):
+                                if counts <= 30:
+                                    counts += 50
                                 min_age = date(schedule.datetime.year - (idx + 1) * 10, 1, 1)
                                 max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
                                 profile = choice(list(Profile.objects.filter(user__birth_date__range=[max_age, min_age])))
-                                for _ in range(int(randint(60, 100) * rate)):
+                                for _ in range(int(counts * rate)):
                                     try:
                                         Reservation.create(
                                             profile=profile,
