@@ -43,7 +43,10 @@ class Command(BaseCommand):
                         theater, schedule_time = choice(self.theaters), datetime(year=base_date.year, month=base_date.month, day=base_date.day) + timedelta(hours=hour) + timedelta(minutes=minute)
                         try:
                             schedule = theater.add_schedule(movie, schedule_time)
-                            counts = theater.counts_by_rank(audience_counts // show_counts)
+                            counts = audience_counts // show_counts
+                            if counts <= 30:
+                                counts += 50
+                            counts = theater.counts_by_rank(counts)
                             movie_code = self.naver_movie.get_movie_code_by_title(movie.name)
                             age_rate = self.naver_movie.get_age_rate_by_code(movie_code)
                             for idx, rate in enumerate(age_rate):
