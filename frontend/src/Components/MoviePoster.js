@@ -1,17 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
-// TODO bgimg => img태그 변경
-
-const MoviePoster = ({ key, id, bgUrl, index }) => { //받아올 데이터
+const MoviePoster = ({ id, bgUrl, index }) => {
+  //받아올 데이터
   return (
     <MovieImg>
       <MovieBgImg
         src={
           bgUrl
-            ? `https://image.tmdb.org/t/p/w300${bgUrl}`
+            ? `https://dbzarastorage.blob.core.windows.net${bgUrl}`
             : require("../assets/noPosterSmall.png").default
         }
       />

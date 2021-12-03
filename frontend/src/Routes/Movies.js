@@ -14,15 +14,14 @@ const Movies = () => {
   // useEffect(() => {
   //   getMovie();
   // }, [])
-  
 
   return (
     <>
       <Container>
         <MovieRankCont>
-          {movieData.map(movie => {
+          {movieData.map((movie) => {
             return (
-              <MovieView 
+              <MovieView
                 // id={movie.id}
                 // rank={movie.rank}
                 // src={movie.src}
@@ -32,19 +31,19 @@ const Movies = () => {
                 // rates={movie.rates}
                 {...movie}
               />
-            )
+            );
           })}
         </MovieRankCont>
       </Container>
     </>
-)};
+  );
+};
 
 export default Movies;
 
-
 const Container = styled.div`
   margin: 150px auto 200px;
-  width: 1200px
+  width: 1200px;
 `;
 
 const MovieRankCont = styled.div`
