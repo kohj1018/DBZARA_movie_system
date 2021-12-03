@@ -33,7 +33,7 @@ const Movies = () => {
                 rates={0}
                 // {...movie}
               />
-            )
+            );
           })}
         </MovieRankCont>
       </Container>
@@ -43,10 +43,9 @@ const Movies = () => {
 
 export default Movies;
 
-
 const Container = styled.div`
   margin: 150px auto 200px;
-  width: 1200px
+  width: 1200px;
 `;
 
 const MovieRankCont = styled.div`

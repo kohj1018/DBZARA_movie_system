@@ -13,6 +13,7 @@ class User(AbstractUser):
     GENDER_CHOICES = [
         ('M', '남성'),
         ('F', '여성'),
+        ('N', '미정')
     ]
     PLATFORM_CHOICES = [
         (1, 'Django'),
@@ -35,7 +36,7 @@ class User(AbstractUser):
 
     @property
     def is_social(self):
-        return True if self.platform != 1 else False
+        return self.platform != 1
 
     @property
     def full_name(self):
@@ -59,10 +60,10 @@ class Profile(models.Model):
     favorite_distributors = models.ManyToManyField('movie.Distributor', blank=True)
 
     def add_coupons(self, coupon):
-        self.coupons.create(coupon)
+        self.coupons.add(coupon)
 
     def add_non_coupons(self, non_coupon):
-        self.non_coupons.create(non_coupon)
+        self.non_coupons.add(non_coupon)
 
     def add_favorite_genre(self, genre):
         self.favorite_genres.add(genre)
@@ -77,10 +78,10 @@ class Profile(models.Model):
         self.favorite_actors.remove(actor)
 
     def add_favorite_director(self, director):
-        self.favorite_actors.add(director)
+        self.favorite_directors.add(director)
 
     def delete_favorite_director(self, director):
-        self.favorite_actors.remove(director)
+        self.favorite_directors.remove(director)
 
     def add_favorite_movie(self, movie):
         self.favorite_movies.add(movie)
@@ -120,6 +121,10 @@ class Profile(models.Model):
     def anonymization_name(self):
         return self.user.username[:3] + ("*" * len(self.user.username[3:]))
 
+    @property
+    def mileage_sum(self):
+        return Mileage.objects.filter(profile=self)
+
     def __str__(self):
         return self.user.full_name
 
@@ -157,10 +162,6 @@ class NonCouponHold(models.Model):
 
     def use_non_coupon(self):
         self.used_date = datetime.now()
-
-    @property
-    def is_used(self):
-        return self.used_date is not None
 
 
 class Grade(models.Model):

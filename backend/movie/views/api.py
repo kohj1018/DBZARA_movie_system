@@ -3,68 +3,77 @@ from datetime import date
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from accounts.models import Profile
-from movie.models import Movie, Review
+from movie.models import Movie, Review, MovieInfo
 from movie.serializers import (
-    BoxOfficeMovieSerializer, NotOpenMovieSerializer, MovieDetailSerializer, MovieStaffSerializer,
-    MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer
+    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
+    MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer, MovieInfoSerializer
 )
 
 
-class BoxOfficeMovieAPIListView(APIView):
+class BasicPagination(PageNumberPagination):
+    page_size_query_param = 'limit'
+    page_size = 12
+    max_page_size = 10
+
+
+class MovieListAPIView(ListModelMixin, GenericAPIView):
+    queryset = Movie.objects.all()
     permission_classes = [AllowAny]
+    pagination_class = BasicPagination
+    serializer_class = MovieListSerializer
 
-    def get(self, request):
-        opening_date = date(2018, 1, 1)
-        closing_date = date(2018, 1, 2)
-        query_set = sorted(Movie.objects.filter(
-            closing_date__range=(opening_date, closing_date)
-        ), key=lambda movie: movie.reservation_rate, reverse=True)
-        serializer = BoxOfficeMovieSerializer(query_set, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        option = self.request.query_params.get('option', 'box-office')
+        today = date(2021, 11, 10)
+        query_set = super().get_queryset()
+
+        if option == 'box-office':
+            return sorted(query_set.filter(
+                closing_date__gte=today
+            ), key=lambda movie: movie.reservation_rate, reverse=True)
+
+        elif option == 'not-open':
+            return sorted(query_set.filter(
+                opening_date__gte=today
+            ), key=lambda movie: movie.reservation_rate, reverse=True)
 
 
-class NotOpenMovieAPIListView(APIView):
+class MovieBaseAPIView (RetrieveModelMixin, GenericAPIView):
     permission_classes = [AllowAny]
-
-    def get(self, request):
-        query_set = Movie.objects.filter(
-            opening_date__gt=date(2018, 2, 1)
-        ).order_by('opening_date')[:10]
-        serializer = NotOpenMovieSerializer(query_set, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class MovieBaseAPIView (APIView):
-    permission_classes = [AllowAny]
-    model = Movie
-    serializer = None
-
-    def get_object(self, pk):
-        return get_object_or_404(self.model, pk=pk)
+    queryset = Movie.objects.all()
 
     @swagger_auto_schema(responses={
         200: 'Return Object',
         404: 'Object Does not exist'
     })
-    def get(self, request, pk):
-        query_set = self.get_object(pk)
-        serializer = self.serializer(query_set)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
 
 class MovieAPIDetailView(MovieBaseAPIView):
-    serializer = MovieDetailSerializer
+    serializer_class = MovieDetailSerializer
+
+
+class MovieInfoAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = MovieInfo.objects.all()
+    serializer_class = MovieInfoSerializer
 
 
 class MovieStaffAPIView(MovieBaseAPIView):
-    serializer = MovieStaffSerializer
+    serializer_class = MovieStaffSerializer
 
 
 class MovieImageAPIView(MovieBaseAPIView):
@@ -73,18 +82,22 @@ class MovieImageAPIView(MovieBaseAPIView):
     ___
     영화와 관련된 이미지 반환
     """
-    serializer = MovieImageSerializer
+    serializer_class = MovieImageSerializer
 
 
 class MovieVideoAPIView(MovieBaseAPIView):
-    serializer = MovieVideoSerializer
+    serializer_class = MovieVideoSerializer
 
 
-class MovieReviewAPIView(MovieBaseAPIView):
-    serializer = MovieReviewSerializer
+class MovieReviewAPIView(ListModelMixin, MovieBaseAPIView):
+    serializer_class = MovieReviewSerializer
+    pagination_class = BasicPagination
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
-class ReviewBaseAPIView(APIView):
+class ReviewBaseAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer = ReviewSerializer
     model = Review
