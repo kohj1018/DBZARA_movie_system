@@ -13,7 +13,7 @@ class KobisAPI:
     BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest'
 
     def __init__(self):
-        self.start_date = date(2020, 1, 1)
+        self.start_date = date(2021, 12, 1)
         self.default_date = date(2020, 1, 1)
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
@@ -31,7 +31,7 @@ class KobisAPI:
 
     def parse_schedule_data(self):
         elements = self.collect_daily_movie()
-        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 100, int(element['audiCnt']) // 100) for element in elements], self.start_date
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 20, int(element['audiCnt']) // 20) for element in elements], self.start_date
 
     def parse_movie_data(self):
         elements = self.collect_daily_movie()
