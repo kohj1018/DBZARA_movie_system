@@ -9,7 +9,6 @@ import People from "./People";
 import { Translate } from "@material-ui/icons";
 
 const Default = ({ id }) => {
-
   // 사진 카로셀(슬라이더) 설정
   const settings = {
     dots: false,
@@ -22,93 +21,83 @@ const Default = ({ id }) => {
   };
 
   return (
-  <>
-    <Container>
-      <Title>시놉시스</Title>
-        {movieData[id].sysTxt.map(txt => {
-          return (
-            <Txt>
-            {txt}
-            </Txt>
-          )
+    <>
+      <Container>
+        <Title>시놉시스</Title>
+        {movieData[id].sysTxt.map((txt) => {
+          return <Txt>{txt}</Txt>;
         })}
-      <Title>제작정보</Title>
-      <Txt>수입 : {movieData[id].studio}</Txt>
-      <Txt>배급 : {movieData[id].distributor}</Txt>
-      <Title>배우·제작진</Title>
-      <ActArea>
-        {movieData[id].people.map(people => {
-          return (
-            <PeopleView
-              // name={people.name}
-              // job={people.job}
-              // src={people.src}
-              {...people}
-            />
-          )
-        })}    
-      </ActArea>
-      <Title>동영상</Title>
-      <VodArea>
-        <Video 
-          src={movieData[id].video} 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-        />
-      </VodArea>
-      <Title>포토</Title>
-      <StyledSlider {...settings}>
-        {movieData[id].photos.map((photo, index) => {
-          return (
-            <PhotoItem>
-              <Photo
-                src={photo}
-              />
-            </PhotoItem>
-          )
-        })}
-      </StyledSlider>
-      <Title>평점</Title>
-      <CommentArea>
-        <RateEditBox
-          rates={movieData[id].rates}
-        />
-        <RatesArea>
-          <RatesTypeMenuTxt>
-            <EmpathyOrder>공감순</EmpathyOrder>
-            <LatestOrder>최신순</LatestOrder>
-          </RatesTypeMenuTxt>
-        </RatesArea>
-        <RatesView>
-          {movieData[id].review.map(review => {
+        <Title>제작정보</Title>
+        <Txt>수입 : {movieData[id].studio}</Txt>
+        <Txt>배급 : {movieData[id].distributor}</Txt>
+        <Title>배우·제작진</Title>
+        <ActArea>
+          {movieData[id].people.map((people) => {
             return (
-              <RateViewBox
-                // nickName={review.nickName}
-                // rates={review.rates}
-                // comment={review.comment}
-                // date={review.date}
-                {...review}
+              <PeopleView
+                // name={people.name}
+                // job={people.job}
+                // src={people.src}
+                {...people}
               />
-            )
+            );
           })}
-        </RatesView>
-      </CommentArea>
-    </Container>
-  </>
-)};
+        </ActArea>
+        <Title>동영상</Title>
+        <VodArea>
+          <Video
+            src={movieData[id].video}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </VodArea>
+        <Title>포토</Title>
+        <StyledSlider {...settings}>
+          {movieData[id].photos.map((photo, index) => {
+            return (
+              <PhotoItem>
+                <Photo src={photo} />
+              </PhotoItem>
+            );
+          })}
+        </StyledSlider>
+        <Title>평점</Title>
+        <CommentArea>
+          <RateEditBox rates={movieData[id].rates} />
+          <RatesArea>
+            <RatesTypeMenuTxt>
+              <EmpathyOrder>공감순</EmpathyOrder>
+              <LatestOrder>최신순</LatestOrder>
+            </RatesTypeMenuTxt>
+          </RatesArea>
+          <RatesView>
+            {movieData[id].review.map((review) => {
+              return (
+                <RateViewBox
+                  // nickName={review.nickName}
+                  // rates={review.rates}
+                  // comment={review.comment}
+                  // date={review.date}
+                  {...review}
+                />
+              );
+            })}
+          </RatesView>
+        </CommentArea>
+      </Container>
+    </>
+  );
+};
 
 export default Default;
-
 
 const Container = styled.div`
   margin: 0;
   padding: 0;
   border: 0;
   outline: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-  background: transparent;
-  box-sizing: border-box;
+
   display: block;
   color: #777;
 `;
@@ -170,7 +159,8 @@ const StyledSlider = styled(Slider)`
     width: 90px;
     height: 90px;
     font-size: 0;
-    background: url(//movie-img.yes24.com/NYes24/new/all_sprite.png) no-repeat 0 0;
+    background: url(//movie-img.yes24.com/NYes24/new/all_sprite.png) no-repeat 0
+      0;
     z-index: 3;
     cursor: pointer;
   }
@@ -206,13 +196,13 @@ const StyledSlider = styled(Slider)`
     margin-right: auto;
     transform: translate3d(0, 0, 0);
     :before {
-      content: '';
+      content: "";
       display: table;
     }
     :after {
       clear: both;
       display: table;
-      content: '';
+      content: "";
     }
   }
 
@@ -273,7 +263,7 @@ const EmpathyOrder = styled.a`
   text-decoration: none;
   text-align: right;
   :before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -298,7 +288,7 @@ const LatestOrder = styled.a`
   text-decoration: none;
   text-align: right;
   :before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
