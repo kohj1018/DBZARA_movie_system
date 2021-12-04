@@ -28,26 +28,60 @@ def create_department():
 class Command(BaseCommand):
     help = 'this command create employee'
 
-    def handle(self, *args, **options):
-        total = options.get('total')
-        all_user = get_user_model().objects.exclude(is_staff=True)
-        all_cinema = Cinema.objects.all()
-        departments = create_department()
-        cinemas = sum([[element] * randint((7 - element.grade) * 10, (8 - element.grade) * 10) for element in all_cinema], [])
+    def __init__(self):
+        self.services = dict()
 
-        print(len(cinemas))
+    def handle(self, *args, **options):
+        all_user = get_user_model().objects.exclude(is_staff=True)
+        all_cinema = Cinema.objects.exclude(pk=1)
+        create_department()
+        cinemas = sum([[element] * randint((7 - element.grade) * 10, (8 - element.grade) * 10) for element in all_cinema], [])
+        count = 0
+        with open('accounts/management/commands/departments.json', encoding='UTF-8-SIG') as json_file:
+            departments = json.load(json_file)
+            for department in departments:
+                if department['fields']['department'] is not None:
+                    min_salary = department['fields']['min_salary']
+                    max_salary = department['fields']['min_salary']
+                    if department['fields']['department'] == 43:
+                        self.services[str(department['pk'])] = {
+                            'min_salary': min_salary,
+                            'max_salary': max_salary
+                        }
+                    else:
+                        user = choice(all_user)
+                        min_salary = int(department['fields']['min_salary'])
+                        max_salary = int(department['fields']['max_salary'])
+                        for _ in range(9 - (max_salary // 1000)):
+                            employee, created = Employee.objects.get_or_create(
+                                user=user,
+                                defaults={
+                                    "cinema": Cinema.objects.get(pk=1),
+                                    'belong': Department.objects.get(pk=int(department['pk'])),
+                                    "register_date": user.date_joined,
+                                    "salary": randint(min_salary, max_salary)
+                                }
+                            )
+                            if created:
+                                count += 1
+                                user.is_employee = True
+                                user.save()
+        print(self.services)
         for cinema in cinemas:
             user = choice(all_user)
+            belong = choice(range(44, 50))
             employee, created = Employee.objects.get_or_create(
                 user=user,
                 defaults={
                     "cinema": cinema,
-                    "belong": choice(departments),
+                    "belong": Department.objects.get(pk=int(belong)),
                     "register_date": user.date_joined,
-                    # TODO: salary는 belong마다 상한 하한을 정해 추가한다.
-                    "salary": 0
+                    "salary": randint(int(self.services.get(str(belong))['min_salary']), int(self.services.get(str(belong))['max_salary']))
                 }
             )
             if created:
+                count += 1
                 user.is_employee = True
                 user.save()
+
+        print(f'-- 직원 데이터 {count}개 생성 완료 --')

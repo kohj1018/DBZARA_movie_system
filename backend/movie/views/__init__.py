@@ -1,7 +1,7 @@
 from .api import (
     MovieListAPIView, MovieAPIDetailView, MovieStaffAPIView, MovieImageAPIView,
     MovieVideoAPIView, MovieReviewAPIView, ReviewAPIView, ReviewDetailAPIView,
-    MovieInfoAPIView
+    MovieInfoAPIView, ActorRetrieveAPIView, DirectorRetrieveAPIView
 )
 
 from .list import (
@@ -21,3 +21,5 @@ movie_video_api_view = MovieVideoAPIView.as_view()
 movie_review_api_view = MovieReviewAPIView.as_view()
 review_api_view = ReviewAPIView.as_view()
 review_detail_api_view = ReviewDetailAPIView.as_view()
+actor_detail_api_view = ActorRetrieveAPIView.as_view()
+director_detail_api_view = DirectorRetrieveAPIView.as_view()
