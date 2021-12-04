@@ -31,11 +31,12 @@ class Command(BaseCommand):
         start_date = date.today()
         end_date = date.today() - timedelta(days=100)
         while start_date > end_date:
+            start_date = date(start_date.year, start_date.month, start_date.day)
             normal, not_normal = 0, 0
             for employee in self.employees:
                 normal += 1
                 start_time = datetime(start_date.year, start_date.month, start_date.day)
-                if not start_date.weekday():
+                if start_date.weekday() in [5, 6]:
                     Attendance.create(
                         employee=employee,
                         start_time=start_time,
@@ -47,12 +48,15 @@ class Command(BaseCommand):
                     status = random_attendance()
                     if employee.cinema.id == 1:
                         start_time = start_time + timedelta(hours=7) + timedelta(minutes=(randint(50, 100)))
+
                     else:
                         start_time = start_time + timedelta(
                             hours=choice(list(range(0, 4)) + list(range(7, 23)))) + timedelta(
                             minutes=(randint(1, 59)))
+
                     if status == 1:
                         end_time = start_time + timedelta(hours=9) + timedelta(minutes=randint(30, 60))
+
                     elif status == 2:
                         end_time = start_time + timedelta(minutes=randint(30, 100))
 
