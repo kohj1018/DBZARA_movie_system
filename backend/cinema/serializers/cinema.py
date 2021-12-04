@@ -10,11 +10,9 @@ class CinemaDetailSerializer(CinemaSerializer):
 
 
 class ScheduleDetailSerializer(ScheduleSerializer):
-    theater = TheaterSerializer()
 
     class Meta(ScheduleSerializer.Meta):
-        model = Schedule
-        fields = ScheduleSerializer.Meta.fields + ['theater']
+        pass
 
 
 class ScheduleCinemaSerializer(CinemaSerializer):

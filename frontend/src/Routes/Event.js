@@ -6,7 +6,6 @@ import { BorderBottom } from "@material-ui/icons";
 // import { Tab } from '@mui/material-ui/core/Tab';
 import EventData from "EventData";
 
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -18,17 +17,17 @@ const Container = styled.div`
 const EventBanner = styled.div`
   width: 100%;
   height: 420px;
-  background-color: #6185CF;
+  background-color: #6185cf;
   /* flex-direction: column; */
 `;
 
 const Event_image = styled.div`
-  width : 1200px;
-  height : 420px;
+  width: 1200px;
+  height: 420px;
   display: block;
-  margin: auto; 
-  ::after{
-    background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.3));
+  margin: auto;
+  ::after {
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
   }
 `;
 
@@ -40,7 +39,7 @@ const EventInner = styled.div`
 `;
 
 const EventTab = styled.div`
-  height : 138px;
+  height: 138px;
   padding-top: 60px;
 `;
 const TabMenu = styled.ul`
@@ -65,7 +64,6 @@ const TabBoxContainer = styled.li`
   text-align: center;
   padding-bottom:2px;
   border-bottom:1px solid #b4b4b4;
- 
 `;
 
 const TabBoxContainerActive = styled.li`
@@ -76,7 +74,6 @@ const TabBoxContainerActive = styled.li`
   text-align: center;
   padding-bottom:2px;
   border-bottom: 3px solid #2b2b2b;
- 
 `;
 
 const TabBox = styled(Button)`
@@ -95,7 +92,8 @@ const AllEventList = styled.div`
   margin-top: 60px;
   gap: 15px;
   position: relative;
-  *{        //*의 의미 - 이 태그의 자식들은 모두 이 속성을 따라갈 것이다
+  * {
+    //*의 의미 - 이 태그의 자식들은 모두 이 속성을 따라갈 것이다
     box-sizing: border-box;
   }
 `;
@@ -127,7 +125,6 @@ const Event = () => {
   const [tabClick, setTabClick] = useState(0);
 
   window.test = tabClick;
-
 
   return (
     <>

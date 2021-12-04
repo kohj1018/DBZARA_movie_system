@@ -31,7 +31,9 @@ export const UserContext = React.createContext({
     },
     error: null,
   },
-  handleUserInfo: (name, password, tokenId) => {}
+  handleUserInfo: (tokenId) => {
+
+  },
 });
 
 const UserInfo = (props) => {

@@ -1,0 +1,82 @@
+import React, { useContext } from "react";
+import styled from "styled-components";
+import { UserContext } from "context";
+
+const UserInfo = styled.div`
+  display: grid;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  grid-template-columns: 9fr 1fr;
+  gap: 10px;
+  width: 75%;
+  height: 60px;
+  margin: 10px 0 50px 0;
+`;
+
+const UserName = styled.div`
+  margin-top: 35px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d1d1d1;
+  font-size: 18px;
+`;
+
+const Exit = styled.div`
+  cursor: point;
+  margin-top: 25px;
+`;
+
+const NavList = styled.ul`
+  width: 230px;
+  height: 230px;
+  display: grid;
+  grid-template-columns: 110px 110px;
+  gap: 10px 12px;
+`;
+
+const NavItem = styled.li`
+  width: 100%;
+  height: 100%;
+  border: 0.5px solid #d1d1d1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: red;
+  }
+`;
+
+const Context = styled.span`
+  text-align: center;
+  font-size: 15px;
+`;
+
+const SideBar = ({ setSideBar }) => {
+  const { username } = useContext(UserContext);
+
+  const NavItemContext = [
+    "예매확인/취소",
+    "예매권/할인권등록",
+    "고객센터",
+    "할인안내",
+  ];
+
+  return (
+    <>
+      <UserInfo>
+        <UserName>{`${username}님 안녕하세요!`}</UserName>
+        <Exit onClick={() => setSideBar(false)}>❌</Exit>
+      </UserInfo>
+      <NavList>
+        {NavItemContext.map((data) => {
+          return (
+            <NavItem>
+              <Context>{data}</Context>
+            </NavItem>
+          );
+        })}
+      </NavList>
+    </>
+  );
+};
+
+export default SideBar;

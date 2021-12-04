@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
@@ -12,16 +12,16 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from accounts.models import Profile
-from movie.models import Movie, Review
+from movie.models import Movie, Review, MovieInfo
 from movie.serializers import (
-    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer,
-    MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer
+    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
+    MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer, MovieInfoSerializer
 )
 
 
 class BasicPagination(PageNumberPagination):
     page_size_query_param = 'limit'
-    page_size = 10
+    page_size = 12
     max_page_size = 10
 
 
@@ -36,12 +36,11 @@ class MovieListAPIView(ListModelMixin, GenericAPIView):
 
     def get_queryset(self):
         option = self.request.query_params.get('option', 'box-office')
-        today = date.today()
+        today = date(2021, 11, 10)
         query_set = super().get_queryset()
 
         if option == 'box-office':
             return sorted(query_set.filter(
-                opening_date__lte=today,
                 closing_date__gte=today
             ), key=lambda movie: movie.reservation_rate, reverse=True)
 
@@ -65,6 +64,12 @@ class MovieBaseAPIView (RetrieveModelMixin, GenericAPIView):
 
 class MovieAPIDetailView(MovieBaseAPIView):
     serializer_class = MovieDetailSerializer
+
+
+class MovieInfoAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = MovieInfo.objects.all()
+    serializer_class = MovieInfoSerializer
 
 
 class MovieStaffAPIView(MovieBaseAPIView):
