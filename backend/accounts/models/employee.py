@@ -49,7 +49,8 @@ class Attendance(PostgresPartitionedModel):
         (1, '정상 출근'),
         (2, '조퇴'),
         (3, '결근'),
-        (4, '연차')
+        (4, '무단 결근'),
+        (5, '연차')
     ]
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     # FIXME: date 속성을 추가해야될지 고민할 필요 있음.
@@ -58,6 +59,16 @@ class Attendance(PostgresPartitionedModel):
     end_time = models.DateTimeField(null=True)
     status = models.IntegerField(choices=RESULT_CHOICES, default=0)
     is_confirmed = models.BooleanField(default=False)
+
+    @classmethod
+    def create(cls, employee, start_time, end_time, status):
+        return cls.objects.create(
+            employee=employee,
+            date=start_time.date(),
+            start_time=start_time,
+            end_time=end_time,
+            status=status
+        )
 
 
 class EmployeeEvaluationByUser(models.Model):
