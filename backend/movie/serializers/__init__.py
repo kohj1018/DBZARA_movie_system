@@ -8,4 +8,4 @@ from .movie import (
     MovieImageSerializer, MovieVideoSerializer, MovieReviewSerializer,
     ReservationChoiceMovieSerializer
 )
-from .person import ActorDetailSerializer, DirectorSerializer
+from .person import ActorDetailSerializer, DirectorDetailSerializer

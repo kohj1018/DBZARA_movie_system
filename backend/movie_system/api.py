@@ -54,4 +54,6 @@ urlpatterns = [
     path('movie/<int:pk>/images/', movie.movie_image_api_view, name='movie-images'),
     path('movie/<int:pk>/videos/', movie.movie_video_api_view, name='movie-videos'),
     path('movie/<int:pk>/reviews/', movie.movie_review_api_view, name='movie-reviews'),
+    path('actor/<int:pk>/', movie.actor_detail_api_view, name='actor-list'),
+    path('director/<int:pk>/', movie.director_detail_api_view, name='director-list'),
 ]
