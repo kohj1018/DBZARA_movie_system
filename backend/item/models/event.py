@@ -45,6 +45,14 @@ class Event(models.Model):
     non_coupon = models.ManyToManyField(Benefit, through='NonCoupon', through_fields=('event', 'benefit'), related_name='+')
 
     @property
+    def poster_url(self):
+        return self.poster.url
+
+    @property
+    def backdrop_url(self):
+        return self.backdrop.url
+
+    @property
     def remain_date(self):
         now_date = datetime.now()
         return (self.end_date - now_date).days
