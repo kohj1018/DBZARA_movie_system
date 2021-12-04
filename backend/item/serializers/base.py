@@ -10,7 +10,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    category = SubCategorySerializer()
+    category = serializers.ReadOnlyField(source='category.name')
 
     class Meta:
         model = Item
