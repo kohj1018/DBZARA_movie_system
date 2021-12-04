@@ -21,7 +21,7 @@ class CinemaListAPIView(ListAPIView):
 class CinemaDetailAPIView(RetrieveAPIView):
     queryset = Cinema.objects.all()
     permission_classes = [AllowAny]
-    serializer_class = CinemaDetailSerializer()
+    serializer_class = CinemaDetailSerializer
 
 
 # FIXME: TO GET MOVIES & CINEMAS DATA

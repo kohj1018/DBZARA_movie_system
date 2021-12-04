@@ -68,7 +68,7 @@ class Movie(models.Model):
 
     @property
     def reservation_rate(self):
-        now_date = date.today()
+        now_date = date(2021, 12, 1)
         return 0
         # TODO: Fix After collect reservation dummy data
         return round(Reservation.objects.filter(
