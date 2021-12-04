@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 
@@ -64,11 +66,12 @@ class Attendance(PostgresPartitionedModel):
     def create(cls, employee, start_time, end_time, status):
         return cls.objects.create(
             employee=employee,
-            date=start_time.date(),
+            date=date(start_time.year, start_time.month, start_time.day),
             start_time=start_time,
             end_time=end_time,
             status=status
         )
+        # return None
 
 
 class EmployeeEvaluationByUser(models.Model):
