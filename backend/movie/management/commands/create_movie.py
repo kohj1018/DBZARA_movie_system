@@ -5,7 +5,7 @@ from functions.collect_movie_data import KobisAPI
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def add_arguments(self, parser):
         parser.add_argument('--days', default=0, type=int)
