@@ -5,9 +5,9 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 
 from item.serializers import (
-    ItemSerializer, EventSerializer, SubCategorySerializer, EventDetailSerializer
+    ItemSerializer, EventSerializer, EventDetailSerializer, StoreSerializer
 )
-from item.models import Event
+from item.models import Event, Item
 
 
 class EventListAPIView(ListAPIView):
@@ -20,3 +20,10 @@ class EventDetailAPIView(RetrieveAPIView):
     queryset = Event.objects.all()
     permission_classes = [AllowAny]
     serializer_class = EventDetailSerializer
+
+
+class StoreListAPIView(ListAPIView):
+    pagination_class = None
+    queryset = Item.objects.filter(category__main_category_id=3)
+    permission_classes = [AllowAny]
+    serializer_class = StoreSerializer

@@ -19,6 +19,9 @@ urlpatterns = [
     path('event/', item.event_list_api_view, name='event'),
     path('event/<int:pk>/', item.event_detail_api_view, name='event-detail'),
 
+    # item api
+    path('store/', item.store_list_api_view, name='item'),
+
     # accounts api
     path('accounts/login/google/', accounts.google_login_api_view, name='google-login'),
     path('accounts/login/kakao/', accounts.kakao_login_api_viwe, name='kakao-login'),
@@ -54,6 +57,8 @@ urlpatterns = [
     path('movie/<int:pk>/images/', movie.movie_image_api_view, name='movie-images'),
     path('movie/<int:pk>/videos/', movie.movie_video_api_view, name='movie-videos'),
     path('movie/<int:pk>/reviews/', movie.movie_review_api_view, name='movie-reviews'),
+
+    # person api
     path('actor/<int:pk>/', movie.actor_detail_api_view, name='actor-list'),
     path('director/<int:pk>/', movie.director_detail_api_view, name='director-list'),
 ]
