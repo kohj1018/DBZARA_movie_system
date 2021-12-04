@@ -9,9 +9,15 @@
         </div>
 
         <div class="row">
-            {% for event in events %}
-                {% include 'item/_poster.html' with object=event type=type %}
-            {% endfor %}
+            <section class="projects-horizontal">
+                <div class="container">
+                    <div class="row projects">
+                        {% for event in events %}
+                            {% include 'item/_poster.html' with object=event type=type %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div class="row justify-content-md-center" >

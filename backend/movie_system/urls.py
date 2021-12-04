@@ -46,6 +46,7 @@ urlpatterns = [
 
     path('movie/', include('movie.urls')),
     path('cinema/', include('cinema.urls')),
+    path('item/', include('item.urls')),
 
     path('api/v1/', include('movie_system.api'))
 ]
