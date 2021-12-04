@@ -13,7 +13,7 @@ from functions.collect_movie_data import KobisAPI
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def __init__(self):
         super().__init__()

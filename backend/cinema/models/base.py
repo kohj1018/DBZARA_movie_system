@@ -111,6 +111,14 @@ class Schedule(PostgresPartitionedModel):
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
 
+    @property
+    def start_time(self):
+        return self.datetime.hour
+
+    @property
+    def end_time(self):
+        return (self.datetime.hour + timedelta(minutes=self.movie.running_time)).hour
+
     def __str__(self):
         return f'{self.theater} - {self.movie}'
 

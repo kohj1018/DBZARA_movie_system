@@ -25,7 +25,7 @@ CONTEXT = {
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def add_arguments(self, parser):
         parser.add_argument('--total', default=1, type=int)

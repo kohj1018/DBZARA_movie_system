@@ -26,7 +26,7 @@ def create_department():
 
 
 class Command(BaseCommand):
-    help = 'this command create employee'
+    help = 'this commands create employee'
 
     def handle(self, *args, **options):
         total = options.get('total')

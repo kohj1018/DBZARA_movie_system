@@ -1,11 +1,11 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'css/model-card.css' %}">
+<link rel="stylesheet" href="{% static 'css/model-poster.css' %}">
 
-<div class="rounded col-sm-2 model-card"><a href="#">
+<div class="rounded col-sm-2 model-poster"><a href="#">
     </a>
     <div class="rounded bsblox-image-effect16"><a href="#">
-        {% if type == 'movie' %}
+        {% if type == 'event' %}
             {% if object.image %}
                 <img class="rounded img-fluid" src="{{ object.image.url }}" />
             {% else %}
@@ -21,25 +21,23 @@
 
 
         <div class="bsblox-caption">
-            {% if type == 'movie' %}
-                <p>VIEW <strong>MOVIE</strong></p>
+            {% if type == 'event' %}
+                <p>VIEW <strong>EVENT</strong></p>
             {% else %}
-                <p>VIEW <strong>PROFILE</strong></p>
+                <p>VIEW <strong>COUPON</strong></p>
             {% endif %}
         </div>
         </a>
         <div class="bsblox-links">
             <a href="#"></a>
-            {% if type == 'movie' %}
-                <a class="profile-link" href="{% url 'movie:movie-detail' object.pk %}">
-            {% elif type == 'actor' %}
-                <a class="profile-link" href="{% url 'movie:actor-detail' object.pk %}">
-            {% else %}
-                <a class="profile-link" href="{% url 'movie:director-detail' object.pk %}">
+            {% if type == 'event' %}
+                <a class="profile-link" href="{% url 'event:event-detail' object.pk %}">
+            {% elif type == 'coupon' %}
+                <a class="profile-link" href="{% url 'event:coupon-detail' object.pk %}">
             {% endif %}
                 <i class="fa fa-search fa fa-search"></i>
             </a>
         </div>
-        <div class="text-center model-card-title">{{ object.name }}</div>
+        <div class="text-center model-poster-title">{{ object.name }}</div>
     </div>
 </div>
