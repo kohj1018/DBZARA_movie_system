@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
-import movieData from "movieData";
+// import movieData from "movieData";
+import { dbzaraApi } from "dbzaraApi"
 
 const Movies = () => {
   const [movies, setMovies] = useState();
@@ -13,32 +14,33 @@ const Movies = () => {
   useEffect(() => {
     getMovie();
   }, [])
-  
+
 
   return (
     movies ? (
       <>
-      <Container>
-        <MovieRankCont>
-          {movies.map(movie => {
-            return (
-              <MovieView 
-                id={movie.id}
-                rank={movie.reservation_rate}
-                src={movie.poster}
-                age={movie.grade}
-                title={movie.name}
-                ticketSales={0}
-                rates={0}
+        <Container>
+          <MovieRankCont>
+            {movies.map(movie => {
+              return (
+                <MovieView
+                  id={movie.id}
+                  rank={movie.reservation_rate}
+                  src={movie.poster}
+                  age={movie.grade}
+                  title={movie.name}
+                  ticketSales={0}
+                  rates={0}
                 // {...movie}
-              />
-            );
-          })}
-        </MovieRankCont>
-      </Container>
-    </>
+                />
+              );
+            })}
+          </MovieRankCont>
+        </Container>
+      </>
     ) : <div></div>
-)};
+  )
+};
 
 export default Movies;
 

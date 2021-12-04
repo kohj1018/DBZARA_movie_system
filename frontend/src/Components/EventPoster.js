@@ -1,18 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios'
+
+const EventModal = styled.div`
+
+`
+
+
 
 const EventPoster = ({ id, day, src, title, text }) => {
+
+  const [modal, setModal] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    axios.get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
+      .then((result) => setModal(result.data))
+      .catch((err) => console.log(err))
+  })
+
+
   return (
     <>
-      <EventBg src={src}></EventBg>
+      {/* 이벤트 랜더링 */}
+      <EventBg src={`https://dbzarastorage.blob.core.windows.net${src}`}></EventBg>
       <EventInfo>
         <Btn>
-          <DDay>{day}</DDay>
+          <DDay>D - {day}</DDay>
           <EventTitle>{title}</EventTitle>
-          <EventText>{text}</EventText>
+          <EventText onClick={handleClickOpen}>
+            자세히 보기
+          </EventText>
         </Btn>
       </EventInfo>
+
+
+
+      {/* 모달 창 */}
+      <EventModal>
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+          <img src={`https://dbzarastorage.blob.core.windows.net${modal.poster_url}`} />
+          {/* <p>{modal.title}</p> */}
+
+
+
+          {/* <Button autoFocus onClick={handleClose} color="primary">
+            닫기
+          </Button> */}
+
+        </Dialog>
+      </EventModal>
+
     </>
   );
 };

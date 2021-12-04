@@ -75,7 +75,13 @@ const TicketTable = styled.table`
   grid-template-rows: repeat(2, 1fr);
   font-size: 13px;
   color: #2b2b2b;
-  grid-row: ;
+  > th{
+    :nth-child(-n+6){
+      background: #e5e5e5;
+    }
+    background: #fff;
+    padding-top : 17px;
+  }
 `;
 const SalesTable = styled.table`
   border: 1px solid #e5e5e5;
@@ -110,18 +116,18 @@ const Registration = ({ id }) => {
         <UserContArea>
           <NoticeTitle>예매권</NoticeTitle>
           <TicketTable>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}>구분</th>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}>예매권 번호</th>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}>사용기간</th>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}>사용가능/매수</th>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}>특이사항</th>
-            <th style={{ background: "#e5e5e5", paddingTop: "17px" }}></th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 1</th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 2</th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 2</th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 2</th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 2</th>
-            <th style={{ background: "#fff", paddingTop: "17px" }} > 2</th>
+            <th>구분</th>
+            <th>예매권 번호</th>
+            <th>사용기간</th>
+            <th>사용가능/매수</th>
+            <th>특이사항</th>
+            <th></th>
+            <th > 1</th>
+            <th > 2</th>
+            <th > 2</th>
+            <th > 2</th>
+            <th > 2</th>
+            <th > 2</th>
           </TicketTable>
           <NoticeDetail style={{ marginTop: "30px" }}>연간 예매권 등록매수는 1인당 24매(1인 1매권)로 제한됩니다. 24회 초과 시 예매권 등록이 불가합니다.</NoticeDetail>
           <NoticeDetail>동일한 그룹의 예매권은 한 아이디당 4매(1인 1매권)까지만 등록이 가능합니다.</NoticeDetail>
