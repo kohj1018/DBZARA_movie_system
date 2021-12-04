@@ -77,23 +77,23 @@ const MoviesInfo = ({ match }) => {
                 <GrTitle>연령별/성별 예매율</GrTitle>
                 <GraphGrid>
                   <GraphBar>
-                      {movieData[match.params.id].agePercent.map((age, index) => {
-                        return (
-                          <BarDrawCont>
-                            <BarLabel>{index+1}0대</BarLabel>
-                            <BarDraw>
-                              <BarPercent style={{width: `${age}px`}}></BarPercent>
-                              <GraphTool>{age}%</GraphTool>
-                            </BarDraw>
-                          </BarDrawCont>
-                        )
-                      })}
+                    {movieData[match.params.id].agePercent.map((age, index) => {
+                      return (
+                        <BarDrawCont>
+                          <BarLabel>{index + 1}0대</BarLabel>
+                          <BarDraw>
+                            <BarPercent style={{ width: `${age}px` }}></BarPercent>
+                            <GraphTool>{age}%</GraphTool>
+                          </BarDraw>
+                        </BarDrawCont>
+                      )
+                    })}
                   </GraphBar>
                   <GraphSex>
-                    <SexMale style={{height: movieData[match.params.id].sexPercent.male}}></SexMale>
-                    <SexMaleTxt style={{height: movieData[match.params.id].sexPercent.male}}>{movieData[match.params.id].sexPercent.male}</SexMaleTxt>
-                    <SexFemale style={{height: movieData[match.params.id].sexPercent.female}}></SexFemale>
-                    <SexFemaleTxt style={{height: movieData[match.params.id].sexPercent.female}}>{movieData[match.params.id].sexPercent.female}</SexFemaleTxt>
+                    <SexMale style={{ height: movieData[match.params.id].sexPercent.male }}></SexMale>
+                    <SexMaleTxt style={{ height: movieData[match.params.id].sexPercent.male }}>{movieData[match.params.id].sexPercent.male}</SexMaleTxt>
+                    <SexFemale style={{ height: movieData[match.params.id].sexPercent.female }}></SexFemale>
+                    <SexFemaleTxt style={{ height: movieData[match.params.id].sexPercent.female }}>{movieData[match.params.id].sexPercent.female}</SexFemaleTxt>
                   </GraphSex>
                 </GraphGrid>
               </GraphGender>
@@ -132,19 +132,19 @@ const MoviesInfo = ({ match }) => {
                   <>
                     {tabIndex === idx ? (
                       <TabMenuItem style={activeTabStyle}>
-                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
+                        <TabItemLink onClick={() => { setTabIndex(idx) }}>{tabName}</TabItemLink>
                       </TabMenuItem>
                     ) : (
-                      <TabMenuItem style={originTabStyle}>
-                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
-                      </TabMenuItem>
-                    )}
+                        <TabMenuItem style={originTabStyle}>
+                          <TabItemLink onClick={() => { setTabIndex(idx) }}>{tabName}</TabItemLink>
+                        </TabMenuItem>
+                      )}
                   </>
                 )
               })}
             </TabMenu>
             {/* 탭 콘텐츠 부분 */}
-            <TabContent tabIndex={tabIndex} id={match.params.id}/>
+            <TabContent tabIndex={tabIndex} id={match.params.id} />
             {/* <Router>
               <TabMenu>
                 {MoviesInfoTab.map(tab => {
@@ -177,30 +177,30 @@ const MoviesInfo = ({ match }) => {
 };
 
 const TabContent = (props) => {
-  switch(props.tabIndex) {
+  switch (props.tabIndex) {
     case 0:
       return (
-        <Default id={props.id}/>
+        <Default id={props.id} />
       )
       break;
     case 1:
       return (
-        <People id={props.id}/>
+        <People id={props.id} />
       )
       break;
     case 2:
       return (
-        <Videos id={props.id}/>
+        <Videos id={props.id} />
       )
       break;
     case 3:
       return (
-        <Photos id={props.id}/>
+        <Photos id={props.id} />
       )
       break;
     case 4:
       return (
-        <Rates id={props.id}/>
+        <Rates id={props.id} />
       )
       break;
   }

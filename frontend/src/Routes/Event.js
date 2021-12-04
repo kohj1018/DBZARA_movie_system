@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Button, Typography } from "@material-ui/core";
 import EventPoster from "Components/EventPoster";
+import { BorderBottom } from "@material-ui/icons";
 // import { Tab } from '@mui/material-ui/core/Tab';
+import EventData from "EventData";
 
 
 const Container = styled.div`
   width: 100%;
-  height: 1041.650px;
+  height: 100%;
   padding-top: 70px;
   background-color: white;
   flex-direction: column;
@@ -34,7 +36,6 @@ const EventInner = styled.div`
   padding: 0 0 120px;
   margin: 0 105px 0 105px;
   width: 1200px;
-  height: 621.875px;
   margin:auto;
 `;
 
@@ -64,9 +65,18 @@ const TabBoxContainer = styled.li`
   text-align: center;
   padding-bottom:2px;
   border-bottom:1px solid #b4b4b4;
-  :active{
-    border-bottom: 3px solid #2b2b2b;
-  }
+ 
+`;
+
+const TabBoxContainerActive = styled.li`
+  width: 300px;
+  height: 77.76px;
+  padding-top: 30px;
+  display: table-cell;
+  text-align: center;
+  padding-bottom:2px;
+  border-bottom: 3px solid #2b2b2b;
+ 
 `;
 
 const TabBox = styled(Button)`
@@ -79,10 +89,11 @@ const TabBox = styled(Button)`
 `;
 
 const AllEventList = styled.div`
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   width : 1200px;
-  height : 293.89px;
   margin-top: 60px;
+  gap: 15px;
   position: relative;
   *{        //*의 의미 - 이 태그의 자식들은 모두 이 속성을 따라갈 것이다
     box-sizing: border-box;
@@ -91,8 +102,8 @@ const AllEventList = styled.div`
 const EventLinkBox = styled.div`
     position: relative;
     margin: 0 0 10px 10px;
-    display: inline-block;
-    width: calc((100% - 60px) / 3);
+    display: flex;
+    width: 100%;
 `;
 
 // const EventBox = styled.div`
@@ -110,9 +121,12 @@ const EventLinkBox = styled.div`
 
 // `;
 
+
+
 const Event = () => {
   const [tabClick, setTabClick] = useState(0);
 
+  window.test = tabClick;
 
 
   return (
@@ -139,23 +153,85 @@ const Event = () => {
             })}
           */}
             <TabMenu>
-              <TabBoxContainer>
-                <TabBox onClick={() =>{setTabClick(0)}}> 전체 </TabBox>
-              </TabBoxContainer>
-              <TabBoxContainer>
-                <TabBox onClick={() =>{setTabClick(1)}}> 시사회 </TabBox>
-              </TabBoxContainer>
-              <TabBoxContainer>
-                <TabBox onClick={() =>{setTabClick(2)}}> 이벤트 </TabBox>
-              </TabBoxContainer>
+              {tabClick === 0 ? (
+                <TabBoxContainerActive>
+                  <TabBox onClick={() => {
+                    setTabClick(0)
+                  }}> 전체 </TabBox>
+                </TabBoxContainerActive>
+              ) : (
+                  <TabBoxContainer>
+                    <TabBox onClick={() => {
+                      setTabClick(0)
+                    }}> 전체 </TabBox>
+                  </TabBoxContainer>
+                )}
+              {tabClick === 1 ? (
+                <TabBoxContainerActive>
+                  <TabBox onClick={() => {
+                    setTabClick(1)
+                  }}> 시사회 </TabBox>
+                </TabBoxContainerActive>
+              ) : (
+                  <TabBoxContainer>
+                    <TabBox onClick={() => {
+                      setTabClick(1)
+                    }}> 시사회 </TabBox>
+                  </TabBoxContainer>
+                )}
+              {tabClick === 2 ? (
+                <TabBoxContainerActive>
+                  <TabBox onClick={() => {
+                    setTabClick(2)
+                  }}> 이벤트 </TabBox>
+                </TabBoxContainerActive>
+              ) : (
+                  <TabBoxContainer>
+                    <TabBox onClick={() => {
+                      setTabClick(2)
+                    }}> 이벤트 </TabBox>
+                  </TabBoxContainer>
+                )}
               <TabBoxContainer>
                 <a href="https://movie.yes24.com/Event/Winner" target="_blank">
                   <TabBox> 당첨자발표 </TabBox>
                 </a>
               </TabBoxContainer>
+              {/* {tabClick === 3 ? (
+                <TabBoxContainerActive>
+                       <TabBox onClick={() => {
+                      setTabClick(3)
+                    }}> 당첨자발표 </TabBox>
+                  <a href="https://movie.yes24.com/Event/Winner" target="_blank">
+                    당첨자발표
+                  </a>
+                </TabBoxContainerActive>
+              ) : (
+                  <TabBoxContainer>
+                    <TabBox onClick={() => {
+                      <a href="https://movie.yes24.com/Event/Winner" target="_blank">
+                        <TabBox> 당첨자발표 </TabBox>
+                      </a>
+
+                    }}> 당첨자발표 </TabBox>
+                  </TabBoxContainer>
+                )} */}
+
+              {/* 
+              <TabBoxContainer>
+                <TabBox onClick={() => { setTabClick(1) }}> 시사회 </TabBox>
+              </TabBoxContainer>
+              <TabBoxContainer>
+                <TabBox onClick={() => { setTabClick(2) }}> 이벤트 </TabBox>
+              </TabBoxContainer>
+              <TabBoxContainer>
+                <a href="https://movie.yes24.com/Event/Winner" target="_blank">
+                  <TabBox> 당첨자발표 </TabBox>
+                </a>
+              </TabBoxContainer> */}
             </TabMenu>
           </EventTab>
-          <TabContent tabClick ={tabClick}/>
+          <TabContent tabClick={tabClick} />
 
           {/* <AllEventList>
             {[1, 2].map((i)=>{
@@ -175,85 +251,84 @@ const Event = () => {
   );
 };
 
-const TabContent = (props) =>{
-  if (props.tabClick === 0) {
-    return (          
-    <AllEventList>
-      {[0, 1, 2].map((i)=>{
-        return(
-        <EventLinkBox>
-            <img src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"
-            style={{width:"100%", height:"100%", position:"relative"}}></img>
-            <EventPoster>
-              <div>
-                <DDay>D - 46</DDay>
-                <EventTitle>매일매일 출첵하고 혜택받자!</EventTitle>
-                <EventText>예매권/할인권</EventText>
-              </div>
-            </EventPoster>
-        </EventLinkBox>
+const TabContent = (props) => {
+  const tab = ['전체', '시사회', '이벤트', '당첨자발표'];
+
+  return (
+    tab.map((data, idx) => {
+      if (props.tabClick === idx) {
+        return (
+          <AllEventList>
+            {console.log(EventData[data])}
+            {
+              EventData[data].length !== 0 ?
+                (EventData[data].map(event => {
+                  return (
+                    <EventLinkBox>
+                      <EventPoster
+                        id={event.id}
+                        day={event.day}
+                        src={event.src}
+                        title={event.title}
+                        text={event.text}
+                      />
+                    </EventLinkBox>
+                  );
+                })
+                ) :
+                // console.log('data', data)
+                <NoneEvent>진행중인 {data}가 없습니다.</NoneEvent>
+            }
+          </AllEventList >
         );
-      })}
-    </AllEventList>
-)
-  } else if (props.tabClick === 1){
-    return (          
-      <AllEventList>
-        <NoneEvent>
-          진행중인 시사회가 없습니다.
-        </NoneEvent>
-        {/* {[0, 1].map((i)=>{
-          return(
-          <EventLinkBox>
-              <EventPoster><p>이벤트 image 넣을게여</p></EventPoster>
-          </EventLinkBox>
-          );
-        })} */}
-      </AllEventList>
-  )
-  } else if (props.tabClick === 2){
-    return (          
-      <AllEventList>
-        {[2].map((i)=>{
-          return(
-          <EventLinkBox>
-            <img src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"
-            width="100%"height="100%"position="relative"></img>
-              <EventPoster></EventPoster>
-          </EventLinkBox>
-          );
-        })}
-      </AllEventList>
-  )
-  } else if (props.tabClick === 3){
-    return <div> 3 </div>
-  }
-}
+      }
+    })
+  );
 
-const DDay = styled.div`
-  padding-bottom: 15px;
-  font-size: 28px;
-  color: #ec6159;
-  text-align: center;
-`;
+  // if (props.tabClick === 0) {
+  //   return (
+  //     <AllEventList>
+  //       {EventData.map(event => {
 
-const EventTitle = styled.div`
-  padding-bottom: 20px;
-  font-size: 20px;
-  line-height: 26px;
-  text-align: center;
-  vertical-align: baseline;
-`;
+  //       })}
+  //     </AllEventList>
+  //   );
+  // } else if (props.tabClick === 1) {
+  //   return (
+  //     <AllEventList>
 
-const EventText = styled.div`
-  padding-bottom: 10px;
-`;
+  //       {/* {EventData.map((i)=>{
+  //         return(
+  //         <EventLinkBox>
+  //             <EventPoster><p>이벤트 image 넣을게여</p></EventPoster>
+  //         </EventLinkBox>
+  //         );
+  //       })} */}
+  //     </AllEventList>
+  //   );
+  // } else if (props.tabClick === 2) {
+  //   return (
+  //     <AllEventList>
+  //       {[1, 2, 3].map((i) => {
+  //         return (
+  //           <EventLinkBox>
+  //             <EventPoster id={i}></EventPoster>
+  //           </EventLinkBox>
+  //         );
+  //       })}
+  //     </AllEventList>
+  //   );
+  // } else if (props.tabClick === 3) {
+  //   return <div> 3 </div>;
+  // }
+};
 
 const NoneEvent = styled.div`
   color: #2b2b2b;
   text-align: center;
   font-size: 14px;
+  grid-row-start: 1;
+  grid-column-start: 2;
 `;
 
 export default Event;
-
