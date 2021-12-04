@@ -23,11 +23,10 @@ import SeatReservation from "Routes/Reservation/SeatReservation";
 import DiscountReservation from "Routes/Reservation/DiscountReservation";
 
 // api연결
-// import { moviesApi } from "api";
 import { UserContext } from "context";
 import { dbzaraApi } from "dbzaraApi";
 
-// 예매page
+// ! 예매page
 const Reservation = () => {
   // 영화선택
   const [expanded, setExpanded] = React.useState("panel1");
@@ -53,6 +52,7 @@ const Reservation = () => {
   const [toDay, onChange] = useState(new Date());
   // value console찍기
 
+  // TODO schedule data 받아오기
   //! API 연결
   let [top10, setTop10] = useState({
     top: null,
@@ -133,19 +133,15 @@ const Reservation = () => {
     choice: false,
     day: null,
   });
+  // TODO seat data
   const [movieSeat, onMovieSeat] = useState({
     choice: false,
+    seat: null,
   });
 
-  // TODO day만 잘라서 넣어놓기
   console.log(moviesChoice);
   console.log(theaterChoice);
-  // console.log(new Date().getDay());
-  // console.log(dayChoice.day.getDay());
-  // console.log(dayChoice.day);
-  // console.log(dayChoice.day.view);
-  console.log(toDay.toISOString().split("T")[0].split("-"));
-  // console.log(toDay.format);
+  console.log(dayChoice);
 
   // !  cinema data
   const area = [
@@ -200,6 +196,8 @@ const Reservation = () => {
       }
     });
   // console.log(areaCinema);
+
+  // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
 
   return (
     <Container>
@@ -430,13 +428,12 @@ const Reservation = () => {
                         onDayChoice((data) => ({
                           ...data,
                           choice: true,
-                          day: toDay,
+                          day: toDay.toISOString().split("T")[0].split("-"),
                         }))
                       }
                       value={toDay}
-                      // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
                     />
-                    {/* {console.log(dayChoice)} */}
+                    {console.log(dayChoice)}
                     <Explanation>
                       <p>
                         영화, 극장, 관람일을 선택하시면 시간 선택이 아래쪽에
