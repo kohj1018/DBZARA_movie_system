@@ -31,8 +31,9 @@ export const UserContext = React.createContext({
     },
     error: null,
   },
-  handleUserInfo: (name, password, tokenId) => {},
-  favoriteMovies: ["밤샘", "지옥", "종강", "원츄"],
+  handleUserInfo: (tokenId) => {
+
+  },
 });
 
 const UserInfo = (props) => {
