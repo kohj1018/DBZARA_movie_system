@@ -18,11 +18,13 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Event
-        fields = ['id', 'title', 'remain_date', 'backdrop']
+        fields = ['id', 'title', 'remain_date', 'backdrop_url']
 
 
 class EventDetailSerializer(EventSerializer):
+
     class Meta(EventSerializer.Meta):
-        fields = ['id', 'title', 'start_date', 'end_date', 'poster']
+        fields = ['id', 'title', 'start_date', 'end_date', 'poster_url']
