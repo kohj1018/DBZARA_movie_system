@@ -98,9 +98,9 @@ class MovieReviewAPIView(ListModelMixin, MovieBaseAPIView):
 
 
 class ReviewBaseAPIView(GenericAPIView):
+    queryset = Review.objects.all()
     permission_classes = [IsAuthenticated]
-    serializer = ReviewSerializer
-    model = Review
+    serializer_class = ReviewSerializer
 
 
 class ReviewAPIView(ReviewBaseAPIView):
