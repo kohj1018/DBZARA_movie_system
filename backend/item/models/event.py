@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 
@@ -42,6 +44,29 @@ class Event(models.Model):
     coupon = models.ManyToManyField(Benefit, through='Coupon', through_fields=('event', 'benefit'), related_name='+')
     non_coupon = models.ManyToManyField(Benefit, through='NonCoupon', through_fields=('event', 'benefit'), related_name='+')
 
+    @property
+    def remain_date(self):
+        now_date = datetime.now()
+        return (self.end_date - now_date).days
+
+    def create_coupon(self, benefit, amount=1000, duration=7):
+        return self.coupon.add(
+            benefit=benefit,
+            event=self,
+            amount=amount,
+            duration=duration
+        )
+
+    def create_non_coupon(self, benefit, amount=3000):
+        return self.non_coupon.create(
+            benefit=benefit,
+            event=self,
+            amount=amount
+        )
+
+    def __str__(self):
+        return self.title
+
 
 class Coupon(models.Model):
     benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
@@ -49,25 +74,8 @@ class Coupon(models.Model):
     amount = models.IntegerField(verbose_name='최대 수량')
     duration = models.IntegerField(verbose_name='유효 기간')
 
-    @classmethod
-    def create(cls, benefit, event, amount=1000, duration=7):
-        cls.objects.create(
-            benefit=benefit,
-            event=event,
-            amount=amount,
-            duration=duration
-        )
-
 
 class NonCoupon(models.Model):
     benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, related_name='+')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='+')
     amount = models.IntegerField(verbose_name='최대 수량')
-
-    @classmethod
-    def create(cls, benefit, event, amount=1000):
-        cls.objects.create(
-            benefit=benefit,
-            event=event,
-            amount=amount
-        )

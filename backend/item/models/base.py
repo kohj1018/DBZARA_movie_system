@@ -40,7 +40,7 @@ class Item(models.Model):
     is_sell = models.BooleanField(default=True, verbose_name='판매 여부')
 
     def __str__(self):
-        return self.name
+        return str(self.id)
 
     @classmethod
     def get_proper_ticket(cls, age, day, hour, name='2D'):

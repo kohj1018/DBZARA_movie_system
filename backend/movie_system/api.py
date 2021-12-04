@@ -2,6 +2,7 @@ from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
+from item import views as item
 from accounts import views as accounts
 from cinema import views as cinema
 from movie import views as movie
@@ -13,6 +14,10 @@ urlpatterns = [
     path('token/', obtain_jwt_token),
     path('token/verify/', verify_jwt_token),
     path('token/refresh/', refresh_jwt_token),
+
+    # event api
+    path('event/', item.event_list_api_view, name='event'),
+    path('event/<int:pk>/', item.event_detail_api_view, name='event-detail'),
 
     # accounts api
     path('accounts/login/google/', accounts.google_login_api_view, name='google-login'),
