@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
 import movieData from "movieData";
-import { dbzaraApi } from "dbzaraApi";
 
 const Movies = () => {
   const [movies, setMovies] = useState();
