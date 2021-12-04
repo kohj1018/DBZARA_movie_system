@@ -1,19 +1,14 @@
 from movie.serializers.base import *
 
 
-class BoxOfficeMovieSerializer(MovieSerializer):
+class MovieListSerializer(MovieSerializer):
     class Meta(MovieSerializer.Meta):
-        fields = ['name', 'poster', 'backdrop', 'reservation_rate']
-
-
-class NotOpenMovieSerializer(MovieSerializer):
-    class Meta(MovieSerializer.Meta):
-        fields = ['name', 'poster', 'backdrop', 'opening_date']
+        fields = MovieSerializer.Meta.fields + ['reservation_rate']
 
 
 class ReservationBaseMovieSerializer(MovieSerializer):
     class Meta(MovieSerializer.Meta):
-        fields = ['name', 'age']
+        fields = ['id', 'name', 'grade']
 
 
 class ReservationChoiceMovieSerializer(ReservationBaseMovieSerializer):
@@ -34,8 +29,13 @@ class MovieDetailSerializer(MovieSerializer):
 
     class Meta:
         model = Movie
-        fields = ['name', 'running_time', 'summary', 'opening_date',
-                  'genres', 'distributors', 'poster', 'backdrop']
+        fields = ['id', 'name', 'poster', 'backdrop', 'grade', 'running_time', 'summary', 'opening_date', 'genres', 'distributors']
+
+
+class MovieReservationSerializer(MovieSerializer):
+
+    class Meta(MovieSerializer.Meta):
+        fields = []
 
 
 class MovieStaffSerializer(MovieSerializer):
@@ -61,7 +61,7 @@ class MovieVideoSerializer(MovieSerializer):
 
 
 class MovieReviewSerializer(MovieSerializer):
-    reviews = ReviewSerializer()
+    reviews = ReviewSerializer(source='review_set', many=True)
 
     class Meta(MovieSerializer.Meta):
         fields = ['reviews']

@@ -51,8 +51,3 @@ class Command(BaseCommand):
             if created:
                 user.is_employee = True
                 user.save()
-        
-        # seeder.execute()
-        # self.stdout.write(self.style.SUCCESS(
-        #     f"{total} users have been created."))
-

@@ -1,57 +1,91 @@
 import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // TODO movies poster로 연결하고
 
-// 연령별로 색깔 다르게 표시
-const ageColor = {
-  전체: {
-    color: "#60c9e3",
-    border: "1px solid #60c9e3",
-    "font-size": "12px",
-    "line-height": "1",
-    padding: "5px 25px 0px 0px",
-  },
-  12: {
-    color: "#6dd551",
-    border: "1px solid #6dd551",
-    "font-size": "15px",
-    "line-height": "0.7",
-    padding: "5px 0px 0px 0px",
-  },
-  15: {
-    color: "#fbac30",
-    border: "1px solid #fbac30",
-    "font-size": "15px",
-    "line-height": "0.7",
-    padding: "5px 0px 0px 0px",
-  },
-  청불: {
-    color: "#d30101",
-    border: "1px solid #d30101",
-    "font-size": "12px",
-    "line-height": "1",
-    padding: "5px 25px 0px 0px",
-  },
-};
 
-const MoviePoster = ({ rank, src, age, title, ticketSales, rates }) => {
+
+const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {  
+  console.log(age);
+  var ageColorStyle = {};
+  // 연령별로 색깔 다르게 표시
+  switch(age) {
+    case 0:
+      ageColorStyle = {
+        color: "#60c9e3",
+        border: "1px solid #60c9e3",
+        fontSize: "12px",
+        lineHeight: "1",
+        padding: "5px 25px 0px 0px"
+      }
+      break;
+    case 12:
+      ageColorStyle = {
+        color: "#6dd551",
+        border: "1px solid #6dd551",
+        fontSize: "15px",
+        lineHeight: "0.7",
+        padding: "5px 0px 0px 0px"
+      }
+      break;
+    case 15:
+      ageColorStyle = {
+        color: "#fbac30",
+        border: "1px solid #fbac30",
+        fontSize: "15px",
+        lineHeight: "0.7",
+        padding: "5px 0px 0px 0px"
+      }
+      break;
+    case 19:
+      ageColorStyle = {
+        color: "#d30101",
+        border: "1px solid #d30101",
+        fontSize: "12px",
+        lineHeight: "1",
+        padding: "5px 25px 0px 0px"
+      }
+      break;
+    default:
+      ageColorStyle = {
+        color: "#6dd551",
+        border: "1px solid #6dd551",
+        fontSize: "15px",
+        lineHeight: "0.7",
+        padding: "5px 0px 0px 0px"
+      }
+      break;
+  }
+  console.log(ageColorStyle);
+  switch(age) {
+    case 0:
+      age = "전체"
+      break;
+    case 19:
+      age = "청불"
+      break;
+    default:
+      break;
+  }
   return (
     <>
       <Container>
         <ImgThumb>
-          <Poster src={src} alt="poster" />
+          <Poster src={`https://dbzarastorage.blob.core.windows.net${src}`} alt="poster" />
           <BtnContainer>
             <OverBtn>
               <Btn>예매</Btn>
-              <Btn>정보</Btn>
+              <Btn>
+                <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
+              </Btn>
             </OverBtn>
           </BtnContainer>
         </ImgThumb>
         <MvInfo>
           <MvTit>
-            <Age ageAttr={ageColor[age]}>{age}</Age>
+            <Age style={ageColorStyle}>{age}</Age>
             {title}
           </MvTit>
           <MvTxt>
@@ -126,6 +160,14 @@ const Btn = styled(Button)`
   }
 `;
 
+const SLink = styled(Link)`
+  && {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const MvInfo = styled.div`
   padding: 25px 0;
   text-align: center;
@@ -151,16 +193,18 @@ const MvTxt = styled.p`
 
 const Age = styled.span`
   margin-right: 5px;
-  color: ${(props) => props.ageAttr["color"]};
-  border: ${(props) => props.ageAttr["border"]};
-  padding: ${(props) => props.ageAttr["padding"]};
   display: inline-block;
   width: 25px;
   height: 22px;
-  line-height: ${(props) => props.ageAttr["line-height"]};
   text-align: center;
-  font-size: ${(props) => props.ageAttr["font-size"]};
+  
 `;
+
+  // line-height: ${(props) => props.ageAttr["line-height"]};
+  // color: ${(props) => props.ageAttr["color"]};
+  // border: ${(props) => props.ageAttr["border"]};
+  // padding: ${(props) => props.ageAttr["padding"]};
+  // font-size: ${(props) => props.ageAttr["font-size"]};
 
 const TicketSales = styled.span`
   margin-left: 0;

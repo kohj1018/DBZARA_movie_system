@@ -1,38 +1,38 @@
 from rest_framework import serializers
 
 from movie.models import (
-    Movie, Genre, Actor, Character, Director, Distributor, Image, Video, Review
+    Movie, Genre, Actor, Character, Director, Distributor, Image, Video, Review, MovieInfo
 )
 
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['name', 'poster', 'backdrop']
+        fields = ['id', 'grade', 'name', 'poster', 'backdrop']
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = ['name', 'image']
+        fields = ['id', 'name', 'image']
 
 
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
-        fields = ['name', 'image']
+        fields = ['id', 'name', 'image']
 
 
 class DistributorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distributor
-        fields = ['name', 'image']
+        fields = ['id', 'name', 'image']
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -56,8 +56,14 @@ class VideoSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField(source='profile.user.username')
+    name = serializers.ReadOnlyField(source='profile.anonymization_name')
 
     class Meta:
         model = Review
-        fields = ['name', 'comment', 'sympathy', 'not_sympathy', 'created']
+        fields = ['id', 'name', 'comment', 'sympathy', 'not_sympathy', 'created']
+
+
+class MovieInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieInfo
+        fields = '__all__'

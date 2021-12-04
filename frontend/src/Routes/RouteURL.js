@@ -1,5 +1,6 @@
 import Home from "Routes/Home";
 import Movies from "Routes/Movies";
+import MoviesInfo from "Routes/MoviesInfo";
 import Reservation from "Routes/Reservation";
 import Theater from "Routes/Theater";
 import Event from "Routes/Event";
@@ -8,7 +9,7 @@ import StoreTicket from "Routes/Store/Ticket";
 import StorePopcorn from "Routes/Store/Popcorn";
 import StorePointMall from "Routes/Store/Pointmall";
 import Login from "Routes/Login";
-import join from "Routes/Join";
+import join from "Routes/MyPage";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -20,10 +21,10 @@ export default [
     path: "/Movies",
     component: Movies,
   },
-  // TODO Create Movies Detail page
+  // 이거 왜 MovieView.js의 Link to랑 같이 "/MoviesInfo/Index?mId=:id"로 바꾸면 안되지?
   {
     path: "/MoviesInfo/Index/:id",
-    component: Movies,
+    component: MoviesInfo,
   },
   {
     path: "/Reservation",

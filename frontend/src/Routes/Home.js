@@ -1,15 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
-import { moviesApi } from "api";
+import { dbzaraApi } from "dbzaraApi";
 import { Link } from "react-router-dom";
 import MovieVideo from "Components/MovieVideo";
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import TheatersIcon from '@material-ui/icons/Theaters';
+import EventPoster from "Components/EventPoster";
+
+import HeadsetMicIcon from "@material-ui/icons/HeadsetMic";
+import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import TheatersIcon from "@material-ui/icons/Theaters";
+import Carousel from "react-material-ui-carousel";
 
 // TODO styled-component 컴포넌트화 만들기
 // TODO CSS 추가 항목들
@@ -47,7 +50,7 @@ const NextBtn = styled(SlideBtn)`
 const Gradient = styled.div`
   width: 200px;
   position: absolute;
-  z-index: 10;
+  z-index: 2;
 `;
 
 const MainLeft = styled(Gradient)`
@@ -109,14 +112,14 @@ const RankingRight = styled(Gradient)`
 const Home = () => {
   // 박스 오피스 순위
   let [movies, setMovies] = useState({
-    popular: null,
+    boxOffice: null,
     error: null,
     loading: true,
   });
 
   // 개봉 예정작
-  let [upComingMovies, setUpComingMovies] = useState({
-    upComing: null,
+  let [notOpenMovies, setNotOpenMovies] = useState({
+    notOpen: null,
     error: null,
     loading: true,
   });
@@ -125,19 +128,15 @@ const Home = () => {
   async function feactApi() {
     try {
       const {
-        data: { results: popular },
-      } = await moviesApi.popular();
+        data: { results: boxOffice },
+      } = await dbzaraApi.boxOffice();
       // console.log(data);
-      setMovies((movies) => ({ ...movies, popular }));
-      // console.log(popular);
+      setMovies((movies) => ({ ...movies, boxOffice }));
 
       const {
-        data: { results: upComing },
-      } = await moviesApi.upComing();
-      setUpComingMovies((movies) => ({ ...movies, upComing }));
-
-      // setOnNav((onNav) => ({ ...onNav, data: movies.popular }));
-
+        data: { results: notOpen },
+      } = await dbzaraApi.notOpen();
+      setNotOpenMovies((movies) => ({ ...movies, notOpen }));
     } catch {
       setMovies((movies) => ({
         ...movies,
@@ -145,9 +144,13 @@ const Home = () => {
       }));
     } finally {
       setMovies((movies) => ({ ...movies, loading: false }));
-      setUpComingMovies((movies) => ({ ...movies, loading: false }));
+      setNotOpenMovies((movies) => ({ ...movies, loading: false }));
     }
   }
+  // API연결 렌더링
+  useEffect(() => {
+    feactApi();
+  }, []);
 
   // 스크롤 이벤트
   const [position, setPosition] = useState({
@@ -162,15 +165,14 @@ const Home = () => {
       setPosition((position) => ({ ...position, Event: true }));
   };
 
-
   // TODO focunIdx ==== -9, +9  : 에니매이션 적용 0.5s후 focunidx = 0, left = -9*276으로 변경
 
   // 이전 poster
   const prevSlide = () => {
-    console.log("func전", focusIdx);
+    // console.log("func전", focusIdx);
     if (focusIdx === 9) setFocusIdx(0);
     else setFocusIdx(focusIdx + 1);
-    console.log("func후", focusIdx);
+    // console.log("func후", focusIdx);
   };
 
   // 이후 poster
@@ -187,12 +189,7 @@ const Home = () => {
     navList: NavList[0],
   });
 
-    // API연결 렌더링
-    useEffect(() => {
-      feactApi();
-    }, []);
-
-    // unmount 시 scroll 이벤트 제거
+  // unmount 시 scroll 이벤트 제거
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
     return () => {
@@ -210,54 +207,48 @@ const Home = () => {
 
   // Ranking초기화면;
   useEffect(() => {
-    navChange(movies.popular, 0);
+    navChange(movies.boxOffice, 0);
   }, [movies]);
-
 
   // Ranking 현재 위치
   const [focusIdx, setFocusIdx] = useState(0);
-
-  // const listPoster = useRef(null);
-
-  // const makeClonePoster = (data) => {
-  //   data.map();
-  // };
-
-  // makeClonePoster(onNav.data.slice(0.1));
 
   return (
     <HomePage>
       {/* {console.log(window.scrollY)} */}
       {/* 메인 poster */}
-      <MainPoster movies={movies.popular} />
+      <Carousel>
+        <MainPoster movies={movies.boxOffice} />
+      </Carousel>
+
       {/* 랭킹 */}
       <Ranking>
         <RankingMenu>
           <RankingMenubgImg>{onNav.navList}</RankingMenubgImg>
           {/* //TODO component로 변경하기 */}
           <Rankingli
-            onClick={() => navChange(movies.popular, 0)}
+            onClick={() => navChange(movies.boxOffice, 0)}
             current="RANKING"
             state={onNav.navList}
           >
             예매순위
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(movies.popular, 1)}
+            onClick={() => navChange(movies.boxOffice, 1)}
             current="BOXOFFICE"
             state={onNav.navList}
           >
             박스오피스
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(upComingMovies.upComing, 2)}
+            onClick={() => navChange(notOpenMovies.notOpen, 2)}
             current="COMING"
             state={onNav.navList}
           >
             개봉예정작
           </Rankingli>
           <Rankingli
-            onClick={() => navChange(movies.popular, 3)}
+            onClick={() => navChange(movies.boxOffice, 3)}
             current="FESTIVAL"
             state={onNav.navList}
           >
@@ -268,8 +259,9 @@ const Home = () => {
         <RankingRight />
         {onNav.data ? (
           <RankingContainer>
+            {/* <Carousel> */}
             <RankingPosterUl current={focusIdx}>
-              {console.log("end", focusIdx)}
+              {/* {console.log("end", focusIdx)} */}
               {[1, 2, 3].map(() =>
                 onNav.data.slice(0, 10).map((movies, index) => {
                   return (
@@ -277,14 +269,14 @@ const Home = () => {
                       <MoviePoster
                         key={movies.id}
                         id={movies.id}
-                        bgUrl={movies.poster_path}
+                        bgUrl={movies.poster}
                         index={index + 1}
                       />
                       <MovieInfo>
-                        <MovieName>{movies.title}</MovieName>
+                        <MovieName>{movies.name}</MovieName>
                         <MovieVote>
                           {onNav.navList === "RANKING"
-                            ? `${movies.vote_average}점`
+                            ? `${movies.reservation_rate}점`
                             : ""}
                         </MovieVote>
                       </MovieInfo>
@@ -293,6 +285,7 @@ const Home = () => {
                 })
               )}
             </RankingPosterUl>
+            {/* </Carousel> */}
             <PrevBtn onClick={() => prevSlide()}>◀</PrevBtn>
             <NextBtn onClick={() => nextSlide()}>▶</NextBtn>
           </RankingContainer>
@@ -311,38 +304,54 @@ const Home = () => {
       </Ranking>
       {/* 베스트다운로드 */}
       <BestPlay>
-        <BestMainTitle>
-          <BestMainTilteP>BEST PLAY</BestMainTilteP>
-        </BestMainTitle>
+        <BestMainname>
+          <BestMainTilteP>Best Preview</BestMainTilteP>
+        </BestMainname>
         <BestMainBox>
-          {/* //TODO 영상component로 변경 */}
           <BestMainContainer>
-            {movies.popular ?
-            <MovieVideo
-              id={movies.popular.[0].id}
-            />: require("../assets/noPosterSmall.png").default}
+            {/* {movies.boxOffice ? (
+              <MovieVideo id={movies.boxOffice[0].id} />
+            ) : (
+              require("../assets/noPosterSmall.png").default
+            )}
           </BestMainContainer>
           <BestSubContainer scrollY={position.BestPlay}>
-            {movies.popular && movies.popular.slice(1,4).map((movies, idx) => {
-              return (
-                <BestSubMovie>
-                  <MovieVideo key={idx} id={movies.id} />
-                </BestSubMovie>
-              );
-            })}
+            {movies.boxOffice &&
+              movies.boxOffice.slice(1, 4).map((movies, idx) => {
+                return (
+                  <BestSubMovie>
+                    <MovieVideo key={idx} id={movies.id} />
+                  </BestSubMovie>
+                );
+              })} */}
+            {movies.boxOffice ? (
+              <MovieVideo id={movies.boxOffice[0].id} />
+            ) : (
+              require("../assets/noPosterSmall.png").default
+            )}
+          </BestMainContainer>
+          <BestSubContainer scrollY={position.BestPlay}>
+            {movies.boxOffice &&
+              movies.boxOffice.slice(1, 4).map((movies, idx) => {
+                return (
+                  <BestSubMovie>
+                    <MovieVideo key={idx} id={movies.id} />
+                  </BestSubMovie>
+                );
+              })}
           </BestSubContainer>
         </BestMainBox>
       </BestPlay>
       {/* 이벤트 */}
       <Event>
-        <EventTitle>
-          <EventTitleSpan>Event</EventTitleSpan>
-        </EventTitle>
+        <Eventname>
+          <EventnameSpan>Event</EventnameSpan>
+        </Eventname>
         <EventImgs scrollY={position.Event}>
-          {[1, 2, 3].map((i) => {
+          {[1, 2, 3].map((event, idx) => {
             return (
               <EventImg>
-                <MoviePoster key={i}></MoviePoster>
+                <EventPoster />
               </EventImg>
             );
           })}
@@ -351,66 +360,126 @@ const Home = () => {
       {/* 공지사항 */}
       <Notice>
         <NoticeInner>
-          <NoticeTitle>
+          <Noticename>
             {/* 링크 걸기 */}
-            <NoticeTitleContext>공지사항</NoticeTitleContext>
-            <NoticeTitleItem>[안내] 어쩌구 저쩌구...</NoticeTitleItem>
-          </NoticeTitle>
+            <NoticenameContext>공지사항</NoticenameContext>
+            <NoticenameItem>[안내] 어쩌구 저쩌구...</NoticenameItem>
+          </Noticename>
         </NoticeInner>
         <NoticeInfo>
           {/* nav 사용 */}
           <NoticeInfoList>
             {/* {[1, 2, 3, 4, 5, 6].map((i) => ( */}
-              <NoticeInfoItem>
-                <a href="http://www.yes24.com/Mall/Help/CS/Apply" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>1:1상담</span>
-                  <Icon>
-                    <HeadsetMicIcon fontSize="large" style={{height: "48px", width: "48px", margin:"10px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-              <NoticeInfoItem>
-                <a href="https://movie.yes24.com/HelpDesk/Faq/" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>FAQ</span>
-                  <Icon>
-                    <QuestionAnswerIcon fontSize="large"style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-              <NoticeInfoItem>
-                <a href="https://movie.yes24.com/HelpDesk/DiscountInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>할인안내</span>
-                  <Icon>
-                    <MonetizationOnIcon fontSize="large" style={{height: "46px", width: "46px", margin:"10px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-              <NoticeInfoItem>
-                <a href="https://movie.yes24.com/HelpDesk/CouponInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>예매권안내</span>
-                  <Icon style={{margin:"auto"}}>
-                    <DraftsIcon fontSize="large" style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-              <NoticeInfoItem>
-                <a href="https://movie.yes24.com/HelpDesk/GuideInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>예매 안내</span>
-                  <Icon>
-                    <AccessTimeIcon fontSize="large" style={{height: "48px", width: "48px", margin:"10px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-              <NoticeInfoItem>
-                <a href="https://movie.yes24.com/HelpDesk/TheaterInfo" style={{fontSize:"14px",color:"#2b2b2b", outline:"none"}}>
-                  <span>극장안내</span>
-                  <Icon>
-                    <TheatersIcon fontSize="large" style={{height: "48px", width: "48px", margin:"12px 0 0"}}/>
-                  </Icon>
-                </a>
-              </NoticeInfoItem>
-                {/* <MoviePoster key={i}></MoviePoster> */}
-              {/* </NoticeInfoItem> */}
+            <NoticeInfoItem>
+              <a
+                href="http://www.yes24.com/Mall/Help/CS/Apply"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>1:1상담</span>
+                <Icon>
+                  <HeadsetMicIcon
+                    fontSize="large"
+                    style={{
+                      height: "48px",
+                      width: "48px",
+                      margin: "10px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            <NoticeInfoItem>
+              <a
+                href="https://movie.yes24.com/HelpDesk/Faq/"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>FAQ</span>
+                <Icon>
+                  <QuestionAnswerIcon
+                    fontSize="large"
+                    style={{
+                      height: "48px",
+                      width: "48px",
+                      margin: "12px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            <NoticeInfoItem>
+              <a
+                href="https://movie.yes24.com/HelpDesk/DiscountInfo"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>할인안내</span>
+                <Icon>
+                  <MonetizationOnIcon
+                    fontSize="large"
+                    style={{
+                      height: "46px",
+                      width: "46px",
+                      margin: "10px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            <NoticeInfoItem>
+              <a
+                href="https://movie.yes24.com/HelpDesk/CouponInfo"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>예매권안내</span>
+                <Icon style={{ margin: "auto" }}>
+                  <DraftsIcon
+                    fontSize="large"
+                    style={{
+                      height: "48px",
+                      width: "48px",
+                      margin: "12px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            <NoticeInfoItem>
+              <a
+                href="https://movie.yes24.com/HelpDesk/GuideInfo"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>예매 안내</span>
+                <Icon>
+                  <AccessTimeIcon
+                    fontSize="large"
+                    style={{
+                      height: "48px",
+                      width: "48px",
+                      margin: "10px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            <NoticeInfoItem>
+              <a
+                href="https://movie.yes24.com/HelpDesk/TheaterInfo"
+                style={{ fontSize: "14px", color: "#2b2b2b", outline: "none" }}
+              >
+                <span>극장안내</span>
+                <Icon>
+                  <TheatersIcon
+                    fontSize="large"
+                    style={{
+                      height: "48px",
+                      width: "48px",
+                      margin: "12px 0 0",
+                    }}
+                  />
+                </Icon>
+              </a>
+            </NoticeInfoItem>
+            {/* <MoviePoster key={i}></MoviePoster> */}
+            {/* </NoticeInfoItem> */}
             {/* ))} */}
           </NoticeInfoList>
         </NoticeInfo>
@@ -433,43 +502,39 @@ const MainPoster = ({ movies }) => {
   };
 
   // TODO 이거 이용해서 animation먹여야 될것 같은데...
-  useEffect(() => {
-    console.log("item", onMouse.item);
-  }, [onMouse.item]);
+  // useEffect(() => {
+  //   console.log("item", onMouse.item);
+  // }, [onMouse.item]);
   return (
-    movies &&(      
-    <>
-      <BgImg>
-        <ImgContainer>
-          <FirstBgImg
-            current={onMouse.item}
-            src={
-              movies
-                ? `https://image.tmdb.org/t/p/original${
-                    movies[onMouse.item].backdrop_path
-                  }`
-                : require("../assets/noPosterSmall.png").default
-            }
-          />
-          <MainLeft />
-          <MainRight />
-        </ImgContainer>
-      </BgImg>
-      <FirstContext>
-        <FirstImgInfo>
-          <FirstImgInfoDetail>▶</FirstImgInfoDetail>
-          <FirstImgName>
-            {movies[onMouse.item].title }
-          </FirstImgName>
-          <FirstImgRank>
-            {`${onMouse.item + 1}위 ${movies[onMouse.item].vote_average}`
+    movies && (
+      <>
+        <BgImg>
+          <ImgContainer>
+            <FirstBgImg
+              current={onMouse.item}
+              src={
+                movies
+                  ? `https://dbzarastorage.blob.core.windows.net${
+                      movies[onMouse.item].backdrop
+                    }`
+                  : require("../assets/noPosterSmall.png").default
               }
-          </FirstImgRank>
-        </FirstImgInfo>
-        <FirstPosterContainer>
-          <FirstPosters>
-            {
-              movies.slice(0, 5).map((movies, index) => {
+            />
+            <MainLeft />
+            <MainRight />
+          </ImgContainer>
+        </BgImg>
+        <FirstContext>
+          <FirstImgInfo>
+            <FirstImgInfoDetail>▶</FirstImgInfoDetail>
+            <FirstImgName>{movies[onMouse.item].name}</FirstImgName>
+            <FirstImgRank>
+              {`${onMouse.item + 1}위 ${movies[onMouse.item].reservation_rate}`}
+            </FirstImgRank>
+          </FirstImgInfo>
+          <FirstPosterContainer>
+            <FirstPosters>
+              {movies.slice(0, 5).map((movies, index) => {
                 return (
                   <FirstSize>
                     {/* // TODO 애니메이션 왜 안먹힘? */}
@@ -477,20 +542,18 @@ const MainPoster = ({ movies }) => {
                       <MoviePoster
                         key={movies.id}
                         id={movies.id}
-                        bgUrl={movies.poster_path}
+                        bgUrl={movies.poster}
                         index={index + 1}
                       />
                     </TurnYPoster>
                   </FirstSize>
                 );
               })}
-          </FirstPosters>
-        </FirstPosterContainer>
-        <PrevBtn>◀</PrevBtn>
-        <NextBtn>▶</NextBtn>
-      </FirstContext>
+            </FirstPosters>
+          </FirstPosterContainer>
+        </FirstContext>
       </>
-      )
+    )
   );
 };
 
@@ -646,7 +709,6 @@ const RankingPosterUl = styled.div`
   position: absolute;
   gap: 20px;
   transition: 0.5s ease-out;
-  ${(props) => console.log("styled", props.current)}
   ${(props) => `left:${(props.current - 9) * 276}px;`}
   ${(props) =>
     props.current === 8 ? setTimeout(() => `transition: null; `, 500) : ``};
@@ -679,43 +741,6 @@ const MovieVote = styled.span`
   font-size: 15px;
 `;
 
-// 베스트영화영상
-// TODO 모달창 형태로 ifame띄우기
-const BestVideo = ({ movies, scrollY }) => {
-  const [video, setVideo] = useState({ data: null });
-  useEffect(() => {
-    setVideo({ data: movies });
-  }, [movies, scrollY]);
-  return (
-    <BestPlay movies={movies}>
-      <BestMainTitle>
-        <BestMainTilteP>BEST PLAY</BestMainTilteP>
-      </BestMainTitle>
-      <BestMainBox>
-        {video.data &&
-          video.data.length > 0 &&
-          video.data.slice(1, 4).map((movies, index) => {
-            return index === 0 ? (
-              <BestMainContainer>
-                <MoviePoster></MoviePoster>
-              </BestMainContainer>
-            ) : (
-              <BestSubContainer scrollY={scrollY}>
-                <BestSubMovie>
-                  <MoviePoster
-                    key={movies.id}
-                    id={movies.id}
-                    bgUrl={movies.poster_path}
-                  />
-                </BestSubMovie>
-              </BestSubContainer>
-            );
-          })}
-      </BestMainBox>
-    </BestPlay>
-  );
-};
-
 // 베스트영상
 const BestPlay = styled.section`
   padding: 60px 0 150px 0;
@@ -724,7 +749,7 @@ const BestPlay = styled.section`
   flex-direction: column;
 `;
 
-const BestMainTitle = styled.section`
+const BestMainname = styled.section`
   min-width: 1200px;
   height: 40px;
 `;
@@ -763,7 +788,7 @@ const BestSubContainer = styled.section`
 const BestSubMovie = styled.section`
   width: 100%;
   height: 33%;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 `;
 
 //이벤트
@@ -773,11 +798,11 @@ const Event = styled.section`
   flex-direction: column;
 `;
 
-const EventTitle = styled.section`
+const Eventname = styled.section`
   height: 170px;
 `;
 
-const EventTitleSpan = styled.span`
+const EventnameSpan = styled.span`
   color: black;
   font-size: 45px;
   font-weight: 600;
@@ -790,12 +815,15 @@ const EventImgs = styled.section`
   /* &:visibility {
     animation: ${fadeOut} 1s ease-in-out;
   } */
+  animation: ${(prop) =>
+    prop.scrollY ? null : `${{ fadeOut }} 0.5s ease-out`};
 `;
 
 const EventImg = styled.div`
   width: 380px;
   height: 265px;
   margin: 0 30px 30px 0;
+  position: relative;
 `;
 
 // 공지사항
@@ -811,17 +839,17 @@ const NoticeInner = styled.div`
   border-top: 2px solid #2b2b2b;
   border-bottom: 2px solid #2b2b2b; ;
 `;
-const NoticeTitle = styled.div`
+const Noticename = styled.div`
   height: 24px;
   display: flex;
   align-items: center;
 `;
-const NoticeTitleContext = styled.span`
+const NoticenameContext = styled.span`
   color: black;
   font-size: 25px;
   font-weight: 500;
 `;
-const NoticeTitleItem = styled.p`
+const NoticenameItem = styled.p`
   margin-left: 30px;
   font-size: 18px;
   color: black;
@@ -850,33 +878,33 @@ const NoticeInfoItem = styled.div`
   vertical-align: top;
   border-left: 1px solid #e1e1e1;
   text-align: center;
-  :nth-child(1){
+  :nth-child(1) {
     border-left: none;
-    padding: 0 58px  0 0;
+    padding: 0 58px 0 0;
     width: 107px;
     height: 74px;
   }
-  :nth-child(2){
+  :nth-child(2) {
     padding: 0 60px 0 68px;
     width: 177px;
     height: 74px;
   }
-  :nth-child(3){
+  :nth-child(3) {
     padding: 0 62px 0 62px;
     width: 177px;
     height: 67px;
   }
-  :nth-child(4){
+  :nth-child(4) {
     padding: 0 58px 0 50px;
     width: 171.56px;
     height: 70px;
   }
-  :nth-child(5){
+  :nth-child(5) {
     padding: 0 53px 0 50px;
     width: 157.34px;
     height: 69px;
   }
-  :nth-child(6){
+  :nth-child(6) {
     padding: 0 0 0 58px;
     width: 108.47px;
     height: 72px;

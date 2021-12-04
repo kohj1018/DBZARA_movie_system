@@ -13,8 +13,8 @@ class KobisAPI:
     BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest'
 
     def __init__(self):
-        self.start_date = date(2018, 1, 1)
-        self.default_date = date(2015, 1, 1)
+        self.start_date = date(2021, 12, 1)
+        self.default_date = date(2020, 1, 1)
         self.SECRET_KEY = secret_settings.KOBIS_SECRET_KEY
         self.ITEM_PAGE = 10
         self.tmdb = TMDBAPI()
@@ -31,7 +31,7 @@ class KobisAPI:
 
     def parse_schedule_data(self):
         elements = self.collect_daily_movie()
-        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 12, int(element['audiCnt']) // 12) for element in elements], self.start_date
+        return [(Movie.objects.get(kobis_id=element['movieCd']), int(element['showCnt']) // 20, int(element['audiCnt']) // 20) for element in elements], self.start_date
 
     def parse_movie_data(self):
         elements = self.collect_daily_movie()
@@ -42,23 +42,24 @@ class KobisAPI:
                     'name': element['movieNm'],
                     'running_time': 0,
                     'summary': '',
-                    'opening_date': element['openDt'] if type(element['openDt']) != str else self.default_date,
-                    'closing_date': self.start_date
+                    'opening_date': element['openDt'] if element['openDt'] != ' ' else self.default_date,
+                    'closing_date': self.start_date + timedelta(days=14)
                 }
             )
             if created:
+                self.get_movie_detail(movie, element['movieCd'])
                 movie_id = self.tmdb.get_movie_id_by_name(name=element['movieNm'])
                 if movie_id != 0:
                     self.tmdb.get_movie_detail(movie_id, movie)
                     actors, directors = self.get_movie_credits(element['movieCd'])
                     self.tmdb.get_movie_credits(movie_id, movie, actors, directors)
-                else:
-                    self.get_movie_detail(movie, element['movieCd'])
-                movie_code = self.review.get_movie_code_by_title(movie.name)
-                self.review.get_comment_by_code(code=movie_code, movie=movie)
+
+                # movie_code = self.review.get_movie_code_by_title(movie.name)
+                # self.review.get_comment_by_code(code=movie_code, movie=movie)
                 # self.tmdb.get_movie_videos(movie_id, movie)
             else:
-                movie.closing_date = self.start_date
+                movie.closing_date = self.start_date + timedelta(days=14)
+                movie.save()
 
         self.start_date = self.start_date + timedelta(days=1)
 
@@ -72,10 +73,19 @@ class KobisAPI:
     def get_movie_detail(self, movie, movie_id):
         data = self.get_movie_info(movie_id=movie_id)
         try:
+            movie.watch_grade = data['audits'][0]['watchGradeNm']
             movie.running_time = data['showTm']
+
         except TypeError as error:
             print(error)
             movie.running_time = 0
+
+        except IndexError as error:
+            print(error)
+            movie.watch_grade = '미정'
+
+        finally:
+            movie.save()
 
     def get_movie_credits(self, movie_id):
         data = self.get_movie_info(movie_id)

@@ -173,7 +173,9 @@
                 {% if user.is_authenticated %}
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.username|upper }}</span>
                     {% if user.profile %}
-                        <img class="img-profile rounded-circle" src="{{ user.profile.image.url }}">
+                        {% if user.profile.image %}
+                            <img class="img-profile rounded-circle" src="{{ user.profile.image.url }}">
+                        {% endif %}
                     {% else %}
                         <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}">
                     {% endif %}

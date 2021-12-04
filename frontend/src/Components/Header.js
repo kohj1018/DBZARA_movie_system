@@ -1,8 +1,148 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
-
+import SideBar from "Components/SideBar";
 // TODO 메뉴, 서치 클릭 -> 사이드바
+
+export default withRouter(({ location: { pathname } }) => {
+  const [hover, setHover] = useState(false);
+  const onHover = () => {
+    setHover(true);
+  };
+  const outHover = () => {
+    setHover(false);
+  };
+
+  // 스크롤 이벤트
+  const [position, setPosition] = useState(false);
+
+  const onScroll = () => {
+    if (window.scrollY >= 70) setPosition(true);
+    else setPosition(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll); //메모리누수 방지
+    };
+  }, []);
+
+  // sidebarOpen
+  const [sideBar, setSideBar] = useState(false);
+
+  return (
+    <>
+      <Header current={pathname !== "/"} scrollY={position}>
+        <List>
+          <Logo>
+            <SLink to="/">Logo</SLink>
+          </Logo>
+        </List>
+        <List>
+          <SubListBg hover={hover} />
+          <Item
+            current={pathname === "/Reservation"}
+            onMouseOver={() => onHover()}
+            onMouseOut={() => outHover()}
+          >
+            <SLink to="/Reservation">
+              <LinkText>예매</LinkText>
+              {/* {console.log(hover)} */}
+            </SLink>
+            {["빠른예매", "예매안내", "예매권 등록"].map((item) => (
+              <TabLi to="/" hover={hover}>
+                {item}
+              </TabLi>
+            ))}
+          </Item>
+          <Item
+            current={pathname === "/Movies"}
+            onMouseOver={() => onHover()}
+            onMouseOut={() => outHover()}
+          >
+            <SLink to="/Movies">
+              <LinkText>영화</LinkText>
+            </SLink>
+            <TabUl>
+              {[
+                "예매순위",
+                "현재상영작",
+                "개봉예정작",
+                "박스오피스",
+                "영화제영화",
+                "예고편",
+              ].map((item) => (
+                <TabLi to="/" hover={hover}>
+                  {item}
+                </TabLi>
+              ))}
+            </TabUl>
+          </Item>
+          <Item
+            current={pathname === "/Theater"}
+            onMouseOver={() => onHover()}
+            onMouseOut={() => outHover()}
+          >
+            <SLink to="/Theater">
+              <LinkText>극장</LinkText>
+            </SLink>
+            <TabUl>
+              {["빠른예매", "예매안내", "예매권 등록"].map((item) => (
+                <TabLi to="/Movies" hover={hover}>
+                  {item}
+                </TabLi>
+              ))}
+            </TabUl>
+          </Item>
+          <Item
+            current={pathname === "/Event"}
+            onMouseOver={() => onHover()}
+            onMouseOut={() => outHover()}
+          >
+            <SLink to="/Event">
+              <LinkText>이벤트</LinkText>
+            </SLink>
+            <TabUl>
+              {["시사회", "이벤트", "당첨자발표"].map((item) => (
+                <TabLi to="/" hover={hover}>
+                  {item}
+                </TabLi>
+              ))}
+            </TabUl>
+          </Item>
+          <Item
+            current={pathname === "/Store"}
+            onMouseOver={() => onHover()}
+            onMouseOut={() => outHover()}
+          >
+            <SLink to="/Store">
+              <LinkText>스토어</LinkText>
+            </SLink>
+            <TabUl>
+              {["티켓", "식음료", "포인트"].map((item) => (
+                <TabLi to="/" hover={hover}>
+                  {item}
+                </TabLi>
+              ))}
+            </TabUl>
+          </Item>
+        </List>
+
+        <List>
+          <LoginItem current={pathname === "/Login"}>
+            <SLink to="/Login">로그인</SLink>
+          </LoginItem>
+          <LoginItem onClick={() => setSideBar(true)}>🟦</LoginItem>
+        </List>
+        <Side open={sideBar}>
+          <SideBar setSideBar={setSideBar} />
+          {/* {console.log("sideBar1", sideBar)} */}
+        </Side>
+      </Header>
+    </>
+  );
+});
 
 const Header = styled.header`
   z-index: 10;
@@ -93,136 +233,15 @@ const TabLi = styled(Link)`
   }
 `;
 
-export default withRouter(({ location: { pathname } }) => {
-  const [hover, setHover] = useState(false);
-  const onHover = () => {
-    setHover(true);
-  };
-  const outHover = () => {
-    setHover(false);
-  };
-
-  // 스크롤 이벤트
-  const [position, setPosition] = useState(false);
-
-  const onScroll = () => {
-    if (window.scrollY >= 70) setPosition(true);
-    else setPosition(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll); //메모리누수 방지
-    };
-  }, []);
-  return (
-    <>
-      <Header current={pathname !== "/"} scrollY={position}>
-        <List>
-          <Logo>
-            <SLink to="/">Logo</SLink>
-          </Logo>
-        </List>
-        <List>
-          <SubListBg hover={hover} />
-          <Item
-            current={pathname === "/Reservation"}
-            onMouseOver={() => onHover()}
-            onMouseOut={() => outHover()}
-          >
-            <SLink to="/Reservation">
-              <LinkText>예매</LinkText>
-              {console.log(hover)}
-            </SLink>
-            {["빠른예매", "예매안내", "예매권 등록"].map((item) => (
-              <TabLi to="/" hover={hover}>
-                {item}
-              </TabLi>
-            ))}
-          </Item>
-          <Item
-            current={pathname === "/Movies"}
-            onMouseOver={() => onHover()}
-            onMouseOut={() => outHover()}
-          >
-            <SLink to="/Movies">
-              <LinkText>영화</LinkText>
-            </SLink>
-            <TabUl>
-              {[
-                "예매순위",
-                "현재상영작",
-                "개봉예정작",
-                "박스오피스",
-                "영화제영화",
-                "예고편",
-              ].map((item) => (
-                <TabLi to="/" hover={hover}>
-                  {item}
-                </TabLi>
-              ))}
-            </TabUl>
-          </Item>
-          <Item
-            current={pathname === "/Theater"}
-            onMouseOver={() => onHover()}
-            onMouseOut={() => outHover()}
-          >
-            <SLink to="/Theater">
-              <LinkText>극장</LinkText>
-            </SLink>
-            <TabUl>
-              {["빠른예매", "예매안내", "예매권 등록"].map((item) => (
-                <TabLi to="/Movies" hover={hover}>
-                  {item}
-                </TabLi>
-              ))}
-            </TabUl>
-          </Item>
-          <Item
-            current={pathname === "/Event"}
-            onMouseOver={() => onHover()}
-            onMouseOut={() => outHover()}
-          >
-            <SLink to="/Event">
-              <LinkText>이벤트</LinkText>
-            </SLink>
-            <TabUl>
-              {["시사회", "이벤트", "당첨자발표"].map((item) => (
-                <TabLi to="/" hover={hover}>
-                  {item}
-                </TabLi>
-              ))}
-            </TabUl>
-          </Item>
-          <Item
-            current={pathname === "/Store"}
-            onMouseOver={() => onHover()}
-            onMouseOut={() => outHover()}
-          >
-            <SLink to="/Store">
-              <LinkText>스토어</LinkText>
-            </SLink>
-            <TabUl>
-              {["티켓", "식음료", "포인트"].map((item) => (
-                <TabLi to="/" hover={hover}>
-                  {item}
-                </TabLi>
-              ))}
-            </TabUl>
-          </Item>
-        </List>
-
-        <List>
-          <LoginItem current={pathname === "/Join"}>
-            <SLink to="/Join">회원가입</SLink>
-          </LoginItem>
-          <LoginItem current={pathname === "/Login"}>
-            <SLink to="/Login">로그인</SLink>
-          </LoginItem>
-        </List>
-      </Header>
-    </>
-  );
-});
+const Side = styled.div`
+  width: 330px;
+  height: 100vh;
+  background-color: #252525;
+  z-index: 10;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.5s ease-out;
+  ${(props) => (props.open ? `right: 0` : `right: -330px`)}
+`;
