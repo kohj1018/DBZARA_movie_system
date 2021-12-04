@@ -9,7 +9,7 @@ import StoreTicket from "Routes/Store/Ticket";
 import StorePopcorn from "Routes/Store/Popcorn";
 import StorePointMall from "Routes/Store/Pointmall";
 import Login from "Routes/Login";
-import join from "Routes/Join";
+import join from "Routes/MyPage";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [

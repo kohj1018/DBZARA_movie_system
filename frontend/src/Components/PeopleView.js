@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const PeopleView = ({ name, job, src }) => {  
+const PeopleView = ({ name, job, src }) => {
   return (
     <>
       <ActCont>

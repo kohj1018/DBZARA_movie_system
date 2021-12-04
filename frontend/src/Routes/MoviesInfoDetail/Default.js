@@ -22,80 +22,81 @@ const Default = ({ id }) => {
   };
 
   return (
-  <>
-    <Container>
-      <Title>시놉시스</Title>
+    <>
+      <Container>
+        <Title>시놉시스</Title>
         {movieData[id].sysTxt.map(txt => {
           return (
             <Txt>
-            {txt}
+              {txt}
             </Txt>
           )
         })}
-      <Title>제작정보</Title>
-      <Txt>수입 : {movieData[id].studio}</Txt>
-      <Txt>배급 : {movieData[id].distributor}</Txt>
-      <Title>배우·제작진</Title>
-      <ActArea>
-        {movieData[id].people.map(people => {
-          return (
-            <PeopleView
-              // name={people.name}
-              // job={people.job}
-              // src={people.src}
-              {...people}
-            />
-          )
-        })}    
-      </ActArea>
-      <Title>동영상</Title>
-      <VodArea>
-        <Video 
-          src={movieData[id].video} 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-        />
-      </VodArea>
-      <Title>포토</Title>
-      <StyledSlider {...settings}>
-        {movieData[id].photos.map((photo, index) => {
-          return (
-            <PhotoItem>
-              <Photo
-                src={photo}
-              />
-            </PhotoItem>
-          )
-        })}
-      </StyledSlider>
-      <Title>평점</Title>
-      <CommentArea>
-        <RateEditBox
-          rates={movieData[id].rates}
-        />
-        <RatesArea>
-          <RatesTypeMenuTxt>
-            <EmpathyOrder>공감순</EmpathyOrder>
-            <LatestOrder>최신순</LatestOrder>
-          </RatesTypeMenuTxt>
-        </RatesArea>
-        <RatesView>
-          {movieData[id].review.map(review => {
+        <Title>제작정보</Title>
+        <Txt>수입 : {movieData[id].studio}</Txt>
+        <Txt>배급 : {movieData[id].distributor}</Txt>
+        <Title>배우·제작진</Title>
+        <ActArea>
+          {movieData[id].people.map(people => {
             return (
-              <RateViewBox
-                // nickName={review.nickName}
-                // rates={review.rates}
-                // comment={review.comment}
-                // date={review.date}
-                {...review}
+              <PeopleView
+                // name={people.name}
+                // job={people.job}
+                // src={people.src}
+                {...people}
               />
             )
           })}
-        </RatesView>
-      </CommentArea>
-    </Container>
-  </>
-)};
+        </ActArea>
+        <Title>동영상</Title>
+        <VodArea>
+          <Video
+            src={movieData[id].video}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+          />
+        </VodArea>
+        <Title>포토</Title>
+        <StyledSlider {...settings}>
+          {movieData[id].photos.map((photo, index) => {
+            return (
+              <PhotoItem>
+                <Photo
+                  src={photo}
+                />
+              </PhotoItem>
+            )
+          })}
+        </StyledSlider>
+        <Title>평점</Title>
+        <CommentArea>
+          <RateEditBox
+            rates={movieData[id].rates}
+          />
+          <RatesArea>
+            <RatesTypeMenuTxt>
+              <EmpathyOrder>공감순</EmpathyOrder>
+              <LatestOrder>최신순</LatestOrder>
+            </RatesTypeMenuTxt>
+          </RatesArea>
+          <RatesView>
+            {movieData[id].review.map(review => {
+              return (
+                <RateViewBox
+                  // nickName={review.nickName}
+                  // rates={review.rates}
+                  // comment={review.comment}
+                  // date={review.date}
+                  {...review}
+                />
+              )
+            })}
+          </RatesView>
+        </CommentArea>
+      </Container>
+    </>
+  )
+};
 
 export default Default;
 

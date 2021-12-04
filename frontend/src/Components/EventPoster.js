@@ -1,21 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import { Box, Button } from "@material-ui/core";
 
-const EventPoster = ({ key, id }) => {
+const EventPoster = ({ id, day, src, title, text }) => {
   return (
     <>
-      <EventBg src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"></EventBg>
+      <EventBg src={src}></EventBg>
       <EventInfo>
         <Btn>
-          <DDay>D - 46</DDay>
-          <EventTitle>매일매일 출첵하고 혜택받자!</EventTitle>
-          <EventText>예매권/할인권</EventText>
+          <DDay>{day}</DDay>
+          <EventTitle>{title}</EventTitle>
+          <EventText>{text}</EventText>
         </Btn>
       </EventInfo>
     </>
   );
 };
-
 export default EventPoster;
 
 const EventBg = styled.img`
