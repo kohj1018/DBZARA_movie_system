@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Typography } from "@material-ui/core";
 import EventPoster from "Components/EventPoster";
 import { BorderBottom } from "@material-ui/icons";
 // import { Tab } from '@mui/material-ui/core/Tab';
 import EventData from "EventData";
+import axios from 'axios';
 
 
 const Container = styled.div`
@@ -126,12 +127,15 @@ const EventLinkBox = styled.div`
 const Event = () => {
   const [tabClick, setTabClick] = useState(0);
 
-  window.test = tabClick;
+
+
+  // window.test = event;
 
 
   return (
     <>
       <Container>
+        {/* {test.map(())} */}
         <EventBanner>
           <Event_image>
             <a href="https://movie.yes24.com/Event/EventDetail?eventId=100308">
@@ -166,16 +170,16 @@ const Event = () => {
                     }}> 전체 </TabBox>
                   </TabBoxContainer>
                 )}
-              {tabClick === 1 ? (
+              {tabClick === 10 ? (
                 <TabBoxContainerActive>
                   <TabBox onClick={() => {
-                    setTabClick(1)
+                    setTabClick(10)
                   }}> 시사회 </TabBox>
                 </TabBoxContainerActive>
               ) : (
                   <TabBoxContainer>
                     <TabBox onClick={() => {
-                      setTabClick(1)
+                      setTabClick(10)
                     }}> 시사회 </TabBox>
                   </TabBoxContainer>
                 )}
@@ -252,36 +256,50 @@ const Event = () => {
 };
 
 const TabContent = (props) => {
+
+  const [event, setEvent] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://dbzara.kro.kr/api/v1/event/") //api주소에서 받아오고
+      .then((res) => {
+        console.log(res.data.results)//그러고나서 받아온 데이터들을 result라는 변수에 저장하고 그걸 useState로 저장
+        setEvent(res.data.results);
+      }
+
+      )
+      .catch((err) => console.log(err)) //err메세지 뜨게 하게끔
+  }, [])
   const tab = ['전체', '시사회', '이벤트', '당첨자발표'];
 
   return (
     tab.map((data, idx) => {
-      if (props.tabClick === idx) {
+      if (props.tabClick === idx) { // tabclikc은 0,1,2,3 idx 는 const tab의 idx
         return (
           <AllEventList>
-            {console.log(EventData[data])}
             {
-              EventData[data].length !== 0 ?
-                (EventData[data].map(event => {
-                  return (
-                    <EventLinkBox>
-                      <EventPoster
-                        id={event.id}
-                        day={event.day}
-                        src={event.src}
-                        title={event.title}
-                        text={event.text}
-                      />
-                    </EventLinkBox>
-                  );
-                })
-                ) :
-                // console.log('data', data)
-                <NoneEvent>진행중인 {data}가 없습니다.</NoneEvent>
+              event.map((res, index) => {
+                return (
+                  <EventLinkBox>
+                    <EventPoster
+                      src={res.backdrop_url}
+                      id={res.id}
+                      day={res.remain_date}
+                      title={res.title}
+                    />
+                  </EventLinkBox>
+                )
+              })
             }
           </AllEventList >
         );
+
       }
+      // else if (props.tabClick === 10) {
+      //   return (
+      //     <NoneEvent>진행중인 시사화가 없습니다.</NoneEvent>
+      //   )
+
+      // }
     })
   );
 
