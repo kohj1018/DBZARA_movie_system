@@ -17,11 +17,6 @@ class CinemaListView(ListView):
         return context
 
 
-# class CinemaStockListView(ListView):
-#     model = Stock
-
-
-
 class CinemaScheduleListView(ListView):
     model = Schedule
 
