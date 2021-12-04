@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+from requests.exceptions import ConnectionError
+from urllib3.exceptions import MaxRetryError
 
 
 class CrawlingMovieAgeRate:
@@ -22,22 +24,25 @@ class CrawlingMovieAgeRate:
     def get_age_rate_by_code(self, movie_code):
         if movie_code is None:
             return
-
-        response = requests.get(
-            self.BASE_URL + f'/movie/bi/mi/basic.naver?code={movie_code}')
-        if response.status_code == 200:
-            html = response.text
-            soup = BeautifulSoup(html, 'html.parser')
-            age_rate = []
-            try:
-                percentages = soup.find('div', {'class': 'bar_graph'}).find_all('div', {'class': 'graph_box'})
-                for percentage in percentages:
-                    age_rate.append(int(percentage.find('strong', {'class': 'graph_percent'}).get_text().replace('%', '')) / 100)
-            except AttributeError or TypeError as e:
-                print(e)
-                age_rate = [0.2, 0.2, 0.2, 0.2, 0.2]
-            finally:
-                return age_rate
+        try:
+            response = requests.get(
+                self.BASE_URL + f'/movie/bi/mi/basic.naver?code={movie_code}')
+            if response.status_code == 200:
+                html = response.text
+                soup = BeautifulSoup(html, 'html.parser')
+                age_rate = []
+                try:
+                    percentages = soup.find('div', {'class': 'bar_graph'}).find_all('div', {'class': 'graph_box'})
+                    for percentage in percentages:
+                        age_rate.append(int(percentage.find('strong', {'class': 'graph_percent'}).get_text().replace('%', '')) / 100)
+                except AttributeError or TypeError as e:
+                    print(e)
+                    age_rate = [0.2, 0.2, 0.2, 0.2, 0.2]
+                finally:
+                    return age_rate
+        except ConnectionError or MaxRetryError as e:
+            print(e)
+            return [0.2, 0.2, 0.2, 0.2, 0.2]
 
 
 if __name__ == '__main__':
