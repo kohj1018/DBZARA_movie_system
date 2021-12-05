@@ -74,6 +74,8 @@ class Movie(models.Model):
 
     @property
     def reservation_rate(self):
+        # TODO: 다른 테이블로 이미 수치 계산 완료 되어야함.
+        return 0
         now_date = date(2021, 12, 1)
         return round(Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(movie=self, datetime__month=now_date.month, datetime__day=now_date.day)
