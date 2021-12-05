@@ -514,9 +514,7 @@ const MainPoster = ({ movies }) => {
               current={onMouse.item}
               src={
                 movies
-                  ? `https://dbzarastorage.blob.core.windows.net${
-                      movies[onMouse.item].backdrop
-                    }`
+                  ? movies[onMouse.item].backdrop
                   : require("../assets/noPosterSmall.png").default
               }
             />
