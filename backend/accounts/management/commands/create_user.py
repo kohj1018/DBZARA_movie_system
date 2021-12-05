@@ -25,7 +25,7 @@ CONTEXT = {
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def __init__(self):
         super(Command, self).__init__()

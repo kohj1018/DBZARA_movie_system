@@ -10,7 +10,8 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    category = SubCategorySerializer()
+    category = serializers.ReadOnlyField(source='category.name')
+    image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Item
@@ -18,13 +19,15 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    backdrop = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Event
-        fields = ['id', 'title', 'remain_date', 'backdrop_url']
+        fields = ['id', 'title', 'remain_date', 'backdrop']
 
 
 class EventDetailSerializer(EventSerializer):
+    poster = serializers.ImageField(use_url=True)
 
     class Meta(EventSerializer.Meta):
-        fields = ['id', 'title', 'start_date', 'end_date', 'poster_url']
+        fields = ['id', 'title', 'start_date', 'end_date', 'poster']

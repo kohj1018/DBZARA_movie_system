@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load calc_tags %}
+
+<link rel="stylesheet" href="{% static 'css/scheduler.css' %}">
+
+{% block content %}
+    <div class="container-fluid h-75">
+        <div class="table-responsive overflow-auto" style="height: 600px;">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                    <!-- for으로 시간 데이터 넣을 예정-->
+                        {% for _ in counts %}
+                            <th style="max-width: 0.04vw; padding: 0;"></th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                        {% for header in headers %}
+                            <td style="font-size: 10px;" colspan="{{ header.colspan }}">{{ header.title }}</td>
+                        {% endfor %}
+                        </tr>
+                        {% for theaters in schedules %}
+                            <tr>
+                                <td class="align-middle" colspan="6">{{ forloop.counter }}관</td>
+                                {% for theater in theaters %}
+                                    {% if theater.name %}
+                                        <td style="max-width: {{ theater.colspan|multiple:"0.04" }}vw; font-size: 10px; background: lightblue; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" colspan="{{ theater.colspan }}">
+                                            {{ theater.name }} <br>
+                                            {{ theater.datetime }}
+                                        </td>
+                                    {% else %}
+                                        <td colspan="{{ theater.colspan }}"> </td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

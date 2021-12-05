@@ -1135,7 +1135,7 @@ backspace:
   label: Backspace
   search:
     terms:
-      - command
+      - commands
       - delete
       - erase
       - keyboard
@@ -18733,7 +18733,7 @@ terminal:
   search:
     terms:
       - code
-      - command
+      - commands
       - console
       - development
       - prompt

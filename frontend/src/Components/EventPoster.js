@@ -10,12 +10,12 @@ import Dialog from '@material-ui/core/Dialog';
 // import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
 
-const EventModal = styled.div``
 
 
+
+const EventModal = styled.div``;
 
 const EventPoster = ({ id, day, src, title, text }) => {
-
   const [modal, setModal] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -27,11 +27,11 @@ const EventPoster = ({ id, day, src, title, text }) => {
   };
 
   useEffect(() => {
-    axios.get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
+    axios
+      .get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
       .then((result) => setModal(result.data))
-      .catch((err) => console.log(err))
-  })
-
+      .catch((err) => console.log(err));
+  });
 
   return (
     <>
@@ -42,13 +42,9 @@ const EventPoster = ({ id, day, src, title, text }) => {
         <Btn>
           <DDay>D - {day}</DDay>
           <EventTitle>{title}</EventTitle>
-          <EventText onClick={handleClickOpen}>
-            자세히 보기
-          </EventText>
+          <EventText onClick={handleClickOpen}>자세히 보기</EventText>
         </Btn>
       </EventInfo>
-
-
 
       {/* 모달 창 */}
       <EventModal>
@@ -57,15 +53,11 @@ const EventPoster = ({ id, day, src, title, text }) => {
           <img src={modal.poster_url} />
           {/* <p>{modal.title}</p> */}
 
-
-
           {/* <Button autoFocus onClick={handleClose} color="primary">
             닫기
           </Button> */}
-
         </Dialog>
       </EventModal>
-
     </>
   );
 };
