@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from accounts.models import User, Employee, Department, Profile, Grade, CouponHold, NonCouponHold
+from accounts.models import User, Employee, Department, Profile, Grade, CouponHold, NonCouponHold, Attendance
 # Register your models here.
 
 
@@ -38,3 +38,8 @@ class CouponHoldAdmin(admin.ModelAdmin):
 @admin.register(NonCouponHold)
 class NonCouponHoldAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ['id', 'employee', 'date', 'start_time', 'end_time', 'status']
