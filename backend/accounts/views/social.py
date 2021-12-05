@@ -37,8 +37,7 @@ class GoogleLoginView(APIView):
             user.set_password(str(user.platform) + str(user.username))
             user.save()
 
-        BASE_URL = os.environ.get('HOST', 'http://127.0.0.1:8000')
-        url = BASE_URL + '/api/v1/token/'
+        url = 'http://dbzara.kro.kr/api/v1/token/'
 
         body = {
             'username': user.username,
@@ -75,8 +74,7 @@ class KakaoLoginAPIView(APIView):
             user.set_password(str(user.platform) + str(user.username))
             user.save()
 
-        BASE_URL = os.environ.get('HOST', 'http://127.0.0.1:8000')
-        url = BASE_URL + '/api/v1/token/'
+        url = 'http://dbzara.kro.kr/api/v1/token/'
 
         body = {
             'username': user.username,
