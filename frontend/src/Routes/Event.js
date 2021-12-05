@@ -6,6 +6,7 @@ import { BorderBottom } from "@material-ui/icons";
 // import { Tab } from '@mui/material-ui/core/Tab';
 import EventData from "EventData";
 import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const Container = styled.div`
@@ -170,7 +171,7 @@ const Event = () => {
                     }}> 전체 </TabBox>
                   </TabBoxContainer>
                 )}
-              {tabClick === 10 ? (
+              {tabClick === 1 ? (
                 <TabBoxContainerActive>
                   <TabBox onClick={() => {
                     setTabClick(10)
@@ -179,7 +180,7 @@ const Event = () => {
               ) : (
                   <TabBoxContainer>
                     <TabBox onClick={() => {
-                      setTabClick(10)
+                      setTabClick(1)
                     }}> 시사회 </TabBox>
                   </TabBoxContainer>
                 )}
@@ -196,11 +197,6 @@ const Event = () => {
                     }}> 이벤트 </TabBox>
                   </TabBoxContainer>
                 )}
-              <TabBoxContainer>
-                <a href="https://movie.yes24.com/Event/Winner" target="_blank">
-                  <TabBox> 당첨자발표 </TabBox>
-                </a>
-              </TabBoxContainer>
               {/* {tabClick === 3 ? (
                 <TabBoxContainerActive>
                        <TabBox onClick={() => {
@@ -262,45 +258,71 @@ const TabContent = (props) => {
   useEffect(() => {
     axios.get("http://dbzara.kro.kr/api/v1/event/") //api주소에서 받아오고
       .then((res) => {
-        console.log(res.data.results)//그러고나서 받아온 데이터들을 result라는 변수에 저장하고 그걸 useState로 저장
+        console.log(res.data.results)//그러고나서 받아온 데이터들을 res라는 변수에 저장하고 그걸 useState로 저장
         setEvent(res.data.results);
       }
 
       )
       .catch((err) => console.log(err)) //err메세지 뜨게 하게끔
   }, [])
-  const tab = ['전체', '시사회', '이벤트', '당첨자발표'];
+  const tab = ['전체', '시사회', '이벤트'];
 
   return (
-    tab.map((data, idx) => {
-      if (props.tabClick === idx) { // tabclikc은 0,1,2,3 idx 는 const tab의 idx
-        return (
-          <AllEventList>
-            {
-              event.map((res, index) => {
-                return (
-                  <EventLinkBox>
-                    <EventPoster
-                      src={res.backdrop_url}
-                      id={res.id}
-                      day={res.remain_date}
-                      title={res.title}
-                    />
-                  </EventLinkBox>
-                )
-              })
+    !event[0] ? (<div style={{ minHeight: "20vh" }}><CircularProgress style={{
+      color: "secondary", position: "absolute", top: "65%", left: "50%", margin: "-150px 0 0 - 150px"
+    }} /></div>) : (
+        tab.map((data, idx) => {
+          if (props.tabClick === idx) { // tabclikc은 0,1,2,3 idx 는 const tab의 idx
+            if (props.tabClick === 0) {
+              return (
+                <AllEventList>
+                  {
+                    event.map((res, index) => {
+                      return (
+                        <EventLinkBox>
+                          <EventPoster
+                            src={res.backdrop}
+                            id={res.id}
+                            day={res.remain_date}
+                            title={res.title}
+                          />
+                          {/* {console.log(res)} */}
+                        </EventLinkBox>
+                      )
+                    })
+                  }
+                </AllEventList >
+              );
             }
-          </AllEventList >
-        );
-
-      }
-      // else if (props.tabClick === 10) {
-      //   return (
-      //     <NoneEvent>진행중인 시사화가 없습니다.</NoneEvent>
-      //   )
-
-      // }
-    })
+            else if (props.tabClick === 1) {
+              return (
+                <NoneEvent>진행중인 시사화가 없습니다.</NoneEvent>
+              )
+            }
+            else if (props.tabClick === 2) {
+              return (
+                <AllEventList>
+                  {
+                    event.map((res, index) => {
+                      return (
+                        <EventLinkBox>
+                          <EventPoster
+                            src={res.backdrop}
+                            id={res.id}
+                            day={res.remain_date}
+                            title={res.title}
+                          />
+                          {/* {console.log(res)} */}
+                        </EventLinkBox>
+                      )
+                    })
+                  }
+                </AllEventList >
+              );
+            }
+          }
+        })
+      )
   );
 
   // if (props.tabClick === 0) {
@@ -344,9 +366,8 @@ const TabContent = (props) => {
 const NoneEvent = styled.div`
   color: #2b2b2b;
   text-align: center;
-  font-size: 14px;
-  grid-row-start: 1;
-  grid-column-start: 2;
+  font-size: 15px;
+  padding-top: 100px;
 `;
 
 export default Event;
