@@ -5,30 +5,40 @@
 
 {% block content %}
     <div class="container-fluid h-75">
-        <div class="table-responsive overflow-auto" style="height: 600px;">
-            <table class="table table-bordered text-center">
-                <thead>
-                    <tr>
-                    <!-- for 으로 날짜 데이터 입력-->
-                    <div class="container">
-                        <div class="row">이름</div>
-                        {% for day in days_of_month %}
-                            <div class="col-md-3">{{ day }}</div>
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Attendanve Info</p>
+            </div>
+            <div class="table-responsive overflow-auto" style="height: 600px; background-color: white">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                        <!-- for 으로 날짜 데이터 입력-->
+                        <div class="container">
+                            <div style="height: 38px"></div>
+                            <div style="display: flex; ">
+                                <div  style="width: 100px; padding-top: 6px; border : 1px solid blue; margin-right: 3px; margin-bottom: 3px; text-align: center;" >이름</div>
+                                {% for day in days_of_month %}
+                                    <div style=" width:35px; height: 35px; border: 1px solid red; margin-right: 3px; margin-bottom: 3px; text-align: center; padding-top: 4px;">{{ day }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attendance in attendances %}
+                            <div class="container">
+                                <div style="display: flex; ">
+                                        <div  style="width: 100px; padding-top: 6px; border : 1px solid blue; margin-right: 3px; margin-bottom: 3px; text-align: center;" >{{ attendance.employee.user.full_name }}</div>
+                                        {% for day in days_of_month %}
+                                            <div style=" width:35px; height: 35px; border: 1px solid red; margin-right: 3px; margin-bottom: 3px; text-align: center; padding-top: 4px;">{{ attendance.status }}</div>
+                                        {% endfor %}
+                                </div>
+                            </div>
                         {% endfor %}
-                    </div>
-                    </tr>
-                </thead>
-                <tbody>
-                    <div class="container">
-                        {% for employee in employees %}
-                            <div class="row">{{ employee.user.full_name }}</div>
-                            {% for attendance in attendance_list %}
-                                <div class="col-md-3">{{ attendance.status }}</div>
-                            {% endfor %}
-                        {% endfor %}
-                    </div>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock content %}
