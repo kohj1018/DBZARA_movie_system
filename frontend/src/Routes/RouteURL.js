@@ -4,6 +4,7 @@ import MoviesInfo from "Routes/MoviesInfo";
 import Reservation from "Routes/Reservation/Reservation";
 import Theater from "Routes/Theater";
 import Event from "Routes/Event";
+import Store from "Routes/Store";
 import Login from "Routes/Login";
 import join from "Routes/MyPage";
 
@@ -33,6 +34,10 @@ export default [
   {
     path: "/Event",
     component: Event,
+  },
+  {
+    path: "/Store",
+    component: Store,
   },
   {
     path: "/Login",
