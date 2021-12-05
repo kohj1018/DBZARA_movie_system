@@ -293,7 +293,7 @@ const UserInfoReservation = ({ userInfo, display }) => {
             </div>
           </div>
         </AgreeInfo>
-        <AllAgree>
+        {/* <AllAgree>
           <p>
             정보제공에 동의하지 않을 권리가 있으나, 동의하지 않을 경우 예매를
             진행할 수 없습니다.
@@ -306,7 +306,7 @@ const UserInfoReservation = ({ userInfo, display }) => {
           />
           {console.log(agree)}
           <p>전체동의</p>
-        </AllAgree>
+        </AllAgree> */}
       </AgreeData>
     </Container>
   );

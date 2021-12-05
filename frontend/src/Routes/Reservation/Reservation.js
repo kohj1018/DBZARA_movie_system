@@ -144,6 +144,7 @@ const Reservation = () => {
   console.log(moviesChoice);
   console.log(theaterChoice);
   console.log(dayChoice);
+  console.log(movieSeat);
 
   // !  cinema data
   const area = [
@@ -448,7 +449,7 @@ const Reservation = () => {
                 <TheaterDetail>
                   <ScjeduleInfo>
                     <p>시간선택</p>
-                    <p> > 30분전 예매 / 30분전 취소 가능</p>
+                    <p> : 30분전 예매 / 30분전 취소 가능</p>
                   </ScjeduleInfo>
                   <CinemaInfo>
                     <div>상영관들 data</div>
@@ -467,7 +468,12 @@ const Reservation = () => {
             }}
             display={display}
           />
-          <SeatReservation onMovieSeat={onMovieSeat} display={display} />
+          <SeatReservation
+            display={display}
+            onMovieSeat={onMovieSeat}
+            // theaterChoice={theaterChoice}
+            // dayChoice={dayChoice}
+          />
           <DiscountReservation display={display} />
         </ReservationInfo>
         {moviesChoice.choice ? (
@@ -802,13 +808,6 @@ const PrevBtn = styled(Btn)`
   && {
     display: ${(props) => (props.state === 1 ? "none" : "block")};
     font-size: 60px;
-    /* > span {
-      > p {
-      }
-      height: 100%;
-
-      margin: 0;
-    } */
   }
 `;
 const NextBtn = styled(PrevBtn)`
