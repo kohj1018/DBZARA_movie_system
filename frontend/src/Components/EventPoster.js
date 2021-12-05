@@ -31,7 +31,7 @@ const EventPoster = ({ id, day, src, title, text }) => {
       .get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
       .then((result) => setModal(result.data))
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   return (
     <>
@@ -50,7 +50,7 @@ const EventPoster = ({ id, day, src, title, text }) => {
       <EventModal>
 
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-          <img src={modal.poster_url} />
+          <img src={modal.poster} />
           {/* <p>{modal.title}</p> */}
 
           {/* <Button autoFocus onClick={handleClose} color="primary">
