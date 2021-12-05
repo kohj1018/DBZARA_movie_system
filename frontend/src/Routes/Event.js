@@ -262,7 +262,7 @@ const TabContent = (props) => {
   useEffect(() => {
     axios.get("http://dbzara.kro.kr/api/v1/event/") //api주소에서 받아오고
       .then((res) => {
-        console.log(res.data.results)//그러고나서 받아온 데이터들을 result라는 변수에 저장하고 그걸 useState로 저장
+        console.log(res.data.results)//그러고나서 받아온 데이터들을 res라는 변수에 저장하고 그걸 useState로 저장
         setEvent(res.data.results);
       }
 
@@ -281,11 +281,12 @@ const TabContent = (props) => {
                 return (
                   <EventLinkBox>
                     <EventPoster
-                      src={res.backdrop_url}
+                      src={res.backdrop}
                       id={res.id}
                       day={res.remain_date}
                       title={res.title}
                     />
+                    {/* {console.log(res)} */}
                   </EventLinkBox>
                 )
               })
@@ -341,12 +342,12 @@ const TabContent = (props) => {
   // }
 };
 
-const NoneEvent = styled.div`
-  color: #2b2b2b;
-  text-align: center;
-  font-size: 14px;
-  grid-row-start: 1;
-  grid-column-start: 2;
-`;
+// const NoneEvent = styled.div`
+//   color: #2b2b2b;
+//   text-align: center;
+//   font-size: 14px;
+//   grid-row-start: 1;
+//   grid-column-start: 2;
+// `;
 
 export default Event;
