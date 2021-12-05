@@ -17,65 +17,33 @@ export const info = {
 };
 
 // 데이터 저장소
-export const UserContext = React.createContext({
-  userInfo: {
-    username: "test",
-    password: "1234",
-    token: null,
-    token_docode: {
-      email: null,
-      exp: null,
-      orig_iat: null,
-      user_id: null,
-      username: null,
-    },
-    error: null,
-  },
-  handleUserInfo: (tokenId) => {
-
-  },
-});
+export const UserContext = React.createContext();
 
 const UserInfo = (props) => {
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState({
+    token: false,
+  });
 
-  const handleUserInfo = (name, password, tokenId) => {
+  const handleUserInfo = (tokenId) => {
     setUserInfo((prevState) => ({
       ...prevState,
-      username: name,
-      password: password,
-      token: tokenId
+      token: tokenId,
     }));
-  }
+  };
 
-  async function userAPI() {
-    try {
-      const {
-        data: { token },
-      } = await info.userLogin();
-
-      let decode = jwt_decode(token);
+  useEffect(() => {
+    if (userInfo.token) {
+      let decode = jwt_decode(userInfo.token);
       // console.log(decode);
       setUserInfo((userInfo) => ({
         ...userInfo,
-        token,
         token_docode: { ...decode },
       }));
-      // console.log(userInfo);
-    } catch {
-      setUserInfo((userInfo) => ({
-        ...userInfo,
-        error: "회원 정보가 없습니다.",
-      }));
     }
-  }
-
-  useEffect(() => {
-    userAPI();
-  }, []);
+  }, [userInfo.token]);
 
   return (
-    <UserContext.Provider value={{userInfo, handleUserInfo}}>
+    <UserContext.Provider value={{ userInfo, handleUserInfo }}>
       {props.children}
     </UserContext.Provider>
   );

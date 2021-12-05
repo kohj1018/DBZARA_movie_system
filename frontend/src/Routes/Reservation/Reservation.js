@@ -116,7 +116,7 @@ const Reservation = () => {
   }, []);
 
   // ! user DATA
-  const userData = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
   // ! User Choice
   const [moviesChoice, onMoviesChoice] = useState({
@@ -320,24 +320,8 @@ const Reservation = () => {
                       <AccordionDetails>
                         {/* //Todo 회원 나이대 영화순위 정렬 */}
                         <MovieUl>
-                          {userData.favoriteMovies ? (
-                            userData.favoriteMovies.map((movie, idx) => {
-                              return (
-                                <MovieLi
-                                  key={idx}
-                                  onClick={() =>
-                                    onMoviesChoice((movies) => ({
-                                      ...movies,
-                                      choice: true,
-                                      movie,
-                                      movieId: movie.id,
-                                    }))
-                                  }
-                                  choice={movie.id}
-                                  current={moviesChoice.movieId}
-                                >{`${idx + 1} : ${movie}`}</MovieLi>
-                              );
-                            })
+                          {userInfo.token ? (
+                            userInfo.token_docode && "관심영화"
                           ) : (
                             <MovieLi>로그인을 해주세요</MovieLi>
                           )}
@@ -460,14 +444,7 @@ const Reservation = () => {
               )}
             </MainReservation>
           </MoviesReservation>
-          <UserInfoReservation
-            userInfo={{
-              userName: "조재훈",
-              phoneNumber: ["010", "2373", "9147"],
-              email: "wognskec@gmail.com",
-            }}
-            display={display}
-          />
+          <UserInfoReservation userInfo={userInfo} display={display} />
           <SeatReservation
             display={display}
             onMovieSeat={onMovieSeat}

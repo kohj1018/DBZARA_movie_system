@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { UserContext } from "context";
+import { Link } from "react-router-dom";
 
 const UserInfo = styled.div`
   display: grid;
@@ -51,7 +52,7 @@ const Context = styled.span`
 `;
 
 const SideBar = ({ setSideBar }) => {
-  const { username } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
   const NavItemContext = [
     "예매확인/취소",
@@ -63,7 +64,14 @@ const SideBar = ({ setSideBar }) => {
   return (
     <>
       <UserInfo>
-        <UserName>{`${username}님 안녕하세요!`}</UserName>
+        <UserName>
+          {userInfo.token ? (
+            userInfo.token_docode &&
+            `${userInfo.token_docode.email.split("@")[0]}님 안녕하세요!`
+          ) : (
+            <Link to="/Login">로그인을 해주세요.</Link>
+          )}
+        </UserName>
         <Exit onClick={() => setSideBar(false)}>❌</Exit>
       </UserInfo>
       <NavList>
