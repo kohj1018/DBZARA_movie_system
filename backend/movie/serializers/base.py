@@ -6,6 +6,9 @@ from movie.models import (
 
 
 class MovieSerializer(serializers.ModelSerializer):
+    poster = serializers.ImageField(use_url=True)
+    backdrop = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Movie
         fields = ['id', 'grade', 'name', 'poster', 'backdrop']
@@ -18,24 +21,32 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class ActorSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Actor
         fields = ['id', 'name', 'image']
 
 
 class DirectorSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Director
         fields = ['id', 'name', 'image']
 
 
 class DistributorSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Distributor
         fields = ['id', 'name', 'image']
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Image
         fields = ['category', 'image']
