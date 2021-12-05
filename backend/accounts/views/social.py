@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 
 from django.contrib.auth import get_user_model
 
@@ -36,7 +37,8 @@ class GoogleLoginView(APIView):
             user.set_password(str(user.platform) + str(user.username))
             user.save()
 
-        url = 'http://127.0.0.1:8000/api/v1/token/'
+        BASE_URL = os.getenv('HOST', 'http://127.0.0.1:8000')
+        url = BASE_URL + '/api/v1/token/'
 
         body = {
             'username': user.username,
@@ -73,7 +75,8 @@ class KakaoLoginAPIView(APIView):
             user.set_password(str(user.platform) + str(user.username))
             user.save()
 
-        url = 'http://127.0.0.1:8000/api/v1/token/'
+        BASE_URL = os.getenv('HOST', 'http://127.0.0.1:8000')
+        url = BASE_URL + '/api/v1/token/'
 
         body = {
             'username': user.username,
