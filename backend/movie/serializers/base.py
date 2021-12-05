@@ -14,6 +14,12 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = ['id', 'grade', 'name', 'poster', 'backdrop']
 
 
+class MovieShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ['id', 'name', 'watch_grade']
+
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre

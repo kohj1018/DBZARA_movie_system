@@ -31,6 +31,8 @@ class Command(BaseCommand):
         finish_date = self.kobis.start_date + timedelta(days=days) if days != 0 else date(2020, 1, 1)
         while self.kobis.start_date < finish_date:
             schedule_data, base_date = self.kobis.parse_schedule_data()
+            if base_date.day == 1:
+                self.naver_movie = CrawlingMovieAgeRate()
             for movie, show_counts, audience_counts in schedule_data:
                 except_count = 0
                 while Schedule.objects.filter(movie=movie, datetime__day=base_date.day, datetime__month=base_date.month).count() <= show_counts:
