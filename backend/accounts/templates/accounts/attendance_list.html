@@ -1,0 +1,34 @@
+{% extends '_base.html' %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/calender.css' %}">
+
+{% block content %}
+    <div class="container-fluid h-75">
+        <div class="table-responsive overflow-auto" style="height: 600px;">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                    <!-- for 으로 날짜 데이터 입력-->
+                    <div class="container">
+                        <div class="row">이름</div>
+                        {% for day in days_of_month %}
+                            <div class="col-md-3">{{ day }}</div>
+                        {% endfor %}
+                    </div>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div class="container">
+                        {% for employee in employees %}
+                            <div class="row">{{ employee.user.full_name }}</div>
+                            {% for attendance in attendance_list %}
+                                <div class="col-md-3">{{ attendance.status }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

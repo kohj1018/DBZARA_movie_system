@@ -1,4 +1,4 @@
-from .list import EmployeeListView
+from .list import EmployeeListView, EmployeeAttendanceListView, EmployerEvaluationListView
 
 from .social import GoogleLoginView, KakaoLoginAPIView
 
@@ -10,6 +10,8 @@ from .api import (
 
 
 employee_list_view = EmployeeListView.as_view()
+employee_attendance_list_view = EmployeeAttendanceListView.as_view()
+employee_evaluate_list_view = EmployerEvaluationListView.as_view()
 
 profile_movie_api_view = ProfileMovieAPIView.as_view()
 profile_genre_api_view = ProfileGenreAPIView.as_view()
