@@ -6,6 +6,7 @@ from django.db.models import Q
 from cinema.models import Cinema, Schedule, Stock
 
 
+
 class CinemaListView(ListView):
     model = Cinema
     context_object_name = 'cinemas'
@@ -65,4 +66,24 @@ class CinemaScheduleListView(ListView):
         context['schedules'] = schedules
         context['counts'] = range(24 * 12 + 6)
 
+        return context
+
+
+class CinemaStockListView(ListView):
+    model = Stock
+
+    def get_queryset(self):
+        query_set = super().get_queryset()
+        cinema_number = int(self.request.GET.get('cinema', '4'))
+        cinema = Cinema.objects.get(pk=cinema_number)
+        return query_set.filter(cinema=cinema)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        if self.request.user.is_staff:
+            context['title'] = '전체 재고 정보'
+            context['stocks'] = Stock.objects.all()
+        else:
+            context['title'] = f'{self.request.user.employee.cinema.name} 재고 정보'
+            context['stocks'] = Stock.objects.filter(cinema=self.request.user.employee.cinema)
         return context

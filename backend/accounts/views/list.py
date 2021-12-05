@@ -31,6 +31,8 @@ class EmployeeListView(ListView):
 
 class EmployeeAttendanceListView(ListView):
     model = Attendance
+    context_object_name = 'attendances'
+    template_name = 'accounts/attendance_list.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -48,7 +50,6 @@ class EmployeeAttendanceListView(ListView):
         employees = queryset.values('employee')
         attendances = []
         for employee in employees:
-            print(employee)
             if not is_searched.get(employee['employee']):
                 attendances.append(queryset.filter(employee__id=employee['employee']).order_by('date'))
                 is_searched[employee['employee']] = True
