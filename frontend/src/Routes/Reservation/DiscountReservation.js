@@ -81,7 +81,7 @@ function a11yProps(index) {
   };
 }
 
-const DiscountReservation = () => {
+const DiscountReservation = ({ display }) => {
   const [expanded, setExpanded] = React.useState("panel1");
 
   const handleChangeAccordion = (panel) => (event, newExpanded) => {
@@ -113,7 +113,7 @@ const DiscountReservation = () => {
   ];
 
   return (
-    <Container>
+    <Container display={display} current={4}>
       <p>할인선택</p>
       <div>
         <Accordion
@@ -207,6 +207,7 @@ const DiscountReservation = () => {
 export default DiscountReservation;
 
 const Container = styled.div`
+  display: ${(props) => (props.display === props.current ? "block" : "none")};
   width: 1200px;
   margin: auto;
   color: black;

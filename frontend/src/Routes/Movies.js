@@ -1,41 +1,45 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
-import movieData from "movieData";
-import { dbzaraApi } from "dbzaraApi";
+// import movieData from "movieData";
+import { dbzaraApi } from "jaehunApi";
 
 const Movies = () => {
-  // const [movies, setMovies] = useState();
-  // const getMovie = async () => {
-  //   const { data: { results: movies } } = await dbzaraApi.boxOffice();
-  //   setMovies(() => movies);
-  // }
+  const [movies, setMovies] = useState();
+  const getMovie = async () => {
+    const {
+      data: { results: movies },
+    } = await dbzaraApi.boxOffice();
+    setMovies(() => movies);
+  };
 
-  // useEffect(() => {
-  //   getMovie();
-  // }, [])
+  useEffect(() => {
+    getMovie();
+  }, []);
 
-  return (
+  return movies ? (
     <>
       <Container>
         <MovieRankCont>
-          {movieData.map((movie) => {
+          {movies.map((movie) => {
             return (
               <MovieView
-                // id={movie.id}
-                // rank={movie.rank}
-                // src={movie.src}
-                // age={movie.age}
-                // title={movie.title}
-                // ticketSales={movie.ticketSales}
-                // rates={movie.rates}
-                {...movie}
+                id={movie.id}
+                rank={movie.reservation_rate}
+                src={movie.poster}
+                age={movie.grade}
+                title={movie.name}
+                ticketSales={0}
+                rates={0}
+                // {...movie}
               />
             );
           })}
         </MovieRankCont>
       </Container>
     </>
+  ) : (
+    <div></div>
   );
 };
 

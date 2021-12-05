@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
+  display: ${(props) => (props.display === props.current ? "block" : "none")};
   width: 1200px;
   height: 712px;
   padding: 90px 70px 60px 70px;
@@ -147,27 +148,47 @@ const AllAgree = styled.div`
   }
 `;
 
-const UserInfoReservation = () => {
+const UserInfoReservation = ({ userInfo, display }) => {
+  const [agree, setAgree] = useState({
+    agree1: false,
+    agree2: false,
+  });
+
   return (
-    <Container>
+    <Container display={display} current={2}>
       <UserInfo>
         <div class="inp_line ui_name">
           <div class="ui_tit">예매자</div>
           <div class="ui_inp">
-            <p class="ui_txt">조재훈</p>
+            <p class="ui_txt">{userInfo.userName}</p>
           </div>
         </div>
         <div class="inp_line ui_phone">
           <div class="ui_tit">휴대폰</div>
           <div class="ui_inp">
             <div class="select_line select_area">
-              <input type="text" />
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="3"
+                value={userInfo.phoneNumber[0]}
+              />
             </div>
             <div class="ui_inp_para">
-              <input type="text" onkeydown="hpInNumber()" maxlength="4" />
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="4"
+                value={userInfo.phoneNumber[1]}
+              />
             </div>
             <div class="ui_inp_para">
-              <input type="text" onkeydown="hpInNumber()" maxlength="4" />
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="4"
+                value={userInfo.phoneNumber[2]}
+              />
             </div>
           </div>
         </div>
@@ -175,14 +196,23 @@ const UserInfoReservation = () => {
           <div class="ui_tit">이메일</div>
           <div class="ui_inp ">
             <div class="ui_inp_para">
-              <input type="text" id="email1" class="inp_st" />
+              <input
+                type="text"
+                id="email1"
+                class="inp_st"
+                value={userInfo.email.split("@")[0]}
+              />
             </div>
             <div class="ui_inp_para at_sign">@</div>
             <div class="ui_inp_para">
-              <input type="text" id="email2" class="inp_st" />
+              <input
+                type="text"
+                id="email2"
+                class="inp_st"
+                value={userInfo.email.split("@")[1]}
+              />
             </div>
             <div class="select_line select_area">
-              <input type="text" />
               <div class="sel_val eve_sel"></div>
               <div class="sel_option eve_list" id="selEmail"></div>
             </div>
@@ -221,7 +251,12 @@ const UserInfoReservation = () => {
                 </tr>
               </table>
               <div>
-                <input type="checkBox" />
+                <input
+                  type="checkBox"
+                  onClick={() =>
+                    setAgree((data) => ({ ...data, agree1: true }))
+                  }
+                />
                 <p>[필수] 개인정보 수집 · 이용 동의</p>
               </div>
             </div>
@@ -247,7 +282,12 @@ const UserInfoReservation = () => {
                 </tr>
               </table>
               <div>
-                <input type="checkBox" />
+                <input
+                  type="checkBox"
+                  onClick={() =>
+                    setAgree((data) => ({ ...data, agree2: true }))
+                  }
+                />
                 <p>[필수] 개인정보 수집 · 이용 동의</p>
               </div>
             </div>
@@ -258,7 +298,13 @@ const UserInfoReservation = () => {
             정보제공에 동의하지 않을 권리가 있으나, 동의하지 않을 경우 예매를
             진행할 수 없습니다.
           </p>
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            onClick={() =>
+              setAgree((data) => ({ ...data, agree1: true, agree2: true }))
+            }
+          />
+          {console.log(agree)}
           <p>전체동의</p>
         </AllAgree>
       </AgreeData>

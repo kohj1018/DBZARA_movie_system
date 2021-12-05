@@ -5,42 +5,43 @@ import movieData from "movieData";
 
 const People = ({ id }) => {
   const directorList = movieData[id].people.filter(people =>
-    people.job != "배우"
+    people.job !== "배우"
   );
   const actorList = movieData[id].people.filter(people =>
-    people.job == "배우"
+    people.job === "배우"
   );
   return (
-  <>
-    <Container>
-      <Title>배우·제작진</Title>
-      <ActArea>
-        {directorList.map(people => {
-          return (
-            <PeopleView
-              // name={people.name}
-              // job={people.job}
-              // src={people.src}
-              {...people}
-            />
-          )
-        })}
-      </ActArea>
-      <ActArea>
-        {actorList.map(people => {
-          return (
-            <PeopleView
-              // name={people.name}
-              // job={people.job}
-              // src={people.src}
-              {...people}
-            />
-          )
-        })}
-      </ActArea>
-    </Container>
-  </>
-)};
+    <>
+      <Container>
+        <Title>배우·제작진</Title>
+        <ActArea>
+          {directorList.map(people => {
+            return (
+              <PeopleView
+                // name={people.name}
+                // job={people.job}
+                // src={people.src}
+                {...people}
+              />
+            )
+          })}
+        </ActArea>
+        <ActArea>
+          {actorList.map(people => {
+            return (
+              <PeopleView
+                // name={people.name}
+                // job={people.job}
+                // src={people.src}
+                {...people}
+              />
+            )
+          })}
+        </ActArea>
+      </Container>
+    </>
+  )
+};
 
 export default People;
 

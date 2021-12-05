@@ -2,6 +2,8 @@ from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
+from item import views as item
+from accounts import views as accounts
 from cinema import views as cinema
 from movie import views as movie
 
@@ -13,9 +15,29 @@ urlpatterns = [
     path('token/verify/', verify_jwt_token),
     path('token/refresh/', refresh_jwt_token),
 
+    # event api
+    path('event/', item.event_list_api_view, name='event'),
+    path('event/<int:pk>/', item.event_detail_api_view, name='event-detail'),
+
+    # accounts api
+    path('accounts/login/google/', accounts.google_login_api_view, name='google-login'),
+    path('accounts/login/kakao/', accounts.kakao_login_api_viwe, name='kakao-login'),
+    path('accounts/movies/', accounts.profile_movie_api_view, name='profile-movie'),
+    path('accounts/genres/', accounts.profile_genre_api_view, name='profile-genre'),
+    path('accounts/actors/', accounts.profile_actor_api_view, name='profile-actor'),
+    path('accounts/directors/', accounts.profile_director_api_view, name='profile-director'),
+    path('accounts/distributors/', accounts.profile_distributor_api_view, name='profile-distributor'),
+    path('accounts/movies/<int:pk>/', accounts.profile_movie_detail_api_view, name='profile-detail-movie'),
+    path('accounts/genres/<int:pk>/', accounts.profile_genre_detail_api_view, name='profile-detail-genre'),
+    path('accounts/actors/<int:pk>/', accounts.profile_actor_detail_api_view, name='profile-detail-actor'),
+    path('accounts/directors/<int:pk>/', accounts.profile_director_detail_api_view, name='profile-detail-director'),
+    path('accounts/distributors/<int:pk>/', accounts.profile_distributor_detail_api_view, name='profile-detail-distributor'),
+
     # cinema api
     path('cinema/', cinema.cinema_api_list_view, name='cinema'),
     path('cinema/<int:pk>/', cinema.cinema_api_detail_view, name='cinema-detail'),
+
+    # schedule api
     path('schedule/', cinema.schedule_api_view, name='schedule'),
     path('schedule/cinema/<int:pk>/', cinema.schedule_cinema_api_view, name='schedule-detail-cinema'),
     path('schedule/movie/<int:pk>/', cinema.schedule_movie_api_view, name='schedule-detail-movie'),

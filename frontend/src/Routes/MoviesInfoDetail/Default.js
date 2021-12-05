@@ -62,6 +62,25 @@ const Default = ({ id }) => {
             );
           })}
         </StyledSlider>
+        <Title>동영상</Title>
+        <VodArea>
+          <Video
+            src={movieData[id].video}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </VodArea>
+        <Title>포토</Title>
+        <StyledSlider {...settings}>
+          {movieData[id].photos.map((photo, index) => {
+            return (
+              <PhotoItem>
+                <Photo src={photo} />
+              </PhotoItem>
+            );
+          })}
+        </StyledSlider>
         <Title>평점</Title>
         <CommentArea>
           <RateEditBox rates={movieData[id].rates} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
-import { dbzaraApi } from "dbzaraApi";
+import { dbzaraApi } from "jaehunApi";
 import { Link } from "react-router-dom";
 import MovieVideo from "Components/MovieVideo";
 import EventPoster from "Components/EventPoster";
@@ -766,19 +766,20 @@ const BestMainBox = styled.section`
 
 const BestMainContainer = styled.section`
   margin-top: 50px;
-  width: 1200px;
+  min-width: 1200px;
   height: 450px;
   position: relative;
 `;
 
 const BestSubContainer = styled.section`
-  width: 335px;
+  /* width: 335px; */
   height: 492px;
   position: absolute;
   top: 35px;
   margin-bottom: 10px;
   flex-direction: column;
   display: none;
+  right: -200px;
   animation: ${fadeOut} 0.5s ease-out;
   ${(prop) => {
     if (prop.scrollY) return `display: block`;
@@ -789,6 +790,8 @@ const BestSubMovie = styled.section`
   width: 100%;
   height: 33%;
   margin-bottom: 5px;
+  &:hover {
+  }
 `;
 
 //이벤트

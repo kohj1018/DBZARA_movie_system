@@ -5,7 +5,6 @@ const api = axios.create({
 });
 
 export const dbzaraApi = {
-  // 영화data
   boxOffice: () =>
     api.get("movie/", {
       params: {

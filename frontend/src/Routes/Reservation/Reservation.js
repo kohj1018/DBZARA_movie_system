@@ -24,7 +24,7 @@ import DiscountReservation from "Routes/Reservation/DiscountReservation";
 
 // api연결
 import { UserContext } from "context";
-import { dbzaraApi } from "dbzaraApi";
+import { dbzaraApi } from "jaehunApi";
 
 // ! 예매page
 const Reservation = () => {
@@ -139,6 +139,8 @@ const Reservation = () => {
     seat: null,
   });
 
+  const [display, onDisplay] = useState(1);
+
   console.log(moviesChoice);
   console.log(theaterChoice);
   console.log(dayChoice);
@@ -208,7 +210,7 @@ const Reservation = () => {
       </Header>
       <Main>
         <ReservationInfo>
-          <MoviesReservation>
+          <MoviesReservation display={display} current={1}>
             <MainReservation>
               <Choice>
                 <MoviesChoice>
@@ -428,12 +430,11 @@ const Reservation = () => {
                         onDayChoice((data) => ({
                           ...data,
                           choice: true,
-                          day: toDay.toISOString().split("T")[0].split("-"),
+                          day: toDay.toISOString().split("T")[0],
                         }))
                       }
                       value={toDay}
                     />
-                    {console.log(dayChoice)}
                     <Explanation>
                       <p>
                         영화, 극장, 관람일을 선택하시면 시간 선택이 아래쪽에
@@ -458,9 +459,16 @@ const Reservation = () => {
               )}
             </MainReservation>
           </MoviesReservation>
-          {/* <UserInfoReservation /> */}
-          {/* <SeatReservation /> */}
-          {/* <DiscountReservation /> */}
+          <UserInfoReservation
+            userInfo={{
+              userName: "조재훈",
+              phoneNumber: ["010", "2373", "9147"],
+              email: "wognskec@gmail.com",
+            }}
+            display={display}
+          />
+          <SeatReservation onMovieSeat={onMovieSeat} display={display} />
+          <DiscountReservation display={display} />
         </ReservationInfo>
         {moviesChoice.choice ? (
           <MoviesDetail choice={moviesChoice.choice}>
@@ -500,39 +508,45 @@ const Reservation = () => {
                     : "극장을 선택하세요."}
                 </div>
                 {/* //TODO 관람일자 왜...왜 씨발 왜... */}
-                <div>관람일시를 선택하세요.</div>
+                <div>
+                  {dayChoice.choice ? dayChoice.day : "관람일시를 선택하세요."}
+                </div>
                 <div>좌석을 선택하세요.</div>
               </div>
             </MoviesInfo>
-            <TicketInfo>
-              <p>
-                <span>성인(2)</span>
-                <span>26,000원</span>
-              </p>
-              <p>
-                <span>청소년(2)</span>
-                <span>26,000원</span>
-              </p>
-              <p>
-                <span>우대(2)</span>
-                <span>26,000원</span>
-              </p>
-              <p>
-                <span>예매수수료(2)</span>
-                <span>26,000원</span>
-              </p>
-              <p>
-                <span>할인금액</span>
-                <span>(-) 1000원</span>
-              </p>
-            </TicketInfo>
-            <AmountInfo>
-              <div>
-                <p>최종결제금액</p>
-                <p>50,000원</p>
-              </div>
-              <Btn>결제</Btn>
-            </AmountInfo>
+            {movieSeat.choice && (
+              <>
+                <TicketInfo>
+                  <p>
+                    <span>성인(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>청소년(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>우대(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>예매수수료(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>할인금액</span>
+                    <span>(-) 1000원</span>
+                  </p>
+                </TicketInfo>
+                <AmountInfo>
+                  <div>
+                    <p>최종결제금액</p>
+                    <p>50,000원</p>
+                  </div>
+                  <Btn>결제</Btn>
+                </AmountInfo>
+              </>
+            )}
           </MoviesDetail>
         ) : (
           <MoviesDetail choice={moviesChoice.choice}>
@@ -548,6 +562,12 @@ const Reservation = () => {
           </MoviesDetail>
         )}
       </Main>
+      <PrevBtn onClick={() => onDisplay(display - 1)} state={display}>
+        <p>⬅</p>
+      </PrevBtn>
+      <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
+        <p>➡</p>
+      </NextBtn>
     </Container>
   );
 };
@@ -561,6 +581,16 @@ const Container = styled.div`
   color: blue;
   display: flex;
   flex-direction: column;
+  > button {
+    position: absolute;
+    top: 500px;
+    :nth-last-child(2) {
+      left: 50px;
+    }
+    :last-child {
+      right: 50px;
+    }
+  }
 `;
 
 const Header = styled.div`
@@ -587,20 +617,22 @@ const Main = styled.div`
 `;
 
 const ReservationInfo = styled.div`
-  width: 100%;
+  width: 1200px;
   margin: auto;
-  /* display: flex; */
+  display: flex;
 `;
 
 const MoviesReservation = styled.div`
   display: flex;
+  display: ${(props) => (props.display === props.current ? "flex" : "none")};
   margin: auto;
 `;
 
 const MainReservation = styled.div`
-  width: 1200px;
+  width: 100%;
   /* height: 900px; */
   margin: auto;
+
   /* border: 1px solid red; */
 `;
 
@@ -763,6 +795,26 @@ const Btn = styled(Button)`
     font-size: 25px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     color: rgba(0, 0, 0, 0.125);
+  }
+`;
+
+const PrevBtn = styled(Btn)`
+  && {
+    display: ${(props) => (props.state === 1 ? "none" : "block")};
+    font-size: 60px;
+    /* > span {
+      > p {
+      }
+      height: 100%;
+
+      margin: 0;
+    } */
+  }
+`;
+const NextBtn = styled(PrevBtn)`
+  && {
+    display: ${(props) => (props.state === 4 ? "none" : "block")};
+    /* background: red; */
   }
 `;
 
