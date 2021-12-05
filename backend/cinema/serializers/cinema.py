@@ -1,5 +1,5 @@
 from cinema.serializers.base import *
-from movie.serializers import MovieSerializer
+from movie.serializers import MovieSerializer, MovieShortSerializer
 
 
 class CinemaDetailSerializer(CinemaSerializer):
@@ -16,10 +16,10 @@ class ScheduleDetailSerializer(ScheduleSerializer):
 
 
 class ScheduleCinemaSerializer(CinemaSerializer):
-    schedule = ScheduleDetailSerializer(source='schedule_by_cinema', many=True)
+    schedules = MovieShortSerializer(source='schedule_by_cinema', many=True)
 
     class Meta(CinemaSerializer.Meta):
-        fields = ['name', 'schedule']
+        fields = ['name', 'schedules']
 
 
 class ScheduleMovieSerializer(MovieSerializer):

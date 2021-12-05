@@ -51,9 +51,20 @@ class Cinema(models.Model):
         return Cinema.objects.filter(sub_region=self.sub_region).count()
 
     @property
-    def schedule_by_cinema(self):
-        base_date = date(2020, 1, 1)
-        return Schedule.objects.filter(theater__cinema=self, datetime__range=[base_date, base_date + timedelta(days=3)])
+    def schedule_movie_by_cinema(self):
+        base_date = date(2021, 11, 10)
+        return Schedule.objects.filter(
+                theater__cinema=self,
+                movie__closing_date__gt=base_date
+                ).values_list('movie', flat=True).distinct()
+
+    @property
+    def schedule_datetime_by_cinema(self):
+        base_date = date(2021, 11, 10)
+        return Schedule.objects.filter(
+                theater__cinema=self,
+                movie__closing_date__gt=base_date
+                ).values_list('datetime', flat=True).distinct()
 
     def __str__(self):
         return self.name
@@ -110,6 +121,10 @@ class Schedule(PostgresPartitionedModel):
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
+
+    @property
+    def schedule_cinema_by_date(self):
+        return self.objects
 
     def __str__(self):
         return f'{self.theater} - {self.movie}'

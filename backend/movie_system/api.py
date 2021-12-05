@@ -1,4 +1,6 @@
-from django.urls import path
+from datetime import datetime
+
+from django.urls import path, register_converter
 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
@@ -8,6 +10,19 @@ from cinema import views as cinema
 from movie import views as movie
 
 app_name = 'api'
+
+
+class DateConverter:
+    regex = '\d{4}-\d{2}-\d{2}'
+
+    def to_python(self, value):
+        return datetime.strptime(value, '%Y-%m-%d')
+
+    def to_url(self, value):
+        return value
+
+
+register_converter(DateConverter, 'yyyy')
 
 urlpatterns = [
     # authentication api
@@ -34,7 +49,8 @@ urlpatterns = [
     path('accounts/genres/<int:pk>/', accounts.profile_genre_detail_api_view, name='profile-detail-genre'),
     path('accounts/actors/<int:pk>/', accounts.profile_actor_detail_api_view, name='profile-detail-actor'),
     path('accounts/directors/<int:pk>/', accounts.profile_director_detail_api_view, name='profile-detail-director'),
-    path('accounts/distributors/<int:pk>/', accounts.profile_distributor_detail_api_view, name='profile-detail-distributor'),
+    path('accounts/distributors/<int:pk>/', accounts.profile_distributor_detail_api_view,
+         name='profile-detail-distributor'),
 
     # cinema api
     path('cinema/', cinema.cinema_api_list_view, name='cinema'),
@@ -44,6 +60,7 @@ urlpatterns = [
     path('schedule/', cinema.schedule_api_view, name='schedule'),
     path('schedule/cinema/<int:pk>/', cinema.schedule_cinema_api_view, name='schedule-detail-cinema'),
     path('schedule/movie/<int:pk>/', cinema.schedule_movie_api_view, name='schedule-detail-movie'),
+    path('schedule/date/<yyyy:search_date>/', cinema.schedule_date_api_view, name='schedule-detail-date'),
 
     # review api
     path('review/', movie.review_api_view, name='review'),

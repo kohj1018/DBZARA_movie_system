@@ -1,7 +1,7 @@
 from .base import (
     GenreSerializer, ActorSerializer, DirectorSerializer, DistributorSerializer,
     ImageSerializer, MovieSerializer, CharacterSerializer, ReviewSerializer,
-    MovieInfoSerializer
+    MovieInfoSerializer, MovieShortSerializer
 )
 from .movie import (
     MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer,

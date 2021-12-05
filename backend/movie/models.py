@@ -62,15 +62,19 @@ class Movie(models.Model):
         return self.images.get(category=2).image
 
     @property
-    def schedule_by_movie(self):
-        base_date = date(2020, 1, 1)
-        return self.schedule_set.filter(datetime__range=[base_date, base_date + timedelta(days=3)])
+    def schedule_cinema_by_movie(self):
+        base_date = date(2021, 11, 10)
+        return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list('cinema', flat=True).distinct()
+
+    @property
+    def schedule_datetime_by_movie(self):
+        base_date = date(2021, 11, 10)
+        return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list(
+            'datetime', flat=True).distinct()
 
     @property
     def reservation_rate(self):
         now_date = date(2021, 12, 1)
-        return 0
-        # TODO: Fix After collect reservation dummy data
         return round(Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(movie=self, datetime__month=now_date.month, datetime__day=now_date.day)
         ).count() / Reservation.objects.filter(
