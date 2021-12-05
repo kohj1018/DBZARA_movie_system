@@ -18,8 +18,13 @@ export const dbzaraApi = {
         option: "not-open",
       },
     }),
-  movieInfo: (id) => api.get(`movie/${id}`),
+  movie: (id) => api.get(`movie/${id}`),
+  movieInfo: (id) => api.get(`movie/${id}/info`),
+  movieImg: (id) => api.get(`movie/${id}/images`),
+  moviePeople: (id) => api.get(`movie/${id}/people`),
+  movieReview: (id) => api.get(`movie/${id}/reviews`),
   movieVideo: (id) => api.get(`movie/${id}/videos`),
+
 
   //   시네마data
   cinema: () => api.get("cinema/"),

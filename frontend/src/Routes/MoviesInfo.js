@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Link
-} from "react-router-dom";
 import movieData from "movieData";
 import Default from "./MoviesInfoDetail/Default";
 import People from "./MoviesInfoDetail/People";
 import Videos from "./MoviesInfoDetail/Videos";
 import Photos from "./MoviesInfoDetail/Photos";
 import Rates from "./MoviesInfoDetail/Rates";
+import { dbzaraApi } from "dbzaraApi";
+import { CircularProgress } from "@material-ui/core";
 
 // TODO
 // 0. Api 사용
@@ -23,6 +19,23 @@ import Rates from "./MoviesInfoDetail/Rates";
 // 6. 사진 넘기는 버튼 띄울 수 있게 하기
 
 const MoviesInfo = ({ match }) => {
+  const [movie, setMovie] = useState();
+  const [movieInfo, setMovieInfo] = useState();
+
+  const getMovie = async () => {
+    const { data: movie } = await dbzaraApi.movie(match.params.id);
+    setMovie(() => movie);
+  }
+  const getMovieInfo = async () => {
+    const { data: { results: movieInfo } } = await dbzaraApi.movieInfo(match.params.id);
+    setMovieInfo(() => movieInfo);
+  }
+
+  useEffect(() => {
+    getMovie();
+    getMovieInfo();
+  }, [])
+
   // Tab 변경 시 Tab 인덱스 확인하기 위한 useState
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -30,36 +43,38 @@ const MoviesInfo = ({ match }) => {
   const originTabStyle = {
     borderBottom: "1px solid #b4b4b4",
     color: "#b4b4b4"
-  }
+  };
   const activeTabStyle = {
     borderBottom: "3px solid #2b2b2b",
     color: "#2b2b2b"
-  }
+  };
 
   return (
+    movie ? (
     <>
       <Container>
         {/* 선택된 영화 이미지 블러 효과 부분 */}
         <DetailBannerArea>
           <BgBlurArea>
-            <BgImg src={movieData[match.params.id].detailSrc}></BgImg>
+            <BgImg src={movie.backdrop}></BgImg>
           </BgBlurArea>
           <DetailMovieInfo>
             <ImgThumb>
-              <Poster src={movieData[match.params.id].src}></Poster>
+              <Poster src={movie.poster}></Poster>
             </ImgThumb>
             <InfoTxt>
-              <Title>{movieData[match.params.id].title}</Title>
-              <EngTit>{movieData[match.params.id].engTitle}</EngTit>
+              <Title>{movie.name}</Title>
+              <EngTit>영어제목</EngTit>
               <TxtBundle>
-                <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt>
-                <Txt>평점 {movieData[match.params.id].rates}</Txt>
+                {/* <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt> */}
+                <Txt>예매율 0위 68.8%</Txt>
+                <Txt>평점 7.1</Txt>
               </TxtBundle>
               <TxtBundle>
-                <Txt>{movieData[match.params.id].releaseDate} 개봉</Txt>
-                <Txt>{movieData[match.params.id].runningTime} 분</Txt>
-                <Txt>12세이상관람가</Txt>
-                <Txt>{movieData[match.params.id].country}</Txt>
+                <Txt>{movie.opening_date} 개봉</Txt>
+                <Txt>{movie.running_time} 분</Txt>
+                <Txt>{movie.grade}세이상관람가</Txt>
+                {/* <Txt>{movieData[match.params.id].country}</Txt> */}
                 <BtnArea>
                   <ReserveBtn>예매</ReserveBtn>
                   <ShareBtn></ShareBtn>
@@ -77,30 +92,30 @@ const MoviesInfo = ({ match }) => {
                 <GrTitle>연령별/성별 예매율</GrTitle>
                 <GraphGrid>
                   <GraphBar>
-                      {movieData[match.params.id].agePercent.map((age, index) => {
+                      {/* {movieInfo.age.map((age, index) => {
                         return (
                           <BarDrawCont>
                             <BarLabel>{index+1}0대</BarLabel>
                             <BarDraw>
-                              <BarPercent style={{width: `${age}px`}}></BarPercent>
-                              <GraphTool>{age}%</GraphTool>
+                              <BarPercent style={{width: `0.${age}px`}}></BarPercent>
+                              <GraphTool>0.{age}%</GraphTool>
                             </BarDraw>
                           </BarDrawCont>
                         )
-                      })}
+                      })} */}
                   </GraphBar>
                   <GraphSex>
-                    <SexMale style={{height: movieData[match.params.id].sexPercent.male}}></SexMale>
-                    <SexMaleTxt style={{height: movieData[match.params.id].sexPercent.male}}>{movieData[match.params.id].sexPercent.male}</SexMaleTxt>
-                    <SexFemale style={{height: movieData[match.params.id].sexPercent.female}}></SexFemale>
-                    <SexFemaleTxt style={{height: movieData[match.params.id].sexPercent.female}}>{movieData[match.params.id].sexPercent.female}</SexFemaleTxt>
+                    {/* <SexMale style={{height: movieInfo.gender.M}}></SexMale>
+                    <SexMaleTxt style={{height: movieInfo.gender.M}}>{movieInfo.gender.M}</SexMaleTxt>
+                    <SexFemale style={{height: movieInfo.gender.F}}></SexFemale>
+                    <SexFemaleTxt style={{height: movieInfo.gender.F}}>{movieInfo.gender.F}</SexFemaleTxt> */}
                   </GraphSex>
                 </GraphGrid>
               </GraphGender>
               <GraphDayAdn>
                 <GrTitle>일일 관객수</GrTitle>
                 <GraphDayAdnView>
-                  <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt>
+                  {/* <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt> */}
                   <GrTxt02>(11월26일 기준)</GrTxt02>
                 </GraphDayAdnView>
               </GraphDayAdn>
@@ -108,7 +123,7 @@ const MoviesInfo = ({ match }) => {
                 <GrTitle>누적 관객수</GrTitle>
                 {/* <GraphChart></GraphChart> */}
                 <GraphAdnCumView>
-                  <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt>
+                  {/* <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt> */}
                 </GraphAdnCumView>
               </GraphDayAdnCum>
               <GraphDaySales>
@@ -116,7 +131,7 @@ const MoviesInfo = ({ match }) => {
                 <GrsTxt>(단위:천원)</GrsTxt>
                 {/* <GraphChart></GraphChart> */}
                 <GraphSalesView>
-                  <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt>
+                  {/* <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt> */}
                 </GraphSalesView>
               </GraphDaySales>
             </GraphCont>
@@ -173,6 +188,13 @@ const MoviesInfo = ({ match }) => {
         </DetailCont>
       </Container>
     </>
+    ) : (
+      <>
+        <LoadingArea>
+          <CircularProgress/>
+        </LoadingArea>
+      </>
+    )
   )
 };
 
@@ -660,4 +682,10 @@ const TabItemLink = styled.a`
   text-align: center;
   list-style: none;
   cursor: pointer;
+`;
+
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
 `;

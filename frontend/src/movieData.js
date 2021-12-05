@@ -239,4 +239,10 @@ export default [
         ticketSales: '0.1%',
         rates: '?'
     },
+    // 필모그래피 테스트 데이터
+    {
+        name: "임지연",
+        birth: "1990.06.23",
+        image: "https://movie-simg.yes24.com/NYes24//PER_PHOTO//14/09/Lim_jiyeon_112010.jpg"
+    },
 ]

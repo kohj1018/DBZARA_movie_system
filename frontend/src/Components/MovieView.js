@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 
 
-const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {  
+const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {  
   console.log(age);
   var ageColorStyle = {};
   // 연령별로 색깔 다르게 표시
@@ -70,10 +70,11 @@ const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
       break;
   }
   return (
+    isFilmo === false ? (
     <>
       <Container>
         <ImgThumb>
-          <Poster src={`https://dbzarastorage.blob.core.windows.net${src}`} alt="poster" />
+          <Poster src={src} alt="poster" />
           <BtnContainer>
             <OverBtn>
               <Btn>예매</Btn>
@@ -95,6 +96,21 @@ const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
         </MvInfo>
       </Container>
     </>
+    ) : (
+      <>
+        <Container>
+          <ImgThumb>
+            <Poster src={src} alt="poster" />
+          </ImgThumb>
+          <MvInfo>
+            <MvTit>
+              <Age style={ageColorStyle}>{age}</Age>
+              {title}
+            </MvTit>
+          </MvInfo>
+        </Container>
+      </>
+    )
   );
 };
 

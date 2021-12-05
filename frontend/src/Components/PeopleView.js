@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const PeopleView = ({ name, job, src }) => {  
+const PeopleView = ({ id, name, job, src }) => {  
   return (
     <>
       <ActCont>
-        <PeopleLink>
+        <PeopleLink to={`MoviesInfo/People/${id}`}>
           <ActThumb>
             <ActImg src={src ? src : "https://movie-img.yes24.com/NYes24/new/ic_noimg02.png"}></ActImg>
           </ActThumb>

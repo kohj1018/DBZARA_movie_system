@@ -1,40 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import movieData from "movieData";
 import RateEditBox from "Components/RateEditBox";
 import RateViewBox from "Components/RateViewBox";
+import { CircularProgress } from "@material-ui/core";
+import { dbzaraApi } from "dbzaraApi";
 
-const Rates = ({ id }) => (
-  <>
-    <Container>
-      <Title>평점</Title>
-      <CommentArea>
-        <RateEditBox
-          rates={movieData[id].rates}
-        />
-        <RatesArea>
-          <RatesTypeMenuTxt>
-            <EmpathyOrder>공감순</EmpathyOrder>
-            <LatestOrder>최신순</LatestOrder>
-          </RatesTypeMenuTxt>
-        </RatesArea>
-        <RatesView>
-          {movieData[id].review.map(review => {
-            return (
-              <RateViewBox
-                // nickName={review.nickName}
-                // rates={review.rates}
-                // comment={review.comment}
-                // date={review.date}
-                {...review}
-              />
-            )
-          })}
-        </RatesView>
-      </CommentArea>
-    </Container>
-  </>
-);
+const Rates = ({ id }) => {
+  const [movieReview, setMovieReview] = useState();
+
+  const getMovieReview = async () => {
+    const { data: { results: movieReview } } = await dbzaraApi.movieReview(id);
+    setMovieReview(() => movieReview);
+  }
+
+  useEffect(() => {
+    getMovieReview();
+  }, [])
+
+  return (
+    movieReview ? (
+      <>
+        <Container>
+          <Title>평점</Title>
+          <CommentArea>
+            <RateEditBox
+              rates={movieData[id].rates}
+            />
+            <RatesArea>
+              <RatesTypeMenuTxt>
+                <EmpathyOrder>공감순</EmpathyOrder>
+                <LatestOrder>최신순</LatestOrder>
+              </RatesTypeMenuTxt>
+            </RatesArea>
+            <RatesView>
+              {movieData[id].review.map(review => {
+                return (
+                  <RateViewBox
+                    nickName={review.name}
+                    rates={0}
+                    comment={review.comment}
+                    date={review.created}
+                    // nickName={review.nickName}
+                    // rates={review.rates}
+                    // comment={review.comment}
+                    // date={review.date}
+                    // {...review}
+                  />
+                )
+              })}
+            </RatesView>
+          </CommentArea>
+        </Container>
+      </>
+    )
+     : (
+      <>
+        <LoadingArea>
+          <CircularProgress/>
+        </LoadingArea>
+      </>
+    )
+)};
 
 export default Rates;
 
@@ -127,3 +154,8 @@ const RatesView = styled.div`
   padding: 0 40px;
 `;
 
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
+`;

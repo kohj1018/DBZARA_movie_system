@@ -10,6 +10,7 @@ import StorePopcorn from "Routes/Store/Popcorn";
 import StorePointMall from "Routes/Store/Pointmall";
 import Login from "Routes/Login";
 import join from "Routes/Join";
+import Filmography from "Filmography";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -25,6 +26,10 @@ export default [
   {
     path: "/MoviesInfo/Index/:id",
     component: MoviesInfo,
+  },
+  {
+    path: "/MoviesInfo/People/:id",
+    component: Filmography,
   },
   {
     path: "/Reservation",

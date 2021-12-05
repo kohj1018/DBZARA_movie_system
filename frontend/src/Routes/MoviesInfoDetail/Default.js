@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
 import movieData from "movieData";
@@ -7,6 +7,8 @@ import RateEditBox from "Components/RateEditBox";
 import RateViewBox from "Components/RateViewBox";
 import People from "./People";
 import { Translate } from "@material-ui/icons";
+import { dbzaraApi } from "dbzaraApi";
+import { CircularProgress } from "@material-ui/core";
 
 const Default = ({ id }) => {
 
@@ -21,80 +23,131 @@ const Default = ({ id }) => {
     // prevArrow: <CustomPrevArrow/>
   };
 
+  // API 연동
+  const [movie, setMovie] = useState();
+  const [movieInfo, setMovieInfo] = useState();
+  const [movieImg, setMovieImg] = useState();
+  const [moviePeople, setMoviePeople] = useState();  
+  const [movieVideo, setMovieVideo] = useState();
+  const [movieReview, setMovieReview] = useState();
+  const getMovie = async () => {
+    const { data: movie } = await dbzaraApi.movie(id);
+    setMovie(() => movie);
+  }
+  const getMovieInfo = async () => {
+    const { data: { results: movieInfo } } = await dbzaraApi.movieInfo(id);
+    setMovieInfo(() => movieInfo);
+  }
+  const getMovieImg = async () => {
+    const { data: { images: movieImg } } = await dbzaraApi.movieImg(id);
+    setMovieImg(() => movieImg);
+  }
+  const getMoviePeople = async () => {
+    const { data: { characters: moviePeople } } = await dbzaraApi.moviePeople(id);
+    setMoviePeople(() => moviePeople);
+  }
+  const getMovieVideo = async () => {
+    const { data: { videos: movieVideo } } = await dbzaraApi.movieVideo(id);
+    setMovieVideo(() => movieVideo);
+  }
+  const getMovieReview = async () => {
+    const { data: { results: movieReview } } = await dbzaraApi.movieReview(id);
+    setMovieReview(() => movieReview);
+  }
+
+  useEffect(() => {
+    getMovie();
+    getMovieInfo();
+    getMovieImg();
+    getMoviePeople();
+    getMovieReview();
+    getMovieVideo();
+  }, [])
+
   return (
-  <>
-    <Container>
-      <Title>시놉시스</Title>
-        {movieData[id].sysTxt.map(txt => {
-          return (
+    movie && moviePeople ? (
+      <>
+        <Container>
+          <Title>시놉시스</Title>
+            {/* {movieData[id].sysTxt.map(txt => {
+              return (
+                <Txt>
+                {txt}
+                </Txt>
+              )
+            })} */}
             <Txt>
-            {txt}
+              {movie.summary}
             </Txt>
-          )
-        })}
-      <Title>제작정보</Title>
-      <Txt>수입 : {movieData[id].studio}</Txt>
-      <Txt>배급 : {movieData[id].distributor}</Txt>
-      <Title>배우·제작진</Title>
-      <ActArea>
-        {movieData[id].people.map(people => {
-          return (
-            <PeopleView
-              // name={people.name}
-              // job={people.job}
-              // src={people.src}
-              {...people}
+          <Title>제작정보</Title>
+          <Txt>수입 : {movie.distributors[0].name}</Txt>
+          <Txt>배급 : {movie.distributors[0].name}</Txt>
+          <Title>배우·제작진</Title>
+          <ActArea>
+            {moviePeople.map(people => {
+              return (
+                <PeopleView
+                  name={people.actor.name}
+                  job={"배우"}
+                  src={people.actor.image}
+                />
+              )
+            })}
+          </ActArea>
+          <Title>동영상</Title>
+          <VodArea>
+            <Video 
+              src={movieVideo[0].video} 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
             />
-          )
-        })}    
-      </ActArea>
-      <Title>동영상</Title>
-      <VodArea>
-        <Video 
-          src={movieData[id].video} 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-        />
-      </VodArea>
-      <Title>포토</Title>
-      <StyledSlider {...settings}>
-        {movieData[id].photos.map((photo, index) => {
-          return (
-            <PhotoItem>
-              <Photo
-                src={photo}
-              />
-            </PhotoItem>
-          )
-        })}
-      </StyledSlider>
-      <Title>평점</Title>
-      <CommentArea>
-        <RateEditBox
-          rates={movieData[id].rates}
-        />
-        <RatesArea>
-          <RatesTypeMenuTxt>
-            <EmpathyOrder>공감순</EmpathyOrder>
-            <LatestOrder>최신순</LatestOrder>
-          </RatesTypeMenuTxt>
-        </RatesArea>
-        <RatesView>
-          {movieData[id].review.map(review => {
-            return (
-              <RateViewBox
-                // nickName={review.nickName}
-                // rates={review.rates}
-                // comment={review.comment}
-                // date={review.date}
-                {...review}
-              />
-            )
-          })}
-        </RatesView>
-      </CommentArea>
-    </Container>
-  </>
+          </VodArea>
+          <Title>포토</Title>
+          <StyledSlider {...settings}>
+            {movieImg.map((photo, index) => {
+              return (
+                <PhotoItem>
+                  <Photo
+                    src={photo.image}
+                  />
+                </PhotoItem>
+              )
+            })}
+          </StyledSlider>
+          <Title>평점</Title>
+          <CommentArea>
+            <RateEditBox
+              rates={movieData[0].rates}
+            />
+            <RatesArea>
+              <RatesTypeMenuTxt>
+                <EmpathyOrder>공감순</EmpathyOrder>
+                <LatestOrder>최신순</LatestOrder>
+              </RatesTypeMenuTxt>
+            </RatesArea>
+            <RatesView>
+              {movieData[0].review.map(review => {
+                return (
+                  <RateViewBox
+                    // nickName={review.nickName}
+                    // rates={review.rates}
+                    // comment={review.comment}
+                    // date={review.date}
+                    {...review}
+                  />
+                )
+              })}
+            </RatesView>
+          </CommentArea>
+        </Container>
+      </>
+    ) : (
+      <>
+        <LoadingArea>
+          <CircularProgress/>
+        </LoadingArea>
+      </>
+    )
 )};
 
 export default Default;
@@ -312,4 +365,10 @@ const RatesView = styled.div`
   border: 1px solid #e5e5e5;
   background: #fff;
   padding: 0 40px;
+`;
+
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
 `;
