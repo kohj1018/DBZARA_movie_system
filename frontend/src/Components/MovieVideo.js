@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { dbzaraApi } from "dbzaraApi";
+import { dbzaraApi } from "jaehunApi";
 
 const Video = styled.iframe`
   background-position: center center;
@@ -10,7 +10,16 @@ const Video = styled.iframe`
   height: 100%;
   /* position: absolute; */
   background-color: black;
-  /* overflow: hidden; */
+  display: absolute;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    width: 1600px;
+    height: 800px;
+
+    top: 100px;
+    z-index: 1;
+    right: -100px;
+  }
 `;
 
 const MovieVideo = ({ id }) => {

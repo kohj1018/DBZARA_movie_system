@@ -7,11 +7,7 @@ const MoviePoster = ({ id, bgUrl, index }) => {
   return (
     <MovieImg>
       <MovieBgImg
-        src={
-          bgUrl
-            ? `https://dbzarastorage.blob.core.windows.net${bgUrl}`
-            : require("../assets/noPosterSmall.png").default
-        }
+        src={bgUrl ? bgUrl : require("../assets/noPosterSmall.png").default}
       />
       {/* <MovieImg> */}
       <Index>{index}</Index>

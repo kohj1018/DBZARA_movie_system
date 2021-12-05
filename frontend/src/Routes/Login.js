@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -11,7 +11,7 @@ import {
 import { UserContext } from "context";
 import GoogleLogin from "react-google-login";
 import KakaoLogin from "react-kakao-login";
-import {socialAPI} from "../junsu-api";
+import { socialAPI } from "junsu-api";
 
 const Login = () => {
   const { userInfo, handleUserInfo } = useContext(UserContext);
@@ -26,14 +26,14 @@ const Login = () => {
     console.log(data);
   };
   const onFailure = (response) => {
-    console.log(response)
+    console.log(response);
   };
 
   useEffect(() => {
     if (window.Kakao !== undefined) {
-      window.Kakao.init(process.env.REACT_APP_KAKAO_LOGIN_API)
+      window.Kakao.init(process.env.REACT_APP_KAKAO_LOGIN_API);
     }
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -46,10 +46,10 @@ const Login = () => {
           cookiePolicy={"single_host_origin"}
         />
         <KakaoLogin
-            token={process.env.REACT_APP_KAKAO_LOGIN_API}
-            onSuccess={onSuccess}
-            onFail={onFailure}>
-        </KakaoLogin>
+          token={process.env.REACT_APP_KAKAO_LOGIN_API}
+          onSuccess={onSuccess}
+          onFail={onFailure}
+        ></KakaoLogin>
         <Info>
           <Accordion>
             <UserSummary>
@@ -69,7 +69,7 @@ const Login = () => {
   );
 };
 
-// export default Login;
+export default Login;
 
 const Container = styled.div`
   margin-top: 50px;
@@ -107,4 +107,31 @@ const UserDetails = styled(AccordionDetails)`
 const Data = styled.li`
   font-size: 15px;
 `;
-export default Login;
+
+// const Login = () => {
+//   //  UserContext에서 정보 받아와서 사용
+//   const { username, password, token, error } = useContext(UserContext);
+//   // console.log(useContext(UserContext));
+//   return (
+//     <Container>
+//       <LoginView>
+//         <Info>
+//           <Accordion>
+//             <UserSummary>
+//               <Typography>UserInfo</Typography>
+//             </UserSummary>
+//             <UserDetails>
+//               <Data>{`name : ${username}`}</Data>
+//               <Data>{`password : ${password}`}</Data>
+//               <Data>
+//                 {token ? `token : ${token.substring(0, 18)}...` : error}
+//               </Data>
+//             </UserDetails>
+//           </Accordion>
+//         </Info>
+//       </LoginView>
+//     </Container>
+//   );
+// };
+
+// export default Login;
