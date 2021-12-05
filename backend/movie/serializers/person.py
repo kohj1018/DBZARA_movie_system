@@ -4,12 +4,12 @@ from movie.serializers.base import ActorSerializer, DirectorSerializer, MovieSer
 class ActorDetailSerializer(ActorSerializer):
     filmography = MovieSerializer(many=True)
 
-    class Meta:
-        fields = ['name', 'image', 'birth_date', 'filmography']
+    class Meta(ActorSerializer.Meta):
+        fields = ActorSerializer.Meta.fields + ['filmography']
 
 
 class DirectorDetailSerializer(DirectorSerializer):
     filmography = MovieSerializer(many=True)
 
-    class Meta:
-        fields = ['name', 'image', 'birth_date', 'filmography']
+    class Meta(DirectorSerializer.Meta):
+        fields = DirectorSerializer.Meta.fields + ['filmography']

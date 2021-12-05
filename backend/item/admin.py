@@ -8,7 +8,6 @@ from .models import Item, MainCategory, MiddleCategory, SubCategory, Order, Even
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     list_display = ['id', 'category', 'name', 'image']
-    pass
 
 
 @admin.register(MainCategory)

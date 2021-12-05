@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,9 +7,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 
 from cinema.serializers import CinemaSerializer, CinemaDetailSerializer, ScheduleSerializer, ScheduleCinemaSerializer, ScheduleMovieSerializer
-from cinema.models import Cinema, Theater, Seat
+from cinema.models import Cinema, Theater, Seat, Schedule
 from movie.models import Movie
-from movie.serializers import ReservationChoiceMovieSerializer
+from movie.serializers import ReservationChoiceMovieSerializer, MovieShortSerializer
 
 
 class CinemaListAPIView(ListAPIView):
@@ -21,7 +21,7 @@ class CinemaListAPIView(ListAPIView):
 class CinemaDetailAPIView(RetrieveAPIView):
     queryset = Cinema.objects.all()
     permission_classes = [AllowAny]
-    serializer_class = CinemaDetailSerializer()
+    serializer_class = CinemaDetailSerializer
 
 
 # FIXME: TO GET MOVIES & CINEMAS DATA
@@ -34,16 +34,50 @@ class CinemaDetailAPIView(RetrieveAPIView):
 #         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ScheduleCinemaAPIView(RetrieveAPIView):
-    queryset = Cinema.objects.all()
+class ScheduleCinemaAPIView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = ScheduleCinemaSerializer
+
+    def get(self, request, pk):
+        cinema = Cinema.objects.get(pk=pk)
+        queryset = Movie.objects.filter(pk__in=cinema.schedule_movie_by_cinema)
+        serializer = MovieShortSerializer(queryset, many=True)
+        return Response({
+            'cinema': CinemaSerializer(cinema).data,
+            'movie': serializer.data,
+            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in cinema.schedule_datetime_by_cinema])
+        }, status=status.HTTP_200_OK)
 
 
-class ScheduleMovieAPIView(RetrieveAPIView):
-    queryset = Movie.objects.all()
+class ScheduleDateAPIView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = ScheduleMovieSerializer
+
+    def get(self, request, search_date):
+        start_datetime = search_date
+        end_datetime = search_date + timedelta(days=1) - timedelta(seconds=1)
+        queryset = Schedule.objects.filter(datetime__range=[start_datetime, end_datetime])
+        movie_serializer = MovieShortSerializer(
+            Movie.objects.filter(pk__in=queryset.values_list('movie', flat=True).distinct()), many=True)
+        cinema_serializer = CinemaSerializer(
+            Cinema.objects.filter(pk__in=queryset.values_list('cinema', flat=True).distinct()), many=True)
+        return Response({
+            'date': search_date,
+            'movie': movie_serializer.data,
+            'cinema': cinema_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class ScheduleMovieAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        movie = Movie.objects.get(pk=pk)
+        queryset = Cinema.objects.filter(pk__in=movie.schedule_cinema_by_movie)
+        serializer = CinemaSerializer(queryset, many=True)
+        return Response({
+            'movie': MovieShortSerializer(movie).data,
+            'cinema': serializer.data,
+            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in movie.schedule_datetime_by_movie])
+        }, status=status.HTTP_200_OK)
 
 
 class ScheduleAPIView(APIView):
