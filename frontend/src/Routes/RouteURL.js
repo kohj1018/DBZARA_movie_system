@@ -6,7 +6,7 @@ import Theater from "Routes/Theater";
 import Event from "Routes/Event";
 import Store from "Routes/Store";
 import Login from "Routes/Login";
-import join from "Routes/Join";
+// import join from "Routes/Join";
 import Filmography from "Filmography";
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -48,8 +48,8 @@ export default [
     path: "/Login",
     component: Login,
   },
-  {
-    path: "/Join",
-    component: join,
-  },
+  // {
+  //   path: "/Join",
+  //   component: join,
+  // },
 ];
