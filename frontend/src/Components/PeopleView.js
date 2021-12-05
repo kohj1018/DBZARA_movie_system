@@ -6,7 +6,7 @@ const PeopleView = ({ id, name, job, src }) => {
   return (
     <>
       <ActCont>
-        <PeopleLink to={`MoviesInfo/People/${id}`}>
+        <PeopleLink to={`/MoviesInfo/People/${id}`}>
           <ActThumb>
             <ActImg src={src ? src : "https://movie-img.yes24.com/NYes24/new/ic_noimg02.png"}></ActImg>
           </ActThumb>

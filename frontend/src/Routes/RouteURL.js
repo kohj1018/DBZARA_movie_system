@@ -7,7 +7,7 @@ import Event from "Routes/Event";
 import Store from "Routes/Store";
 import Login from "Routes/Login";
 // import join from "Routes/Join";
-import Filmography from "Filmography";
+import Filmography from "Routes/Filmography";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [

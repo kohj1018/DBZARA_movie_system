@@ -32,6 +32,7 @@ const People = ({ id }) => {
             {moviePeople.map(people => {
               return (
                 <PeopleView
+                  id={people.actor.id}
                   name={people.actor.name}
                   job={"배우"}
                   src={people.actor.image}

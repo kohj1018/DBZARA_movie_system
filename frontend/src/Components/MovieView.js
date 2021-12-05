@@ -79,7 +79,7 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
               <OverBtn>
                 <Btn>예매</Btn>
                 <Btn>
-                  <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
+                  <SLink to={`/MoviesInfo/Index/${id}`}>정보</SLink>
                 </Btn>
               </OverBtn>
             </BtnContainer>
@@ -99,15 +99,17 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
     ) : (
       <>
         <Container>
-          <ImgThumb>
-            <Poster src={src} alt="poster" />
-          </ImgThumb>
-          <MvInfo>
-            <MvTit>
-              <Age style={ageColorStyle}>{age}</Age>
-              {title}
-            </MvTit>
-          </MvInfo>
+          <SLink2 to={`/MoviesInfo/Index/${id}`}>
+            <ImgThumb>
+              <Poster src={src} alt="poster" />
+            </ImgThumb>
+            <MvInfo style={{ padding: "35px 0" }}>
+              <MvTit>
+                <Age style={ageColorStyle}>{age}</Age>
+                {title}
+              </MvTit>
+            </MvInfo>
+          </SLink2>
         </Container>
       </>
     )
@@ -181,6 +183,13 @@ const SLink = styled(Link)`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+`;
+
+const SLink2 = styled(Link)`
+  :hover {
+    display: block;
+    border: 3px solid red;
   }
 `;
 

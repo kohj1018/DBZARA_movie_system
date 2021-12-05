@@ -86,6 +86,7 @@ const Default = ({ id }) => {
             {moviePeople.map(people => {
               return (
                 <PeopleView
+                  id={people.actor.id}
                   name={people.actor.name}
                   job={"배우"}
                   src={people.actor.image}
@@ -96,7 +97,7 @@ const Default = ({ id }) => {
           <Title>동영상</Title>
           <VodArea>
             <Video
-              src={movieVideo[0].video}
+              src={movieVideo ? movieVideo[0].video : ""}
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
             />
