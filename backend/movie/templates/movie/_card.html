@@ -2,12 +2,11 @@
 
 <link rel="stylesheet" href="{% static 'css/model-card.css' %}">
 
-<div class="rounded col-sm-2 model-card"><a href="#">
-    </a>
+<div class="rounded col-sm-2 model-card"><a href="#"></a>
     <div class="rounded bsblox-image-effect16"><a href="#">
         {% if type == 'movie' %}
-            {% if object.image %}
-                <img class="rounded img-fluid" src="{{ object.image.url }}" />
+            {% if object.poster %}
+                <img class="rounded img-fluid" src="{{ object.poster }}" />
             {% else %}
                 <img class="img-fluid" src="{% static 'img/no-photo-available.jpeg' %}" />
             {% endif %}

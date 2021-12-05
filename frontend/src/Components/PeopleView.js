@@ -2,7 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+<<<<<<< HEAD
 const PeopleView = ({ id, name, job, src }) => {  
+=======
+const PeopleView = ({ name, job, src }) => {
+>>>>>>> upstream/develop
   return (
     <>
       <ActCont>

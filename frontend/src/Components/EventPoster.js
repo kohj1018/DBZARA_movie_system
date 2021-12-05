@@ -1,21 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+// import { Box, Button } from "@material-ui/core";
+import Dialog from '@material-ui/core/Dialog';
+// import MuiDialogTitle from '@material-ui/core/DialogTitle';
+// import MuiDialogContent from '@material-ui/core/DialogContent';
+// import MuiDialogActions from '@material-ui/core/DialogActions';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
+// import Typography from '@material-ui/core/Typography';
+import axios from 'axios'
 
-const EventPoster = ({ key, id }) => {
+
+
+
+const EventModal = styled.div``;
+
+const EventPoster = ({ id, day, src, title, text }) => {
+  const [modal, setModal] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    axios
+      .get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
+      .then((result) => setModal(result.data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
-      <EventBg src="https://movie-simg.yes24.com/NYes24//EVENT_IMG/20/05/evtlist_attend_141625.png"></EventBg>
+      {/* 이벤트 랜더링 */}
+      <EventBg src={src}></EventBg>
+      {/* {console.log(src)} */}
       <EventInfo>
         <Btn>
-          <DDay>D - 46</DDay>
-          <EventTitle>매일매일 출첵하고 혜택받자!</EventTitle>
-          <EventText>예매권/할인권</EventText>
+          <DDay>D - {day}</DDay>
+          <EventTitle>{title}</EventTitle>
+          <EventText onClick={handleClickOpen}>자세히 보기</EventText>
         </Btn>
       </EventInfo>
+
+      {/* 모달 창 */}
+      <EventModal>
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+          <img src={modal.poster} />
+          {/* <p>{modal.title}</p> */}
+
+          {/* <Button autoFocus onClick={handleClose} color="primary">
+            닫기
+          </Button> */}
+        </Dialog>
+      </EventModal>
     </>
   );
 };
-
 export default EventPoster;
 
 const EventBg = styled.img`

@@ -138,7 +138,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'https://dbzarastorage.blob.core.windows.net/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTHENTICATION_BACKENDS = [
@@ -167,6 +167,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'accounts', 'static'),
     os.path.join(BASE_DIR, 'movie', 'static'),
     os.path.join(BASE_DIR, 'cinema', 'static'),
+    os.path.join(BASE_DIR, 'item', 'static'),
 ]
 
 REST_FRAMEWORK = {

@@ -7,7 +7,7 @@ from functions.collect_cinema_data import NaverMapAPI
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def __init__(self):
         self.naver_api = NaverMapAPI()

@@ -48,6 +48,7 @@ class ProfileDistributorAPIView(ProfileBaseAPIView):
 class ProfileMovieDetailAPIView(GenericAPIView):
     queryset = Movie.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = MovieSerializer
 
     def post(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
@@ -65,6 +66,7 @@ class ProfileMovieDetailAPIView(GenericAPIView):
 class ProfileGenreDetailAPIView(GenericAPIView):
     queryset = Genre.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = GenreSerializer
 
     def post(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
@@ -82,6 +84,7 @@ class ProfileGenreDetailAPIView(GenericAPIView):
 class ProfileActorDetailAPIView(GenericAPIView):
     queryset = Actor.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = ActorSerializer
 
     def post(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
@@ -99,6 +102,7 @@ class ProfileActorDetailAPIView(GenericAPIView):
 class ProfileDirectorDetailAPIView(GenericAPIView):
     queryset = Director.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = DirectorSerializer
 
     def post(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
@@ -116,6 +120,7 @@ class ProfileDirectorDetailAPIView(GenericAPIView):
 class ProfileDistributorDetailAPIView(GenericAPIView):
     queryset = Distributor.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = DistributorSerializer
 
     def post(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)

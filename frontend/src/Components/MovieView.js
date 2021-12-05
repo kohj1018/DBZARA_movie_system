@@ -7,19 +7,19 @@ import { Link } from "react-router-dom";
 
 
 
-const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {  
+const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {
   console.log(age);
   var ageColorStyle = {};
   // 연령별로 색깔 다르게 표시
-  switch(age) {
+  switch (age) {
     case 0:
       ageColorStyle = {
         color: "#60c9e3",
         border: "1px solid #60c9e3",
         fontSize: "12px",
         lineHeight: "1",
-        padding: "5px 25px 0px 0px"
-      }
+        padding: "5px 25px 0px 0px",
+      };
       break;
     case 12:
       ageColorStyle = {
@@ -27,8 +27,8 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
         border: "1px solid #6dd551",
         fontSize: "15px",
         lineHeight: "0.7",
-        padding: "5px 0px 0px 0px"
-      }
+        padding: "5px 0px 0px 0px",
+      };
       break;
     case 15:
       ageColorStyle = {
@@ -36,8 +36,8 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
         border: "1px solid #fbac30",
         fontSize: "15px",
         lineHeight: "0.7",
-        padding: "5px 0px 0px 0px"
-      }
+        padding: "5px 0px 0px 0px",
+      };
       break;
     case 19:
       ageColorStyle = {
@@ -45,8 +45,8 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
         border: "1px solid #d30101",
         fontSize: "12px",
         lineHeight: "1",
-        padding: "5px 25px 0px 0px"
-      }
+        padding: "5px 25px 0px 0px",
+      };
       break;
     default:
       ageColorStyle = {
@@ -54,48 +54,48 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
         border: "1px solid #6dd551",
         fontSize: "15px",
         lineHeight: "0.7",
-        padding: "5px 0px 0px 0px"
-      }
+        padding: "5px 0px 0px 0px",
+      };
       break;
   }
   console.log(ageColorStyle);
-  switch(age) {
+  switch (age) {
     case 0:
-      age = "전체"
+      age = "전체";
       break;
     case 19:
-      age = "청불"
+      age = "청불";
       break;
     default:
       break;
   }
   return (
     isFilmo === false ? (
-    <>
-      <Container>
-        <ImgThumb>
-          <Poster src={src} alt="poster" />
-          <BtnContainer>
-            <OverBtn>
-              <Btn>예매</Btn>
-              <Btn>
-                <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
-              </Btn>
-            </OverBtn>
-          </BtnContainer>
-        </ImgThumb>
-        <MvInfo>
-          <MvTit>
-            <Age style={ageColorStyle}>{age}</Age>
-            {title}
-          </MvTit>
-          <MvTxt>
-            <TicketSales>예매율 : {ticketSales}</TicketSales>
-            <Rates>평점 : {rates}</Rates>
-          </MvTxt>
-        </MvInfo>
-      </Container>
-    </>
+      <>
+        <Container>
+          <ImgThumb>
+            <Poster src={src} alt="poster" />
+            <BtnContainer>
+              <OverBtn>
+                <Btn>예매</Btn>
+                <Btn>
+                  <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
+                </Btn>
+              </OverBtn>
+            </BtnContainer>
+          </ImgThumb>
+          <MvInfo>
+            <MvTit>
+              <Age style={ageColorStyle}>{age}</Age>
+              {title}
+            </MvTit>
+            <MvTxt>
+              <TicketSales>예매율 : {ticketSales}</TicketSales>
+              <Rates>평점 : {rates}</Rates>
+            </MvTxt>
+          </MvInfo>
+        </Container>
+      </>
     ) : (
       <>
         <Container>
@@ -213,14 +213,13 @@ const Age = styled.span`
   width: 25px;
   height: 22px;
   text-align: center;
-  
 `;
 
-  // line-height: ${(props) => props.ageAttr["line-height"]};
-  // color: ${(props) => props.ageAttr["color"]};
-  // border: ${(props) => props.ageAttr["border"]};
-  // padding: ${(props) => props.ageAttr["padding"]};
-  // font-size: ${(props) => props.ageAttr["font-size"]};
+// line-height: ${(props) => props.ageAttr["line-height"]};
+// color: ${(props) => props.ageAttr["color"]};
+// border: ${(props) => props.ageAttr["border"]};
+// padding: ${(props) => props.ageAttr["padding"]};
+// font-size: ${(props) => props.ageAttr["font-size"]};
 
 const TicketSales = styled.span`
   margin-left: 0;

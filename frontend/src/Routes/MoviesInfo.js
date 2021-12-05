@@ -51,47 +51,47 @@ const MoviesInfo = ({ match }) => {
 
   return (
     movie ? (
-    <>
-      <Container>
-        {/* 선택된 영화 이미지 블러 효과 부분 */}
-        <DetailBannerArea>
-          <BgBlurArea>
-            <BgImg src={movie.backdrop}></BgImg>
-          </BgBlurArea>
-          <DetailMovieInfo>
-            <ImgThumb>
-              <Poster src={movie.poster}></Poster>
-            </ImgThumb>
-            <InfoTxt>
-              <Title>{movie.name}</Title>
-              <EngTit>영어제목</EngTit>
-              <TxtBundle>
-                {/* <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt> */}
-                <Txt>예매율 0위 68.8%</Txt>
-                <Txt>평점 7.1</Txt>
-              </TxtBundle>
-              <TxtBundle>
-                <Txt>{movie.opening_date} 개봉</Txt>
-                <Txt>{movie.running_time} 분</Txt>
-                <Txt>{movie.grade}세이상관람가</Txt>
-                {/* <Txt>{movieData[match.params.id].country}</Txt> */}
-                <BtnArea>
-                  <ReserveBtn>예매</ReserveBtn>
-                  <ShareBtn></ShareBtn>
-                </BtnArea>
-              </TxtBundle>
-            </InfoTxt>
-          </DetailMovieInfo>
-        </DetailBannerArea>
-        {/* 영화 콘텐츠 내용 부분 */}
-        <DetailCont>
-          <GraphArea>
-            <GraphAreaTitle>예매분석</GraphAreaTitle>
-            <GraphCont>
-              <GraphGender>
-                <GrTitle>연령별/성별 예매율</GrTitle>
-                <GraphGrid>
-                  <GraphBar>
+      <>
+        <Container>
+          {/* 선택된 영화 이미지 블러 효과 부분 */}
+          <DetailBannerArea>
+            <BgBlurArea>
+              <BgImg src={movie.backdrop}></BgImg>
+            </BgBlurArea>
+            <DetailMovieInfo>
+              <ImgThumb>
+                <Poster src={movie.poster}></Poster>
+              </ImgThumb>
+              <InfoTxt>
+                <Title>{movie.name}</Title>
+                <EngTit>영어제목</EngTit>
+                <TxtBundle>
+                  {/* <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt> */}
+                  <Txt>예매율 0위 68.8%</Txt>
+                  <Txt>평점 7.1</Txt>
+                </TxtBundle>
+                <TxtBundle>
+                  <Txt>{movie.opening_date} 개봉</Txt>
+                  <Txt>{movie.running_time} 분</Txt>
+                  <Txt>{movie.grade}세이상관람가</Txt>
+                  {/* <Txt>{movieData[match.params.id].country}</Txt> */}
+                  <BtnArea>
+                    <ReserveBtn>예매</ReserveBtn>
+                    <ShareBtn></ShareBtn>
+                  </BtnArea>
+                </TxtBundle>
+              </InfoTxt>
+            </DetailMovieInfo>
+          </DetailBannerArea>
+          {/* 영화 콘텐츠 내용 부분 */}
+          <DetailCont>
+            <GraphArea>
+              <GraphAreaTitle>예매분석</GraphAreaTitle>
+              <GraphCont>
+                <GraphGender>
+                  <GrTitle>연령별/성별 예매율</GrTitle>
+                  <GraphGrid>
+                    <GraphBar>
                       {/* {movieInfo.age.map((age, index) => {
                         return (
                           <BarDrawCont>
@@ -103,64 +103,64 @@ const MoviesInfo = ({ match }) => {
                           </BarDrawCont>
                         )
                       })} */}
-                  </GraphBar>
-                  <GraphSex>
-                    {/* <SexMale style={{height: movieInfo.gender.M}}></SexMale>
+                    </GraphBar>
+                    <GraphSex>
+                      {/* <SexMale style={{height: movieInfo.gender.M}}></SexMale>
                     <SexMaleTxt style={{height: movieInfo.gender.M}}>{movieInfo.gender.M}</SexMaleTxt>
                     <SexFemale style={{height: movieInfo.gender.F}}></SexFemale>
                     <SexFemaleTxt style={{height: movieInfo.gender.F}}>{movieInfo.gender.F}</SexFemaleTxt> */}
-                  </GraphSex>
-                </GraphGrid>
-              </GraphGender>
-              <GraphDayAdn>
-                <GrTitle>일일 관객수</GrTitle>
-                <GraphDayAdnView>
-                  {/* <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt> */}
-                  <GrTxt02>(11월26일 기준)</GrTxt02>
-                </GraphDayAdnView>
-              </GraphDayAdn>
-              <GraphDayAdnCum>
-                <GrTitle>누적 관객수</GrTitle>
-                {/* <GraphChart></GraphChart> */}
-                <GraphAdnCumView>
-                  {/* <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt> */}
-                </GraphAdnCumView>
-              </GraphDayAdnCum>
-              <GraphDaySales>
-                <GrTitle>누적 매출액</GrTitle>
-                <GrsTxt>(단위:천원)</GrsTxt>
-                {/* <GraphChart></GraphChart> */}
-                <GraphSalesView>
-                  {/* <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt> */}
-                </GraphSalesView>
-              </GraphDaySales>
-            </GraphCont>
-            <GraphBtnArea>
-              <GraphArrowBtn></GraphArrowBtn>
-            </GraphBtnArea>
-          </GraphArea>
-          <DetailTabArea>
-            {/* 탭 전환 방식 개선 완료 */}
-            <TabMenu>
-              {["기본정보", "배우·제작진", "동영상", "포토", "평점"].map((tabName, idx) => {
-                return (
-                  <>
-                    {tabIndex === idx ? (
-                      <TabMenuItem style={activeTabStyle}>
-                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
-                      </TabMenuItem>
-                    ) : (
-                      <TabMenuItem style={originTabStyle}>
-                        <TabItemLink onClick={() => {setTabIndex(idx)}}>{tabName}</TabItemLink>
-                      </TabMenuItem>
-                    )}
-                  </>
-                )
-              })}
-            </TabMenu>
-            {/* 탭 콘텐츠 부분 */}
-            <TabContent tabIndex={tabIndex} id={match.params.id}/>
-            {/* <Router>
+                    </GraphSex>
+                  </GraphGrid>
+                </GraphGender>
+                <GraphDayAdn>
+                  <GrTitle>일일 관객수</GrTitle>
+                  <GraphDayAdnView>
+                    {/* <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt> */}
+                    <GrTxt02>(11월26일 기준)</GrTxt02>
+                  </GraphDayAdnView>
+                </GraphDayAdn>
+                <GraphDayAdnCum>
+                  <GrTitle>누적 관객수</GrTitle>
+                  {/* <GraphChart></GraphChart> */}
+                  <GraphAdnCumView>
+                    {/* <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt> */}
+                  </GraphAdnCumView>
+                </GraphDayAdnCum>
+                <GraphDaySales>
+                  <GrTitle>누적 매출액</GrTitle>
+                  <GrsTxt>(단위:천원)</GrsTxt>
+                  {/* <GraphChart></GraphChart> */}
+                  <GraphSalesView>
+                    {/* <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt> */}
+                  </GraphSalesView>
+                </GraphDaySales>
+              </GraphCont>
+              <GraphBtnArea>
+                <GraphArrowBtn></GraphArrowBtn>
+              </GraphBtnArea>
+            </GraphArea>
+            <DetailTabArea>
+              {/* 탭 전환 방식 개선 완료 */}
+              <TabMenu>
+                {["기본정보", "배우·제작진", "동영상", "포토", "평점"].map((tabName, idx) => {
+                  return (
+                    <>
+                      {tabIndex === idx ? (
+                        <TabMenuItem style={activeTabStyle}>
+                          <TabItemLink onClick={() => { setTabIndex(idx) }}>{tabName}</TabItemLink>
+                        </TabMenuItem>
+                      ) : (
+                        <TabMenuItem style={originTabStyle}>
+                          <TabItemLink onClick={() => { setTabIndex(idx) }}>{tabName}</TabItemLink>
+                        </TabMenuItem>
+                      )}
+                    </>
+                  )
+                })}
+              </TabMenu>
+              {/* 탭 콘텐츠 부분 */}
+              <TabContent tabIndex={tabIndex} id={match.params.id} />
+              {/* <Router>
               <TabMenu>
                 {MoviesInfoTab.map(tab => {
                   return (
@@ -184,14 +184,14 @@ const MoviesInfo = ({ match }) => {
                 })}
               </Switch>
             </Router> */}
-          </DetailTabArea>
-        </DetailCont>
-      </Container>
-    </>
+            </DetailTabArea>
+          </DetailCont>
+        </Container>
+      </>
     ) : (
       <>
         <LoadingArea>
-          <CircularProgress/>
+          <CircularProgress />
         </LoadingArea>
       </>
     )
@@ -199,30 +199,30 @@ const MoviesInfo = ({ match }) => {
 };
 
 const TabContent = (props) => {
-  switch(props.tabIndex) {
+  switch (props.tabIndex) {
     case 0:
       return (
-        <Default id={props.id}/>
+        <Default id={props.id} />
       )
       break;
     case 1:
       return (
-        <People id={props.id}/>
+        <People id={props.id} />
       )
       break;
     case 2:
       return (
-        <Videos id={props.id}/>
+        <Videos id={props.id} />
       )
       break;
     case 3:
       return (
-        <Photos id={props.id}/>
+        <Photos id={props.id} />
       )
       break;
     case 4:
       return (
-        <Rates id={props.id}/>
+        <Rates id={props.id} />
       )
       break;
   }

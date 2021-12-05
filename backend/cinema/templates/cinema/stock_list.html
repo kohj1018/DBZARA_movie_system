@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container-fluid mt-2 w-100">
+        <div class="row">
+            <div class="col mb-3">
+                {% include '_search_bar.html' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Evaluation Info</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="dataTable" class="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
+                                <table id="dataTable" class="table my-0">
+                                    <thead>
+                                        <tr>
+                                            <th>보유</th>
+                                            <th>재고명</th>
+                                            <th>재고수량/기준수량</th>
+                                            <th>가격</th>
+                                            <th>최근 구매일</th>
+                                            <th>공급사</th>
+                                            <th>담당자</th>
+                                            <th>담당자 전화번호</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stock-table">
+                                        {% for stock in stocks %}
+                                            <tr>
+                                                <td>{{ stock.cinema }}</td>
+                                                <td>{{ stock.item }}</td>
+                                                <td>{{ stock.quantity }} / {{ stock.standard_quantity }}</td>
+                                                <td>{{ stock.supply_price }}</td>
+                                                <td>{{ stock.modified }}</td>
+                                                <td>{{ stock.supplier.name }}</td>
+                                                <td>{{ stock.supplier.manager_name }}</td>
+                                                <td>{{ stock.supplier.manager_phone_number }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center" >
+            <div class="col">
+                {% include '_pagination.html' with page_obj=page_obj %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

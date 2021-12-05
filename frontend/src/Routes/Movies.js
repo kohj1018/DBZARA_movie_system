@@ -9,14 +9,15 @@ import { CircularProgress } from "@material-ui/core";
 const Movies = () => {
   const [movies, setMovies] = useState();
   const getMovie = async () => {
-    const { data: { results: movies } } = await dbzaraApi.boxOffice();
+    const {
+      data: { results: movies },
+    } = await dbzaraApi.boxOffice();
     setMovies(() => movies);
-  }
+  };
 
   useEffect(() => {
     getMovie();
-  }, [])
-  
+  }, []);
 
   return (
     movies ? (
@@ -31,7 +32,7 @@ const Movies = () => {
           <MovieRankCont>
             {movies.map(movie => {
               return (
-                <MovieView 
+                <MovieView
                   isFilmo={false}
                   id={movie.id}
                   rank={movie.reservation_rate}
@@ -40,7 +41,7 @@ const Movies = () => {
                   title={movie.name}
                   ticketSales={0}
                   rates={0}
-                  // {...movie}
+                // {...movie}
                 />
               );
             })}
@@ -53,11 +54,12 @@ const Movies = () => {
     ) : (
       <>
         <LoadingArea>
-          <CircularProgress/>
+          <CircularProgress />
         </LoadingArea>
       </>
     )
-)};
+  )
+};
 
 export default Movies;
 

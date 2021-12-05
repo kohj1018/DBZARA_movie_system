@@ -25,7 +25,6 @@ export const dbzaraApi = {
   movieReview: (id) => api.get(`movie/${id}/reviews`),
   movieVideo: (id) => api.get(`movie/${id}/videos`),
 
-
   //   시네마data
   cinema: () => api.get("cinema/"),
 

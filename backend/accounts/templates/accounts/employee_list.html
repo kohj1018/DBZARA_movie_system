@@ -1,0 +1,41 @@
+{% extends '_table.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block table-title %}
+    {{ title }}
+{% endblock table-title %}
+
+{% block headers %}
+    <tr>
+        <th>직장</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>소속</th>
+        <th>직무</th>
+        <th>입사일</th>
+        {% if user.is_superuser %}
+            <th>급여</th>
+        {% endif %}
+        <th>메일</th>
+    </tr>
+{% endblock headers %}
+
+{% block bodies %}
+    {% for employee in employees %}
+        <tr>
+            <td>{{ employee.cinema.name }}</td>
+            <td>{{ employee.user.full_name }}</td>
+            <td>{{ employee.user.gender }}</td>
+            <td>{{ employee.belong.department }}</td>
+            <td>{{ employee.belong.name }}</td>
+            <td>{{ employee.register_date }}</td>
+            {% if user.is_superuser %}
+                <td>{{ employee.salary }}</td>
+            {% endif %}
+            <td>{{ employee.user.email }}</td>
+        </tr>
+    {% endfor %}
+{% endblock bodies %}

@@ -40,13 +40,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
 
+    # third-party apps urls
 
+    # custom apps urls
     path('accounts/', include('accounts.urls')),
-    path('accounts/', include('allauth.urls')),
-
     path('movie/', include('movie.urls')),
     path('cinema/', include('cinema.urls')),
+    path('item/', include('item.urls')),
 
+    # api urls
     path('api/v1/', include('movie_system.api'))
 ]
 

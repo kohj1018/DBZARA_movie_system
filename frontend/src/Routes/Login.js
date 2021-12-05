@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import {
   Button,
@@ -10,52 +10,66 @@ import {
 } from "@material-ui/core";
 import { UserContext } from "context";
 import GoogleLogin from "react-google-login";
+import KakaoLogin from "react-kakao-login";
+import { socialAPI } from "junsu-api";
 
-// const Login = () => {
-//   //  UserContext에서 정보 받아와서 사용
-//   const { userInfo, handleUserInfo } = useContext(UserContext);
-//   console.log(useContext(UserContext));
-//   const responseGoogle = (response) => {
-//     console.log(response);
-//     console.log(response.profileObj);
-//     console.log(response.profileObj.name);
-//     // console.log(response.tokenId);
-//     // console.log(handleUserInfo);
-//     // console.log(userInfo);
-//   };
-//   return (
-//     <Container>
-//       {/* {console.log(username, password, token)} */}
-//       {/* {console.log({ token_decode })} */}
-//       <LoginView>
-//         {/* <Btn variant="outlined">로그인</Btn> */}
-//         <GoogleLogin
-//           clientId="382922198280-05veft7p5mrpa6nbdvnnj0dsk5tpakg5.apps.googleusercontent.com"
-//           buttonText="Google Login"
-//           onSuccess={responseGoogle}
-//           onFailure={responseGoogle}
-//           cookiePolicy={"single_host_origin"}
-//         />
-//         <Info>
-//           <Accordion>
-//             <UserSummary>
-//               <Typography>UserInfo</Typography>
-//             </UserSummary>
-//             <UserDetails>
-//               {/* <Data>{`name : ${userInfo.username}`}</Data>
-//               <Data>{`password : ${userInfo.password}`}</Data> */}
-//               <Data>
-//                 {/* {token ? `token : ${userInfo.token.substring(0, 18)}...` : error} */}
-//               </Data>
-//             </UserDetails>
-//           </Accordion>
-//         </Info>
-//       </LoginView>
-//     </Container>
-//   );
-// };
+const Login = () => {
+  const { userInfo, handleUserInfo } = useContext(UserContext);
+  const responseGoogle = async (response) => {
+    const { profileObj } = response;
+    const data = await socialAPI.googleLogin(profileObj);
+    console.log(data);
+  };
+  const onSuccess = async (response) => {
+    const { profile } = response;
+    const data = await socialAPI.kakaoLogin(profile);
+    console.log(data);
+  };
+  const onFailure = (response) => {
+    console.log(response);
+  };
 
-// export default Login;
+  useEffect(() => {
+    if (window.Kakao !== undefined) {
+      window.Kakao.init(process.env.REACT_APP_KAKAO_LOGIN_API);
+    }
+  }, []);
+
+  return (
+    <Container>
+      <LoginView>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_LOGIN_ID}
+          buttonText="Google Login"
+          onSuccess={responseGoogle}
+          onFailure={responseGoogle}
+          cookiePolicy={"single_host_origin"}
+        />
+        <KakaoLogin
+          token={process.env.REACT_APP_KAKAO_LOGIN_API}
+          onSuccess={onSuccess}
+          onFail={onFailure}
+        ></KakaoLogin>
+        <Info>
+          <Accordion>
+            <UserSummary>
+              <Typography>UserInfo</Typography>
+            </UserSummary>
+            <UserDetails>
+              {/* <Data>{`name : ${userInfo.username}`}</Data>
+              <Data>{`password : ${userInfo.password}`}</Data> */}
+              <Data>
+                {/* {token ? `token : ${userInfo.token.substring(0, 18)}...` : error} */}
+              </Data>
+            </UserDetails>
+          </Accordion>
+        </Info>
+      </LoginView>
+    </Container>
+  );
+};
+
+export default Login;
 
 const Container = styled.div`
   margin-top: 50px;
@@ -94,30 +108,30 @@ const Data = styled.li`
   font-size: 15px;
 `;
 
-const Login = () => {
-  //  UserContext에서 정보 받아와서 사용
-  const { username, password, token, error } = useContext(UserContext);
-  // console.log(useContext(UserContext));
-  return (
-    <Container>
-      <LoginView>
-        <Info>
-          <Accordion>
-            <UserSummary>
-              <Typography>UserInfo</Typography>
-            </UserSummary>
-            <UserDetails>
-              <Data>{`name : ${username}`}</Data>
-              <Data>{`password : ${password}`}</Data>
-              <Data>
-                {token ? `token : ${token.substring(0, 18)}...` : error}
-              </Data>
-            </UserDetails>
-          </Accordion>
-        </Info>
-      </LoginView>
-    </Container>
-  );
-};
+// const Login = () => {
+//   //  UserContext에서 정보 받아와서 사용
+//   const { username, password, token, error } = useContext(UserContext);
+//   // console.log(useContext(UserContext));
+//   return (
+//     <Container>
+//       <LoginView>
+//         <Info>
+//           <Accordion>
+//             <UserSummary>
+//               <Typography>UserInfo</Typography>
+//             </UserSummary>
+//             <UserDetails>
+//               <Data>{`name : ${username}`}</Data>
+//               <Data>{`password : ${password}`}</Data>
+//               <Data>
+//                 {token ? `token : ${token.substring(0, 18)}...` : error}
+//               </Data>
+//             </UserDetails>
+//           </Accordion>
+//         </Info>
+//       </LoginView>
+//     </Container>
+//   );
+// };
 
-export default Login;
+// export default Login;

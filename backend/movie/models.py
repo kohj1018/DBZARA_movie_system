@@ -55,22 +55,28 @@ class Movie(models.Model):
 
     @property
     def poster(self):
-        return self.images.get(category=1).image.url
+        return self.images.get(category=1).image
 
     @property
     def backdrop(self):
-        return self.images.get(category=2).image.url
+        return self.images.get(category=2).image
 
     @property
-    def schedule_by_movie(self):
-        base_date = date(2020, 1, 1)
-        return self.schedule_set.filter(datetime__range=[base_date, base_date + timedelta(days=3)])
+    def schedule_cinema_by_movie(self):
+        base_date = date(2021, 11, 10)
+        return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list('cinema', flat=True).distinct()
+
+    @property
+    def schedule_datetime_by_movie(self):
+        base_date = date(2021, 11, 10)
+        return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list(
+            'datetime', flat=True).distinct()
 
     @property
     def reservation_rate(self):
-        now_date = date.today()
+        # TODO: 다른 테이블로 이미 수치 계산 완료 되어야함.
         return 0
-        # TODO: Fix After collect reservation dummy data
+        now_date = date(2021, 12, 1)
         return round(Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(movie=self, datetime__month=now_date.month, datetime__day=now_date.day)
         ).count() / Reservation.objects.filter(

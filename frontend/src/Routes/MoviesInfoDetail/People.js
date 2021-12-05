@@ -7,7 +7,7 @@ import { dbzaraApi } from "dbzaraApi";
 
 const People = ({ id }) => {
   const [moviePeople, setMoviePeople] = useState();
-  
+
   const getMoviePeople = async () => {
     const { data: { characters: moviePeople } } = await dbzaraApi.moviePeople(id);
     setMoviePeople(() => moviePeople);
@@ -56,11 +56,12 @@ const People = ({ id }) => {
     ) : (
       <>
         <LoadingArea>
-          <CircularProgress/>
+          <CircularProgress />
         </LoadingArea>
       </>
     )
-)};
+  )
+};
 
 export default People;
 

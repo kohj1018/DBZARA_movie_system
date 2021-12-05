@@ -1,13 +1,10 @@
 import Home from "Routes/Home";
 import Movies from "Routes/Movies";
 import MoviesInfo from "Routes/MoviesInfo";
-import Reservation from "Routes/Reservation";
+import Reservation from "Routes/Reservation/Reservation";
 import Theater from "Routes/Theater";
 import Event from "Routes/Event";
-import Store from "Routes/Store/Store";
-import StoreTicket from "Routes/Store/Ticket";
-import StorePopcorn from "Routes/Store/Popcorn";
-import StorePointMall from "Routes/Store/Pointmall";
+import Store from "Routes/Store";
 import Login from "Routes/Login";
 import join from "Routes/Join";
 import Filmography from "Filmography";
@@ -46,18 +43,6 @@ export default [
   {
     path: "/Store",
     component: Store,
-  },
-  {
-    path: "/Store/Ticket",
-    component: StoreTicket,
-  },
-  {
-    path: "/Store/Popcorn",
-    component: StorePopcorn,
-  },
-  {
-    path: "/Store/Pointmall",
-    component: StorePointMall,
   },
   {
     path: "/Login",

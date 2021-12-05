@@ -11,7 +11,6 @@ import { dbzaraApi } from "dbzaraApi";
 import { CircularProgress } from "@material-ui/core";
 
 const Default = ({ id }) => {
-
   // 사진 카로셀(슬라이더) 설정
   const settings = {
     dots: false,
@@ -27,7 +26,7 @@ const Default = ({ id }) => {
   const [movie, setMovie] = useState();
   const [movieInfo, setMovieInfo] = useState();
   const [movieImg, setMovieImg] = useState();
-  const [moviePeople, setMoviePeople] = useState();  
+  const [moviePeople, setMoviePeople] = useState();
   const [movieVideo, setMovieVideo] = useState();
   const [movieReview, setMovieReview] = useState();
   const getMovie = async () => {
@@ -69,16 +68,16 @@ const Default = ({ id }) => {
       <>
         <Container>
           <Title>시놉시스</Title>
-            {/* {movieData[id].sysTxt.map(txt => {
+          {/* {movieData[id].sysTxt.map(txt => {
               return (
                 <Txt>
                 {txt}
                 </Txt>
               )
             })} */}
-            <Txt>
-              {movie.summary}
-            </Txt>
+          <Txt>
+            {movie.summary}
+          </Txt>
           <Title>제작정보</Title>
           <Txt>수입 : {movie.distributors[0].name}</Txt>
           <Txt>배급 : {movie.distributors[0].name}</Txt>
@@ -96,9 +95,9 @@ const Default = ({ id }) => {
           </ActArea>
           <Title>동영상</Title>
           <VodArea>
-            <Video 
-              src={movieVideo[0].video} 
-              frameborder="0" 
+            <Video
+              src={movieVideo[0].video}
+              frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
             />
           </VodArea>
@@ -144,24 +143,21 @@ const Default = ({ id }) => {
     ) : (
       <>
         <LoadingArea>
-          <CircularProgress/>
+          <CircularProgress />
         </LoadingArea>
       </>
     )
-)};
+  )
+};
 
 export default Default;
-
 
 const Container = styled.div`
   margin: 0;
   padding: 0;
   border: 0;
   outline: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-  background: transparent;
-  box-sizing: border-box;
+
   display: block;
   color: #777;
 `;
@@ -223,7 +219,8 @@ const StyledSlider = styled(Slider)`
     width: 90px;
     height: 90px;
     font-size: 0;
-    background: url(//movie-img.yes24.com/NYes24/new/all_sprite.png) no-repeat 0 0;
+    background: url(//movie-img.yes24.com/NYes24/new/all_sprite.png) no-repeat 0
+      0;
     z-index: 3;
     cursor: pointer;
   }
@@ -259,13 +256,13 @@ const StyledSlider = styled(Slider)`
     margin-right: auto;
     transform: translate3d(0, 0, 0);
     :before {
-      content: '';
+      content: "";
       display: table;
     }
     :after {
       clear: both;
       display: table;
-      content: '';
+      content: "";
     }
   }
 
@@ -326,7 +323,7 @@ const EmpathyOrder = styled.a`
   text-decoration: none;
   text-align: right;
   :before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -351,7 +348,7 @@ const LatestOrder = styled.a`
   text-decoration: none;
   text-align: right;
   :before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
