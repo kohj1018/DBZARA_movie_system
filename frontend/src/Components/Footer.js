@@ -26,8 +26,8 @@ const FooterArea = styled.div`
   margin-top:60px;
   line-height:1;
 `;
-const FooterInfo = styled.dl``;
-const InfoDl = styled.dl`
+// const FooterInfo = styled.div``;
+const InfoDl = styled.div`
   font-size:0;
   float:left;
   /* display: block;
@@ -36,7 +36,7 @@ const InfoDl = styled.dl`
   margin-inline-start: 0px;
   margin-inline-end: 0px; */
 `;
-const InfoDt = styled.dt`
+const InfoDt = styled.div`
   /* width: 188.99px;
   height: 20px;
   font-size: 15px;
@@ -51,13 +51,13 @@ const DtSpan = styled.span`
   height:20px;
   background:url('//movie-img.yes24.com/NYes24/new/logo.png') no-repeat 0 -39px;
 `;
-const InfoDd = styled.dd`
+const InfoDd = styled.div`
   width: 481.29px;
   height: 131.88px;
   display:inline-block;
   vertical-align:top;
 `;
-const DivDd = styled.dd`
+const DivDd = styled.div`
   width : 481.29px;
   height : 12.222px;
   margin: 0;
@@ -172,28 +172,28 @@ const Footer = () => {
                 <DivDd>
                   <DdTextFirst>
                     {/* <body link ="black" vlink ="red" alink = "darkgreen"> */}
-                    <a href="http://company.yes24.com/" style={{color: "#2b2b2b"}} target="_blank">회사소개</a>
+                    <a href="http://company.yes24.com/" style={{ color: "#2b2b2b" }} target="_blank">회사소개</a>
                     {/* </body> */}
                   </DdTextFirst>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/service.aspx" target="_blank" style={{color: "#2b2b2b"}}>이용약관</a>
+                    <a href="http://www.yes24.com/notice/service.aspx" target="_blank" style={{ color: "#2b2b2b" }}>이용약관</a>
                   </DdText>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/privacypolicy.aspx" target="_blank" style={{color: "#2b2b2b"}}>개인정보처리방침</a>
+                    <a href="http://www.yes24.com/notice/privacypolicy.aspx" target="_blank" style={{ color: "#2b2b2b" }}>개인정보처리방침</a>
                   </DdText>
                   <DdText>
-                    <a href="http://www.yes24.com/notice/youthpolicy.aspx" target="_blank" style={{color: "#2b2b2b"}}>청소년보호정책</a>
+                    <a href="http://www.yes24.com/notice/youthpolicy.aspx" target="_blank" style={{ color: "#2b2b2b" }}>청소년보호정책</a>
                   </DdText>
                   <DdText>
-                    <a href="/Event/Movie_Prize_Result_Awards" style={{color: "#2b2b2b"}}>공동체 영화상 CAMP</a>
+                    <a href="/Event/Movie_Prize_Result_Awards" style={{ color: "#2b2b2b" }}>공동체 영화상 CAMP</a>
                   </DdText>
                 </DivDd>
                 <AddrInfo>
                   <FcName>디비자라(주)</FcName>
                   <CallCont>한양대학교 ERICA 솦트웨어학부 (학연산클러스터 5층)</CallCont>
                   <CallCont>대표 : 누구게        개인정보보호책임자 : 노하준 hajoon0516@naver.com</CallCont>
-                  <CallCont>사업자등록번호 : 229-81-37000   통신판매업신고 : 제 2005-02682호    
-                      <a href="https://www.ftc.go.kr/www/bizCommList.do?key=232" style={{margin:"0 0 0 10px", borderBottom:"1px solid #a7a6a6", color: "#2b2b2b"}}>사업자 정보확인</a>
+                  <CallCont>사업자등록번호 : 229-81-37000   통신판매업신고 : 제 2005-02682호
+                      <a href="https://www.ftc.go.kr/www/bizCommList.do?key=232" style={{ margin: "0 0 0 10px", borderBottom: "1px solid #a7a6a6", color: "#2b2b2b" }}>사업자 정보확인</a>
                   </CallCont>
                   <CallCont>Copyright  ⓒ YES24 Corp. All Rights Reserved.</CallCont>
                 </AddrInfo>
@@ -208,7 +208,7 @@ const Footer = () => {
               </a>
             </FooterCallCont>
             <TopAreaShow>
-              <TopButton onClick={()=>window.scrollTo(0,0)}>최상단으로 이동</TopButton>
+              <TopButton onClick={() => window.scrollTo(0, 0)}>최상단으로 이동</TopButton>
             </TopAreaShow>
           </FooterCall>
         </FooterInner>

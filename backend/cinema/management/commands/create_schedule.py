@@ -14,7 +14,7 @@ from functions.crawling_movie_age_rate import CrawlingMovieAgeRate
 
 
 class Command(BaseCommand):
-    help = 'this command create user'
+    help = 'this commands create user'
 
     def __init__(self):
         super().__init__()

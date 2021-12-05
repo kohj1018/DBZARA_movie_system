@@ -167,6 +167,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'accounts', 'static'),
     os.path.join(BASE_DIR, 'movie', 'static'),
     os.path.join(BASE_DIR, 'cinema', 'static'),
+    os.path.join(BASE_DIR, 'item', 'static'),
 ]
 
 REST_FRAMEWORK = {

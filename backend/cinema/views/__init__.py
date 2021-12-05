@@ -1,5 +1,5 @@
 from .list import (
-    CinemaListView
+    CinemaListView, CinemaScheduleListView
 )
 
 from .api import (
@@ -8,6 +8,7 @@ from .api import (
 )
 
 cinemas = CinemaListView.as_view()
+cinema_schedule_list_view = CinemaScheduleListView.as_view()
 
 cinema_api_list_view = CinemaListAPIView.as_view()
 cinema_api_detail_view = CinemaDetailAPIView.as_view()

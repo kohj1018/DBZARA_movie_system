@@ -112,7 +112,7 @@ export default withRouter(({ location: { pathname } }) => {
             </TabUl>
           </Item>
           <Item
-            current={pathname === "/Store"}
+            current={pathname === "/Event"}
             onMouseOver={() => onHover()}
             onMouseOut={() => outHover()}
           >
@@ -161,8 +161,8 @@ const Header = styled.header`
     props.current
       ? "RGB(38, 38, 38)"
       : props.scrollY
-      ? "RGB(38, 38, 38)"
-      : "transparent"};
+        ? "RGB(38, 38, 38)"
+        : "transparent"};
 `;
 
 const Logo = styled.div`
