@@ -55,11 +55,11 @@ class Movie(models.Model):
 
     @property
     def poster(self):
-        return self.images.get(category=1).image.url
+        return self.images.get(category=1).image
 
     @property
     def backdrop(self):
-        return self.images.get(category=2).image.url
+        return self.images.get(category=2).image
 
     @property
     def schedule_by_movie(self):
