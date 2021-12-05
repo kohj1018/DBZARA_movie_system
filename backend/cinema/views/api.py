@@ -42,8 +42,8 @@ class ScheduleCinemaAPIView(APIView):
         queryset = Movie.objects.filter(pk__in=cinema.schedule_movie_by_cinema)
         serializer = MovieShortSerializer(queryset, many=True)
         return Response({
-            'cinema': CinemaSerializer(cinema).data,
-            'movie': serializer.data,
+            'cinemas': CinemaSerializer(cinema).data,
+            'movies': serializer.data,
             'date': set([datetime.strftime(d, '%Y-%m-%d') for d in cinema.schedule_datetime_by_cinema])
         }, status=status.HTTP_200_OK)
 
@@ -61,8 +61,8 @@ class ScheduleDateAPIView(APIView):
             Cinema.objects.filter(pk__in=queryset.values_list('cinema', flat=True).distinct()), many=True)
         return Response({
             'date': search_date,
-            'movie': movie_serializer.data,
-            'cinema': cinema_serializer.data
+            'movies': movie_serializer.data,
+            'cinemas': cinema_serializer.data
         }, status=status.HTTP_200_OK)
 
 
@@ -74,8 +74,8 @@ class ScheduleMovieAPIView(APIView):
         queryset = Cinema.objects.filter(pk__in=movie.schedule_cinema_by_movie)
         serializer = CinemaSerializer(queryset, many=True)
         return Response({
-            'movie': MovieShortSerializer(movie).data,
-            'cinema': serializer.data,
+            'movies': MovieShortSerializer(movie).data,
+            'cinemas': serializer.data,
             'date': set([datetime.strftime(d, '%Y-%m-%d') for d in movie.schedule_datetime_by_movie])
         }, status=status.HTTP_200_OK)
 

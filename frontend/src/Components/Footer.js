@@ -46,16 +46,19 @@ const InfoDt = styled.div`
   vertical-align: top;
 `;
 const DtSpan = styled.span`
-  display:block;
   width:114px;
-  height:20px;
-  background:url('//movie-img.yes24.com/NYes24/new/logo.png') no-repeat 0 -39px;
+  font-size: 20px;
+  padding-left: 70px;
+  font-weight: bold;
+  color: #2b2b2b;
+  /* background:url('//movie-img.yes24.com/NYes24/new/logo.png') no-repeat 0 -39px; */
 `;
 const InfoDd = styled.div`
   width: 481.29px;
   height: 131.88px;
   display:inline-block;
   vertical-align:top;
+  padding-top: 3px;
 `;
 const DivDd = styled.div`
   width : 481.29px;
@@ -166,7 +169,7 @@ const Footer = () => {
           <FooterArea>
             <InfoDl>
               <InfoDt>
-                <DtSpan>YES24 영화</DtSpan>
+                <DtSpan>DBZARA</DtSpan>
               </InfoDt>
               <InfoDd>
                 <DivDd>
@@ -202,7 +205,7 @@ const Footer = () => {
           </FooterArea>
           <FooterCall>
             <FooterCallCont>
-              <CallContTxt>영화예매/PLAY24 문의</CallContTxt>
+              <CallContTxt>모르면? 디비자라에 문의</CallContTxt>
               <a href="https://www.yes24.com/Mall/Help/CS/Apply" target="_blank">
                 <InquiryLink>1:1문의 하기</InquiryLink>
               </a>
