@@ -63,12 +63,12 @@ class Movie(models.Model):
 
     @property
     def schedule_cinema_by_movie(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list('cinema', flat=True).distinct()
 
     @property
     def schedule_datetime_by_movie(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list(
             'datetime', flat=True).distinct()
 
