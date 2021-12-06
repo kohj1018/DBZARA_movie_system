@@ -12,44 +12,7 @@ import { UserContext } from "context";
 import GoogleLogin from "react-google-login";
 import KakaoLogin from "react-kakao-login";
 import { socialAPI } from "junsu-api";
-import jwt_decode from "jwt-decode";
-
-const Container = styled.div`
-  margin-top: 50px;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LoginView = styled.div`
-  margin-top: 20px;
-  margin: 10px;
-  width: 50%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #66a6ff;
-`;
-
-const Info = styled.ul`
-  background-color: #293672;
-  margin: 10px 0 0 10px;
-`;
-
-const UserSummary = styled(AccordionSummary)``;
-const UserDetails = styled(AccordionDetails)`
-  display: flex;
-  flex-direction: column;
-  background-color: #89f7fe;
-`;
-const Data = styled.li`
-  font-size: 15px;
-`;
+import setCookie from "cookie";
 
 // !로그인 연동
 const Login = () => {
@@ -58,19 +21,30 @@ const Login = () => {
 
   const responseGoogle = async (response) => {
     const { profileObj } = response;
-    const data = await socialAPI.googleLogin(profileObj);
-    console.log("구글", data);
+    const dbzaraToken = await socialAPI.googleLogin(profileObj);
+    console.log("구글", dbzaraToken);
+    console.log("구글token", dbzaraToken.data.token);
+    handleUserInfo(dbzaraToken.data.token);
+    // setCookie("dbzaraToken", dbzaraToken.data.token, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "none",
+    // });
+    // setCookie("googleToken", google.data.token);
   };
   const onSuccess = async (response) => {
     const { profile } = response;
     // const data = await socialAPI.kakaoLogin(profile);
-    const {
-      data: { token: kakaoToken },
-    } = await socialAPI.kakaoLogin(profile);
-    console.log("카카오", kakaoToken); //data && data.data.token
-    // actions.setUserInfo(kakaoToken);
-    console.log(handleUserInfo);
-    handleUserInfo(kakaoToken);
+    const dbzaraToken = await socialAPI.kakaoLogin(profile);
+    console.log("카카오", dbzaraToken);
+    console.log("카카오token", dbzaraToken.data.token);
+    handleUserInfo(dbzaraToken.data.token);
+    // setCookie("dbzaraToken", dbzaraToken.data.token, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "none",
+    // });
+    // setCookie("kakaoToken", kakao.data.token);
   };
   const onFailure = (response) => {
     console.log(response);
@@ -118,3 +92,40 @@ const Login = () => {
 };
 
 export default Login;
+
+const Container = styled.div`
+  margin-top: 50px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoginView = styled.div`
+  margin-top: 20px;
+  margin: 10px;
+  width: 50%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #66a6ff;
+`;
+
+const Info = styled.ul`
+  background-color: #293672;
+  margin: 10px 0 0 10px;
+`;
+
+const UserSummary = styled(AccordionSummary)``;
+const UserDetails = styled(AccordionDetails)`
+  display: flex;
+  flex-direction: column;
+  background-color: #89f7fe;
+`;
+const Data = styled.li`
+  font-size: 15px;
+`;
