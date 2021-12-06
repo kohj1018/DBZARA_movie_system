@@ -39,11 +39,11 @@ class MovieReservationSerializer(MovieSerializer):
 
 
 class MovieStaffSerializer(MovieSerializer):
-    characters = CharacterSerializer(source='character_set', many=True)
-    directors = DirectorSerializer(many=True)
+    actors = CharacterSerializer(source='short_actors', many=True)
+    directors = DirectorSerializer(source='short_directors', many=True)
 
     class Meta(MovieSerializer.Meta):
-        fields = ['characters', 'directors']
+        fields = ['actors', 'directors']
 
 
 class MovieImageSerializer(MovieSerializer):
