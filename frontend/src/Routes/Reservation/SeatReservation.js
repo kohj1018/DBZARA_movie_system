@@ -3,12 +3,13 @@ import styled from "styled-components";
 import MovieSeat from "Components/MovieSeat";
 
 // 좌석배정
-let seatData = new Set([]);
+
 const SeatReservation = ({
   display,
   onMovieSeat,
-  theaterChoice,
-  dayChoice,
+  // moviesChoice,
+  // theaterChoice,
+  // dayChoice,
 }) => {
   //  ! 인원수
   // const [count, setCount] = useState({
@@ -25,7 +26,6 @@ const SeatReservation = ({
   //     cnt: 0,
   //   },
   // });
-
   const [adultNum, setAdultNum] = useState({
     type: "adult",
     count: 0,
@@ -38,39 +38,7 @@ const SeatReservation = ({
     type: "preferential",
     count: 0,
   });
-
-  const [seat, setSeat] = useState({
-    row: null,
-    col: null,
-  });
-  const [selected, setSelected] = useState([]);
-
-  seatData.add(`${seat.row}행${seat.col}열, `);
-  console.log("seatData", seatData);
-
-  const Seat = ({ row, col, setSelected }) => {
-    return (
-      <SeatBox>
-        <div>
-          {[...Array(row).keys()].map((num1, idx1) => (
-            <tr className={`row ${row}`}>
-              {[...Array(col).keys()].map((num2, idx2) => (
-                <td
-                  id={idx1 + idx2}
-                  onClick={() => {
-                    setSeat((data) => ({ ...data, row: idx1, col: idx2 })); // { row: idx1, col: idx2 }
-                    setSelected(
-                      (data) => new Set([...data, col * idx1 + idx2])
-                    );
-                  }}
-                />
-              ))}
-            </tr>
-          ))}
-        </div>
-      </SeatBox>
-    );
-  };
+  const [selected, setSelected] = useState(new Set([])); //좌석 정보list
 
   return (
     <Container display={display} current={3}>
@@ -78,18 +46,6 @@ const SeatReservation = ({
       <SeatPick>
         <SeatInfo>
           <div className={"PersonnelContainer"}>
-            {/* {["성인", "청소년", "우대"].map((type, idx) => (
-              <div>
-                <p>{type}</p>
-                <PersonCount
-                  number={count}
-                  setNumber={setCount}
-                />
-              </div>
-            ))} */}
-            {/* {console.log(adultNum)}
-            {console.log(teenagerNum)}
-            {console.log(preferentialNum)} */}
             <div>
               <p>성인</p>
               <PersonCount
@@ -117,24 +73,23 @@ const SeatReservation = ({
           </div>
           <div className={"TheaterContainer"}>
             <p>선택한 상영관 및 시간</p>
-            <p>{theaterChoice ? theaterChoice.theater : "장소"}</p>
-            <p>{dayChoice ? dayChoice.day : "시간"}</p>
+            <p>상영관 {false ? `theaterChoice.theater` : "디비자라"}</p>
+            <p>시간 {false ? `dayChoice.day` : "00"}</p>
+            {/* {console.log("moviesChoice", moviesChoice)}
+            {console.log("theaterChoice",theaterChoice)}
+            {console.log("dayChoice",dayChoice)} */}
           </div>
           <div className={"SeatContainer"}>
             <p>선택한 좌석</p>
             <p>
-              {console.log(seatData)}
-              {Array.from(seatData).map((data) =>
-                data.slice(0, 4) !== "null" ? data : null
-              )}
+              {selected.length === 0 || selected.size === 0
+                ? "좌석을 선택하세요."
+                : selected}
             </p>
-            {/* `${seat.row + 1}행/${seat.col + 1}열` */}
-            {console.log("seat", seat)}
-            {console.log("select", selected)}
           </div>
         </SeatInfo>
-        <Seat row={8} col={10} setSelected={setSelected} />
-        <MovieSeat setSelected={setSelected} onMovieSeat={onMovieSeat} />
+        <Seat row={8} col={10} setSelected={setSelected} selected={selected} />
+        {/* <MovieSeat setSelected={setSelected} onMovieSeat={onMovieSeat} /> */}
       </SeatPick>
     </Container>
   );
@@ -142,22 +97,100 @@ const SeatReservation = ({
 
 export default SeatReservation;
 
+const handleClick = (value, setSelected, row, col) => {
+  // console.log("value", value.target); //DOM요소
+  // console.log("value className", value.target.classList); //class List
+
+  if (value.target.classList[1] === "clicked") {
+    value.target.classList.remove("clicked");
+    setSelected((seatList) =>
+      seatList.filter(
+        (value) => value !== `${String.fromCharCode(row + 97)}${col}, `
+      )
+    );
+    // console.log("삭제");
+  } else {
+    value.target.classList.add("clicked");
+    setSelected((seatList) => [
+      ...seatList,
+      `${String.fromCharCode(row + 97)}${col}, `,
+    ]);
+    // console.log("추가");
+  }
+};
+
+//! 함수를 안에 넣으면 클릭할때마다 리렌더링 다시 되면서 리셋됨
+const Seat = ({ row, col, setSelected, setSeatRC, seatRC, selected }) => {
+  return (
+    <SeatBox row={row} col={col}>
+      <div className="screen">screen</div>
+      <div>
+        {[...Array(row).keys()].map((num1, idx1) => (
+          <div className={`row${idx1 + 1}`}>
+            <p>{String.fromCharCode(idx1 + 97)}</p>
+            {[...Array(col).keys()].map((num2, idx2) => (
+              <span
+                className={`col${idx2 + 1}`}
+                onClick={(value) => handleClick(value, setSelected, idx1, idx2)}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      {console.log("seatRC", seatRC)}
+      {console.log("selected", selected)}
+    </SeatBox>
+  );
+};
+
 const SeatBox = styled.div`
   /* background-color: #e7e7e7; */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 100px;
   border-top: 1px solid #e5e5e5;
+  .screen {
+    margin-left: 30px;
+    width: ${(prop) => `${prop.row * 50}px`};
+    height: ${(prop) => `${prop.row * 12}px`};
+    border-radius: 10px 10px 50px 50px / 10px 10px 50px 50px;
+    background-color: #e7e7e7;
+    font-size: ${(prop) => `${prop.row * 10}px`};
+    color: #e1e1e1;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .col${(prop) => parseInt(prop.row / 3)},.col${(prop) =>
+      parseInt(prop.row / 1.2)} {
+    margin-right: 20px;
+  }
+  .row${(prop) => parseInt(prop.col / 3)},
+    .row${(prop) => parseInt(prop.col / 1.5)} {
+    margin-top: 20px;
+  }
+  .clicked {
+    background-color: red;
+  }
   > div {
-    > tr {
-      > td {
+    > div {
+      display: flex;
+      > p {
+        width: 30px;
+        height: 40px;
+        font-size: 20px;
+        padding-top: 10px;
+      }
+      > span {
         background-color: #e7e7e7;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         border: 1px solid black;
+        border-radius: 20px 20px 0 0 / 20px 20px 0 0;
+        margin: 2px;
         &:hover {
-          background-color: red;
+          background-color: #ec615c;
         }
       }
     }
@@ -178,6 +211,22 @@ const PersonCount = ({ name, number, setNumber }) => {
     </CountBox>
   );
 };
+
+const CountBox = styled.span`
+  .adult,
+  .teenager,
+  .preferential {
+    &:hover {
+      background-color: red;
+    }
+    :nth-child(${(props) => props.number.count + 1}) {
+      background-color: #ec615c;
+    }
+  }
+  .clicked {
+    background-color: red;
+  }
+`;
 
 const Container = styled.div`
   display: ${(props) => (props.display === props.current ? "block" : "none")};
@@ -242,31 +291,4 @@ const SeatPick = styled.div`
   width: 1200px;
   background-color: white;
   border: 1px solid #e5e5e5;
-`;
-
-const CountBox = styled.span`
-  .adult {
-    &:hover {
-      background-color: red;
-    }
-    :nth-child(${(props) => props.number.count + 1}) {
-      background-color: #ec615c;
-    }
-  }
-  .teenager {
-    &:hover {
-      background-color: red;
-    }
-    :nth-child(${(props) => props.number.count + 1}) {
-      background-color: #ec615c;
-    }
-  }
-  .preferential {
-    &:hover {
-      background-color: red;
-    }
-    :nth-child(${(props) => props.number.count + 1}) {
-      background-color: #ec615c;
-    }
-  }
 `;

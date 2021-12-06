@@ -6,7 +6,8 @@ import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { Link } from "react-router-dom";
 
 // Tab
 import Tabs from "@material-ui/core/Tabs";
@@ -55,14 +56,14 @@ const Reservation = () => {
 
   // TODO schedule data 받아오기
   //! API 연결
-  const [ schedule, setSchedule ] = useState({
+  const [schedule, setSchedule] = useState({
     movies: null,
     others: null,
     cinemas: null,
     date: null,
     error: null,
-    loading: true
-  })
+    loading: true,
+  });
   let [top10, setTop10] = useState({
     top: null,
     error: null,
@@ -85,30 +86,25 @@ const Reservation = () => {
     try {
       // TOP10
       const {
-        data: {
-          movies,
-          cinemas
-        }
+        data: { movies, cinemas },
       } = await dbzaraApi.schedule();
 
       setSchedule((prevState) => ({
-          ...prevState,
-          movies,
-          cinemas
+        ...prevState,
+        movies,
+        cinemas,
       }));
-      console.log(schedule)
+      console.log(schedule);
     } catch {
       setSchedule((prevState) => ({
         ...prevState,
-        error: "찾을 수 없다."
+        error: "찾을 수 없다.",
       }));
-
     } finally {
       setSchedule((prevState) => ({
         ...prevState,
-        loading: false
+        loading: false,
       }));
-
     }
   }
   // API연결 렌더링
@@ -117,8 +113,7 @@ const Reservation = () => {
   }, []);
 
   // ! user DATA
-  const userData = useContext(UserContext);
-
+  const { userInfo } = useContext(UserContext);
 
   const [scheduleChoice, setScheduleChoice] = useState({
     movie: null,
@@ -127,7 +122,7 @@ const Reservation = () => {
     cinemaDetail: null,
     date: null,
     loading: true,
-    error: null
+    error: null,
   });
 
   // ! User Choice
@@ -157,91 +152,88 @@ const Reservation = () => {
     seat: null,
   });
 
+  // ! 현재 화면idx
   const [display, onDisplay] = useState(1);
 
   const onMovieChoice = async (movieId) => {
     const {
-      data: {
-          cinemas,
-          date,
-          movies
-      }
+      data: { cinemas, date, movies },
     } = await dbzaraApi.scheduleMovie(movieId);
     setSchedule((prevState) => ({
       ...prevState,
       cinemas: cinemas,
-      date: date
-    }))
-    console.log('junsu-prev', schedule);
-    console.log('junsu-after', movies, cinemas, date);
+      date: date,
+    }));
+    console.log("junsu-prev", schedule);
+    console.log("junsu-after", movies, cinemas, date);
 
     setScheduleChoice((prevState) => ({
       ...prevState,
       movie: movieId,
-      movieDetail: movies
+      movieDetail: movies,
     }));
     setCalendarBorder(date);
-  }
+  };
 
+  // ! 스케줄 선택
   const onCinemaChoice = async (cinemaId) => {
     const {
-      data: {
-        movies,
-        date,
-        cinemas
-      }
+      data: { movies, date, cinemas },
     } = await dbzaraApi.scheduleCinema(cinemaId);
     setSchedule((prevState) => ({
       ...prevState,
       movies: movies,
-      date: date.filter(prev => prevState.date.includes(prev))
-    }))
+      date: date.filter((prev) => prevState.date.includes(prev)),
+    }));
 
     setScheduleChoice((prevState) => ({
       ...prevState,
       cinema: cinemaId,
-      cinemaDetail: cinemas
+      cinemaDetail: cinemas,
     }));
     setCalendarBorder(date);
     console.log(scheduleChoice);
-  }
+  };
 
   const onDateChoice = async (date) => {
     const {
-      data: {
-        movies,
-        cinemas
-      }
+      data: { movies, cinemas },
     } = await dbzaraApi.scheduleMovie(date);
     setSchedule((prevState) => ({
       ...prevState,
       cinemas,
-      movies
-    }))
+      movies,
+    }));
 
     setScheduleChoice((prevState) => ({
       ...prevState,
-      date: date
+      date: date,
     }));
-  }
+  };
 
   const setCalendarBorder = (scheduleDate) => {
     const dateList = parseFirstDate();
     let styles = ``;
 
-    const days = document.querySelectorAll(`.react-calendar__month-view__days button`);
+    const days = document.querySelectorAll(
+      `.react-calendar__month-view__days button`
+    );
     for (let day of days) {
       day.style.border = "";
     }
 
     for (let date of scheduleDate) {
       if (dateList.indexOf(date) !== -1) {
-        const day = document.querySelector(`.react-calendar__month-view__days button:nth-child(${dateList.indexOf(date)})`);
-        day.style.border = '1px solid rgba(0, 0, 0, 0.1)';
-        console.log('date', day);
+        const day = document.querySelector(
+          `.react-calendar__month-view__days button:nth-child(${dateList.indexOf(
+            date
+          )})`
+        );
+        day.style.border = "1px solid rgba(0, 0, 0, 0.1)";
+        console.log("date", day);
       }
     }
-  }
+  };
 
   // !  cinema data
   const area = [
@@ -256,8 +248,8 @@ const Reservation = () => {
 
   // 시네마 나눔
   const initialRegion = () => ({
-    "서울": [],
-    "부산": [],
+    서울: [],
+    부산: [],
     "경기/인천": [],
     "충청/대전": [],
     "경북/대구": [],
@@ -270,77 +262,85 @@ const Reservation = () => {
   // const setCinemaRegion = () => {
   //   initialRegion();
   schedule.cinemas &&
-  schedule.cinemas.map((cinema, idx) => {
-    if (cinema.main_region.slice(0, 2) === "서울") {
-      areaCinema["서울"].push(cinema);
-    } else if (cinema.main_region.slice(0, 2) === "부산") {
-      areaCinema["부산"].push(cinema);
-    } else if (
+    schedule.cinemas.map((cinema, idx) => {
+      if (cinema.main_region.slice(0, 2) === "서울") {
+        areaCinema["서울"].push(cinema);
+      } else if (cinema.main_region.slice(0, 2) === "부산") {
+        areaCinema["부산"].push(cinema);
+      } else if (
         cinema.main_region.slice(0, 2) === "경기" ||
         cinema.main_region.slice(0, 2) === "인천"
-    ) {
-      areaCinema["경기/인천"].push(cinema);
-    } else if (
+      ) {
+        areaCinema["경기/인천"].push(cinema);
+      } else if (
         cinema.main_region.slice(0, 2) === "충청" ||
         cinema.main_region.slice(0, 2) === "대전"
-    ) {
-      areaCinema["충청/대전"].push(cinema);
-    } else if (
+      ) {
+        areaCinema["충청/대전"].push(cinema);
+      } else if (
         cinema.main_region.slice(0, 2) === "경북" ||
         cinema.main_region.slice(0, 2) === "대구"
-    ) {
-      areaCinema["경북/대구"].push(cinema);
-    } else if (
+      ) {
+        areaCinema["경북/대구"].push(cinema);
+      } else if (
         cinema.main_region.slice(0, 2) === "경남" ||
         cinema.main_region.slice(0, 2) === "울산"
-    ) {
-      areaCinema["경남/울산"].push(cinema);
-    } else {
-      areaCinema["강원/제주"].push(cinema);
-    }});
-    // });
+      ) {
+        areaCinema["경남/울산"].push(cinema);
+      } else {
+        areaCinema["강원/제주"].push(cinema);
+      }
+    });
+  // });
   // }
   // console.log(areaCinema);
   useEffect(async () => {
-    if(scheduleChoice.date && scheduleChoice.cinema && scheduleChoice.movie) {
-      const {
-        data
-      } = await dbzaraApi.theaterList(scheduleChoice);
-      setTheater((prevState => ({
+    if (scheduleChoice.date && scheduleChoice.cinema && scheduleChoice.movie) {
+      const { data } = await dbzaraApi.theaterList(scheduleChoice);
+      setTheater((prevState) => ({
         ...prevState,
-        theaters: data
-      })));
+        theaters: data,
+      }));
       console.log(theater);
     }
-  }, [scheduleChoice])
+  }, [scheduleChoice]);
 
   const parseFirstDate = () => {
     const nowDate = new Date();
     const firstDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1);
-    console.log('date', firstDate.getDay());
+    console.log("date", firstDate.getDay());
     const dateList = [];
     for (let i = 1; i < firstDate.getDay(); i++) {
-      dateList.push('1980-01-01');
+      dateList.push("1980-01-01");
     }
-    while(dateList.length < 35) {
+    while (dateList.length < 35) {
       const tempDate = new Date();
-      tempDate.setDate(firstDate.getDate() + 1).toString()
-      dateList.push(tempDate.toISOString().split('T')[0]);
+      tempDate.setDate(firstDate.getDate() + 1).toString();
+      dateList.push(tempDate.toISOString().split("T")[0]);
       firstDate.setDate(firstDate.getDate() + 1);
     }
     return dateList;
-  }
+  };
 
   // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
 
-  return (
-    top10.loading ? (<div style={{ minHeight: "82vh" }}><CircularProgress style={{
-      color: "secondary", position: "absolute", top: "40%", left: "50%", margin: "-150px 0 0 - 150px"
-    }} /></div>) : (
-        <Container>
-          <Header>
-            <Refresh onClick={() => window.location.reload()}>
-              처음부터 다시
+  return schedule.loading ? (
+    <div style={{ minHeight: "82vh" }}>
+      <CircularProgress
+        style={{
+          color: "secondary",
+          position: "absolute",
+          top: "40%",
+          left: "50%",
+          margin: "-150px 0 0 - 150px",
+        }}
+      />
+    </div>
+  ) : (
+    <Container>
+      <Header>
+        <Refresh onClick={() => window.location.reload()}>
+          처음부터 다시
         </Refresh>
       </Header>
       <Main>
@@ -447,25 +447,7 @@ const Reservation = () => {
                       <AccordionDetails>
                         {/* //Todo 회원 나이대 영화순위 정렬 */}
                         <MovieUl>
-                          {userData.favoriteMovies ? (
-                            userData.favoriteMovies.map((movie, idx) => {
-                              return (
-                                <MovieLi
-                                  key={idx}
-                                  onClick={() =>
-                                    onMoviesChoice((movies) => ({
-                                      ...movies,
-                                      choice: true,
-                                      movie,
-                                      movieId: movie.id,
-                                    }))
-                                  }
-                                  choice={movie.id}
-                                  current={moviesChoice.movieId}
-                                >{`${idx + 1} : ${movie}`}</MovieLi>
-                              );
-                            })
-                          ) : (
+                          {userInfo ? null : (
                             <MovieLi>로그인을 해주세요</MovieLi>
                           )}
                         </MovieUl>
@@ -550,12 +532,10 @@ const Reservation = () => {
                       onClickDay={(toDay) =>
                         setScheduleChoice((prevState) => ({
                           ...prevState,
-                          date: toDay.toISOString().split("T")[0]
+                          date: toDay.toISOString().split("T")[0],
                         }))
                       }
-                      value={
-                        toDay
-                      }
+                      value={toDay}
                     />
                     <Explanation>
                       <p>
@@ -566,19 +546,21 @@ const Reservation = () => {
                   </div>
                 </DayChoice>
               </Choice>
-              {scheduleChoice.movie && scheduleChoice.cinema && scheduleChoice.date && (
-                <TheaterDetail>
-                  <ScjeduleInfo>
-                    <p>시간선택</p>
-                    <p> : 30분전 예매 / 30분전 취소 가능</p>
-                  </ScjeduleInfo>
-                  <CinemaInfo>
-                    <div>상영관들 data</div>
-                    <div>상영관들 data</div>
-                    <div>상영관들 data</div>
-                  </CinemaInfo>
-                </TheaterDetail>
-              )}
+              {scheduleChoice.movie &&
+                scheduleChoice.cinema &&
+                scheduleChoice.date && (
+                  <TheaterDetail>
+                    <ScjeduleInfo>
+                      <p>시간선택</p>
+                      <p> : 30분전 예매 / 30분전 취소 가능</p>
+                    </ScjeduleInfo>
+                    <CinemaInfo>
+                      <div>상영관들 data</div>
+                      <div>상영관들 data</div>
+                      <div>상영관들 data</div>
+                    </CinemaInfo>
+                  </TheaterDetail>
+                )}
             </MainReservation>
           </MoviesReservation>
           <UserInfoReservation
@@ -636,7 +618,9 @@ const Reservation = () => {
                 </div>
                 {/* //TODO 관람일자 왜...왜 씨발 왜... */}
                 <div>
-                  {scheduleChoice.date ? scheduleChoice.date : "관람일시를 선택하세요."}
+                  {scheduleChoice.date
+                    ? scheduleChoice.date
+                    : "관람일시를 선택하세요."}
                 </div>
                 <div>좌석을 선택하세요.</div>
               </div>
@@ -697,134 +681,9 @@ const Reservation = () => {
       </NextBtn>
       {/* <Test1 row={10} col={30} /> */}
     </Container>
-  ))
-};
-export default Reservation;
-
-const Flex = styled.div`
-  width: 1000px;
-  /* height: 600px; */
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0);
-  font-size: 10px;
-  /* margin-bottom: 50px; */
-  display: flex;
-  /* flex-direction: column; */
-  > div {
-    width: 20px;
-    border: 1px solid red;
-    :nth-child(1) {
-      width: 50px;
-      background-color: red;
-    }
-  }
-`;
-const Test1 = ({ row, col }) => {
-  return (
-    <>
-      <Flex row={row} col={col}>
-        <div className={`col1`} id={0}>
-          이름|날짜
-        </div>
-        <div className={`col1`} id={1}>
-          1
-        </div>
-        <div className={`col2`} id={2}>
-          2
-        </div>
-        <div className={`col3`} id={3}>
-          3
-        </div>
-        <div className={`col4`} id={4}>
-          4
-        </div>
-        <div className={`col5`} id={5}>
-          5
-        </div>
-        <div className={`col6`} id={6}>
-          6
-        </div>
-        <div className={`col7`} id={7}>
-          7
-        </div>
-        <div className={`col8`} id={8}>
-          8
-        </div>
-        <div className={`col9`} id={9}>
-          9
-        </div>
-        <div className={`col10`} id={10}>
-          10
-        </div>
-        <div className={`col11`} id={11}>
-          11
-        </div>
-        <div className={`col12`} id={12}>
-          12
-        </div>
-        <div className={`col13`} id={13}>
-          13
-        </div>
-        <div className={`col14`} id={14}>
-          14
-        </div>
-        <div className={`col15`} id={15}>
-          15
-        </div>
-        <div className={`col16`} id={16}>
-          16
-        </div>
-        <div className={`col17`} id={17}>
-          17
-        </div>
-        <div className={`col18`} id={18}>
-          18
-        </div>
-        <div className={`col19`} id={19}>
-          19
-        </div>
-        <div className={`col20`} id={20}>
-          20
-        </div>
-        <div className={`col21`} id={21}>
-          21
-        </div>
-        <div className={`col22`} id={22}>
-          22
-        </div>
-        <div className={`col23`} id={23}>
-          23
-        </div>
-        <div className={`col24`} id={24}>
-          24
-        </div>
-        <div className={`col25`} id={25}>
-          25
-        </div>
-        <div className={`col26`} id={26}>
-          26
-        </div>
-        <div className={`col27`} id={27}>
-          27
-        </div>
-        <div className={`col28`} id={28}>
-          28
-        </div>
-        <div className={`col29`} id={29}>
-          29
-        </div>
-        <div className={`col30`} id={30}>
-          30
-        </div>
-      </Flex>
-      <Flex row={row} col={col}>
-        <div className={`col1`} id={0}>
-          최윤호
-        </div>
-      </Flex>
-    </>
   );
 };
+export default Reservation;
 
 const Container = styled.div`
   width: 100%;
@@ -1115,7 +974,6 @@ const CalenderBox = styled(Calendar)`
   .react-calendar__month-view__days button abbr {
     font-size: 12px;
   }
-  
 `;
 
 const Explanation = styled.div`
