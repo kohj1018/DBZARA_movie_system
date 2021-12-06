@@ -73,6 +73,6 @@ class Command(BaseCommand):
 
                 print(f'-- <Schedule> {base_date} 일: [{movie}] {show_counts - except_count}개 데이터 생성 완료 --')
 
-            self.kobis.start_date += timedelta(days=1)
+            self.kobis.start_date -= timedelta(days=1)
 
 
