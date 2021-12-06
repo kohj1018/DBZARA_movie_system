@@ -152,6 +152,7 @@ const Reservation = () => {
     seat: null,
   });
 
+  // ! 현재 화면idx
   const [display, onDisplay] = useState(1);
 
   const onMovieChoice = async (movieId) => {
@@ -174,6 +175,7 @@ const Reservation = () => {
     setCalendarBorder(date);
   };
 
+  // ! 스케줄 선택
   const onCinemaChoice = async (cinemaId) => {
     const {
       data: { movies, date, cinemas },
