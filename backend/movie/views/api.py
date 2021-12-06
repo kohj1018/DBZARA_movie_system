@@ -92,6 +92,7 @@ class MovieVideoAPIView(MovieBaseAPIView):
 
 
 class MovieReviewAPIView(ListModelMixin, GenericAPIView):
+    permission_classes = [AllowAny]
     queryset = Movie.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = BasicPagination
