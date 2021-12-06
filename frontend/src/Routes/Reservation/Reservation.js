@@ -143,10 +143,10 @@ const Reservation = () => {
 
   const [display, onDisplay] = useState(1);
 
-  console.log(moviesChoice);
-  console.log(theaterChoice);
-  console.log(dayChoice);
-  console.log(movieSeat);
+  // console.log(moviesChoice);
+  // console.log(theaterChoice);
+  // console.log(dayChoice);
+  // console.log(movieSeat);
 
   // !  cinema data
   const area = [
@@ -462,6 +462,7 @@ const Reservation = () => {
           <SeatReservation
             display={display}
             onMovieSeat={onMovieSeat}
+            // moviesChoice={moviesChoice}
             // theaterChoice={theaterChoice}
             // dayChoice={dayChoice}
           />
@@ -565,136 +566,10 @@ const Reservation = () => {
       <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
         <p>➡</p>
       </NextBtn>
-      {/* <Test1 row={10} col={30} /> */}
     </Container>
   );
 };
 export default Reservation;
-
-const Flex = styled.div`
-  width: 1000px;
-  /* height: 600px; */
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0);
-  font-size: 10px;
-  /* margin-bottom: 50px; */
-  display: flex;
-  /* flex-direction: column; */
-  > div {
-    width: 20px;
-    border: 1px solid red;
-    :nth-child(1) {
-      width: 50px;
-      background-color: red;
-    }
-  }
-`;
-const Test1 = ({ row, col }) => {
-  return (
-    <>
-      <Flex row={row} col={col}>
-        <div className={`col1`} id={0}>
-          이름|날짜
-        </div>
-        <div className={`col1`} id={1}>
-          1
-        </div>
-        <div className={`col2`} id={2}>
-          2
-        </div>
-        <div className={`col3`} id={3}>
-          3
-        </div>
-        <div className={`col4`} id={4}>
-          4
-        </div>
-        <div className={`col5`} id={5}>
-          5
-        </div>
-        <div className={`col6`} id={6}>
-          6
-        </div>
-        <div className={`col7`} id={7}>
-          7
-        </div>
-        <div className={`col8`} id={8}>
-          8
-        </div>
-        <div className={`col9`} id={9}>
-          9
-        </div>
-        <div className={`col10`} id={10}>
-          10
-        </div>
-        <div className={`col11`} id={11}>
-          11
-        </div>
-        <div className={`col12`} id={12}>
-          12
-        </div>
-        <div className={`col13`} id={13}>
-          13
-        </div>
-        <div className={`col14`} id={14}>
-          14
-        </div>
-        <div className={`col15`} id={15}>
-          15
-        </div>
-        <div className={`col16`} id={16}>
-          16
-        </div>
-        <div className={`col17`} id={17}>
-          17
-        </div>
-        <div className={`col18`} id={18}>
-          18
-        </div>
-        <div className={`col19`} id={19}>
-          19
-        </div>
-        <div className={`col20`} id={20}>
-          20
-        </div>
-        <div className={`col21`} id={21}>
-          21
-        </div>
-        <div className={`col22`} id={22}>
-          22
-        </div>
-        <div className={`col23`} id={23}>
-          23
-        </div>
-        <div className={`col24`} id={24}>
-          24
-        </div>
-        <div className={`col25`} id={25}>
-          25
-        </div>
-        <div className={`col26`} id={26}>
-          26
-        </div>
-        <div className={`col27`} id={27}>
-          27
-        </div>
-        <div className={`col28`} id={28}>
-          28
-        </div>
-        <div className={`col29`} id={29}>
-          29
-        </div>
-        <div className={`col30`} id={30}>
-          30
-        </div>
-      </Flex>
-      <Flex row={row} col={col}>
-        <div className={`col1`} id={0}>
-          최윤호
-        </div>
-      </Flex>
-    </>
-  );
-};
 
 const Container = styled.div`
   width: 100%;
