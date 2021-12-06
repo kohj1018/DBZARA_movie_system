@@ -19,8 +19,6 @@ export const info = {
 // 데이터 저장소
 export const UserContext = React.createContext({
   userInfo: {
-    username: "test",
-    password: "1234",
     token: null,
     token_docode: {
       email: null,
