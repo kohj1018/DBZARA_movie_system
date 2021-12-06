@@ -98,7 +98,6 @@ class ScheduleAPIView(APIView):
     def post(self, request):
         schedule = request.data
         search_date = date(*[int(element) for element in schedule['date'].split('-')])
-        print(search_date)
         queryset = Schedule.objects.filter(movie__id=schedule['movie'], cinema__id=schedule['cinema'], datetime__year=search_date.year, datetime__month=search_date.month, datetime__day=search_date.day)
         serializer = ReservationSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
