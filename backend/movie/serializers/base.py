@@ -83,4 +83,4 @@ class ReviewSerializer(serializers.ModelSerializer):
 class MovieInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieInfo
-        fields = '__all__'
+        fields = ['movie', 'age', 'gender', 'counts', 'sales', 'age_percent', 'gender_percent', 'updated']

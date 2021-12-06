@@ -233,6 +233,20 @@ class MovieInfo(models.Model):
     sales = models.IntegerField(default=0)
     updated = models.DateField(auto_now=True)
 
+    @property
+    def age_percent(self):
+        temp = dict()
+        for element in self.age.keys():
+            temp[element] = round(self.age.get(element) / self.counts, 2)
+        return temp
+
+    @property
+    def gender_percent(self):
+        temp = dict()
+        for element in self.gender.keys():
+            temp[element] = round(self.gender.get(element) / self.counts, 2)
+        return temp
+
     @classmethod
     def create(cls, movie):
         return cls.objects.get_or_create(movie=movie)[0]
