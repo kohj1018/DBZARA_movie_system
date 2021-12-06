@@ -6,4 +6,4 @@ class ReservationSerializer(ScheduleSerializer):
     floor = serializers.ReadOnlyField(source='theater.floor')
 
     class Meta(ScheduleSerializer.Meta):
-        fields = ['id', 'name', 'floor', 'datetime']
+        fields = ['id', 'name', 'floor', 'start_datetime', 'end_datetime']
