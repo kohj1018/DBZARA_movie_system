@@ -37,7 +37,7 @@ class CrawlingMovieReview:
             if total:
                 total = int(total.find('em').string.replace(',', ''))
             else:
-                return None
+                total = 1
 
         pages = randint(30, 50) if total > 500 else total // 10
         for page in range(1, pages):

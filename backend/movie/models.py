@@ -83,6 +83,14 @@ class Movie(models.Model):
             schedule__in=Schedule.objects.filter(datetime__month=now_date.month, datetime__day=now_date.day)
         ).count(), 3) * 100
 
+    @property
+    def short_directors(self):
+        return self.directors.all()[:8]
+
+    @property
+    def short_actors(self):
+        return self.character_set.all()[:8]
+
     def __str__(self):
         return self.name
 
