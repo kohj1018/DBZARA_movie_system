@@ -63,12 +63,12 @@ class Movie(models.Model):
 
     @property
     def schedule_cinema_by_movie(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list('cinema', flat=True).distinct()
 
     @property
     def schedule_datetime_by_movie(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return self.schedule_set.filter(movie__closing_date__gt=base_date).values_list(
             'datetime', flat=True).distinct()
 
@@ -82,6 +82,14 @@ class Movie(models.Model):
         ).count() / Reservation.objects.filter(
             schedule__in=Schedule.objects.filter(datetime__month=now_date.month, datetime__day=now_date.day)
         ).count(), 3) * 100
+
+    @property
+    def short_directors(self):
+        return self.directors.all()[:8]
+
+    @property
+    def short_actors(self):
+        return self.character_set.all()[:8]
 
     def __str__(self):
         return self.name
@@ -224,6 +232,20 @@ class MovieInfo(models.Model):
     counts = models.IntegerField(default=0)
     sales = models.IntegerField(default=0)
     updated = models.DateField(auto_now=True)
+
+    @property
+    def age_percent(self):
+        temp = dict()
+        for element in self.age.keys():
+            temp[element] = round(self.age.get(element) / self.counts, 2)
+        return temp
+
+    @property
+    def gender_percent(self):
+        temp = dict()
+        for element in self.gender.keys():
+            temp[element] = round(self.gender.get(element) / self.counts, 2)
+        return temp
 
     @classmethod
     def create(cls, movie):
