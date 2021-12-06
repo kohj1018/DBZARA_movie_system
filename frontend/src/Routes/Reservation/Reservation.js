@@ -55,6 +55,14 @@ const Reservation = () => {
 
   // TODO schedule data 받아오기
   //! API 연결
+  const [ schedule, setSchedule ] = useState({
+    movies: null,
+    others: null,
+    cinemas: null,
+    date: null,
+    error: null,
+    loading: true
+  })
   let [top10, setTop10] = useState({
     top: null,
     error: null,
@@ -77,38 +85,30 @@ const Reservation = () => {
     try {
       // TOP10
       const {
-        data: { results: boxOffice },
-      } = await dbzaraApi.boxOffice();
-      setTop10((movies) => ({ ...movies, top: boxOffice.slice(0, 10) }));
-      // console.log("boxOffice", boxOffice.slice(0, 10));
+        data: {
+          movies,
+          cinemas
+        }
+      } = await dbzaraApi.schedule();
 
-      const { data: restMovie } = await dbzaraApi.moviesList();
-      // console.log(restMovie);
-      setRestMovies((movies) => ({ ...movies, restMovie }));
-
-      // cinema
-      const {
-        data: { results: cinema },
-      } = await dbzaraApi.cinema();
-      setCinema((cinemas) => ({ ...cinemas, cinema }));
-      // console.log(cinemas);
+      setSchedule((prevState) => ({
+          ...prevState,
+          movies,
+          cinemas
+      }));
+      console.log(schedule)
     } catch {
-      setTop10((movies) => ({
-        ...movies,
-        error: "영화 정보를 찾을 수 없습니다!",
+      setSchedule((prevState) => ({
+        ...prevState,
+        error: "찾을 수 없다."
       }));
-      setRestMovies((movies) => ({
-        ...movies,
-        error: "영화 정보를 찾을 수 없습니다!",
-      }));
-      setCinema((cinema) => ({
-        ...cinema,
-        error: "상영관 정보를 찾을 수 없습니다!",
-      }));
+
     } finally {
-      setTop10((movies) => ({ ...movies, loading: false }));
-      setRestMovies((movies) => ({ ...movies, loading: false }));
-      setCinema((cinema) => ({ ...cinema, loading: false }));
+      setSchedule((prevState) => ({
+        ...prevState,
+        loading: false
+      }));
+
     }
   }
   // API연결 렌더링
@@ -119,17 +119,34 @@ const Reservation = () => {
   // ! user DATA
   const userData = useContext(UserContext);
 
+
+  const [scheduleChoice, setScheduleChoice] = useState({
+    movie: null,
+    movieDetail: null,
+    cinema: null,
+    cinemaDetail: null,
+    date: null,
+    loading: true,
+    error: null
+  });
+
   // ! User Choice
   const [moviesChoice, onMoviesChoice] = useState({
     choice: false,
     movie: null,
     movieId: null,
   });
+
+  const [theater, setTheater] = useState({
+    theaters: null,
+  });
+
   const [theaterChoice, onTheaterChoice] = useState({
     choice: false,
     theater: null,
     theaterId: null,
   });
+
   const [dayChoice, onDayChoice] = useState({
     choice: false,
     day: null,
@@ -142,10 +159,89 @@ const Reservation = () => {
 
   const [display, onDisplay] = useState(1);
 
-  console.log(moviesChoice);
-  console.log(theaterChoice);
-  console.log(dayChoice);
-  console.log(movieSeat);
+  const onMovieChoice = async (movieId) => {
+    const {
+      data: {
+          cinemas,
+          date,
+          movies
+      }
+    } = await dbzaraApi.scheduleMovie(movieId);
+    setSchedule((prevState) => ({
+      ...prevState,
+      cinemas: cinemas,
+      date: date
+    }))
+    console.log('junsu-prev', schedule);
+    console.log('junsu-after', movies, cinemas, date);
+
+    setScheduleChoice((prevState) => ({
+      ...prevState,
+      movie: movieId,
+      movieDetail: movies
+    }));
+    setCalendarBorder(date);
+  }
+
+  const onCinemaChoice = async (cinemaId) => {
+    const {
+      data: {
+        movies,
+        date,
+        cinemas
+      }
+    } = await dbzaraApi.scheduleCinema(cinemaId);
+    setSchedule((prevState) => ({
+      ...prevState,
+      movies: movies,
+      date: date.filter(prev => prevState.date.includes(prev))
+    }))
+
+    setScheduleChoice((prevState) => ({
+      ...prevState,
+      cinema: cinemaId,
+      cinemaDetail: cinemas
+    }));
+    setCalendarBorder(date);
+    console.log(scheduleChoice);
+  }
+
+  const onDateChoice = async (date) => {
+    const {
+      data: {
+        movies,
+        cinemas
+      }
+    } = await dbzaraApi.scheduleMovie(date);
+    setSchedule((prevState) => ({
+      ...prevState,
+      cinemas,
+      movies
+    }))
+
+    setScheduleChoice((prevState) => ({
+      ...prevState,
+      date: date
+    }));
+  }
+
+  const setCalendarBorder = (scheduleDate) => {
+    const dateList = parseFirstDate();
+    let styles = ``;
+
+    const days = document.querySelectorAll(`.react-calendar__month-view__days button`);
+    for (let day of days) {
+      day.style.border = "";
+    }
+
+    for (let date of scheduleDate) {
+      if (dateList.indexOf(date) !== -1) {
+        const day = document.querySelector(`.react-calendar__month-view__days button:nth-child(${dateList.indexOf(date)})`);
+        day.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+        console.log('date', day);
+      }
+    }
+  }
 
   // !  cinema data
   const area = [
@@ -159,47 +255,81 @@ const Reservation = () => {
   ];
 
   // 시네마 나눔
-  let areaCinema = {
-    서울: [],
-    부산: [],
+  const initialRegion = () => ({
+    "서울": [],
+    "부산": [],
     "경기/인천": [],
     "충청/대전": [],
     "경북/대구": [],
     "경남/울산": [],
     "강원/제주": [],
-  };
+  });
 
-  cinemas.cinema &&
-    cinemas.cinema.map((cinema, idx) => {
-      if (cinema.main_region.slice(0, 2) === "서울") {
-        areaCinema["서울"].push(cinema);
-      } else if (cinema.main_region.slice(0, 2) === "부산") {
-        areaCinema["부산"].push(cinema);
-      } else if (
+  const areaCinema = initialRegion();
+
+  // const setCinemaRegion = () => {
+  //   initialRegion();
+  schedule.cinemas &&
+  schedule.cinemas.map((cinema, idx) => {
+    if (cinema.main_region.slice(0, 2) === "서울") {
+      areaCinema["서울"].push(cinema);
+    } else if (cinema.main_region.slice(0, 2) === "부산") {
+      areaCinema["부산"].push(cinema);
+    } else if (
         cinema.main_region.slice(0, 2) === "경기" ||
         cinema.main_region.slice(0, 2) === "인천"
-      ) {
-        areaCinema["경기/인천"].push(cinema);
-      } else if (
+    ) {
+      areaCinema["경기/인천"].push(cinema);
+    } else if (
         cinema.main_region.slice(0, 2) === "충청" ||
         cinema.main_region.slice(0, 2) === "대전"
-      ) {
-        areaCinema["충청/대전"].push(cinema);
-      } else if (
+    ) {
+      areaCinema["충청/대전"].push(cinema);
+    } else if (
         cinema.main_region.slice(0, 2) === "경북" ||
         cinema.main_region.slice(0, 2) === "대구"
-      ) {
-        areaCinema["경북/대구"].push(cinema);
-      } else if (
+    ) {
+      areaCinema["경북/대구"].push(cinema);
+    } else if (
         cinema.main_region.slice(0, 2) === "경남" ||
         cinema.main_region.slice(0, 2) === "울산"
-      ) {
-        areaCinema["경남/울산"].push(cinema);
-      } else {
-        areaCinema["강원/제주"].push(cinema);
-      }
-    });
+    ) {
+      areaCinema["경남/울산"].push(cinema);
+    } else {
+      areaCinema["강원/제주"].push(cinema);
+    }});
+    // });
+  // }
   // console.log(areaCinema);
+  useEffect(async () => {
+    if(scheduleChoice.date && scheduleChoice.cinema && scheduleChoice.movie) {
+      const {
+        data
+      } = await dbzaraApi.theaterList(scheduleChoice);
+      setTheater((prevState => ({
+        ...prevState,
+        theaters: data
+      })));
+      console.log(theater);
+    }
+  }, [scheduleChoice])
+
+  const parseFirstDate = () => {
+    const nowDate = new Date();
+    const firstDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1);
+    console.log('date', firstDate.getDay());
+    const dateList = [];
+    for (let i = 1; i < firstDate.getDay(); i++) {
+      dateList.push('1980-01-01');
+    }
+    while(dateList.length < 35) {
+      const tempDate = new Date();
+      tempDate.setDate(firstDate.getDate() + 1).toString()
+      dateList.push(tempDate.toISOString().split('T')[0]);
+      firstDate.setDate(firstDate.getDate() + 1);
+    }
+    return dateList;
+  }
 
   // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
 
@@ -212,375 +342,362 @@ const Reservation = () => {
             <Refresh onClick={() => window.location.reload()}>
               처음부터 다시
         </Refresh>
-          </Header>
-          <Main>
-            <ReservationInfo>
-              <MoviesReservation display={display} current={1}>
-                <MainReservation>
-                  <Choice>
-                    <MoviesChoice>
-                      <span>영화 선택</span>
-                      <div>
-                        <Accordion
-                          square
-                          expanded={expanded === "panel1"}
-                          onChange={handleChange("panel1")}
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1d-content"
-                            id="panel1d-header"
-                          >
-                            <Typography>예매 TOP 10</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            {/* {console.log(movies.popular)} */}
-                            <MovieUl>
-                              {top10.top &&
-                                top10.top.map((movie, idx) => (
-                                  <MovieLi
-                                    key={idx}
-                                    onClick={() =>
-                                      onMoviesChoice((movies) => ({
-                                        ...movies,
-                                        choice: true,
-                                        movie,
-                                        movieId: movie.id,
-                                      }))
-                                    }
-                                    choice={movie.id}
-                                    current={moviesChoice.movieId}
-                                  >
-                                    <p>{idx + 1}</p>
-                                    {movie.grade ? (
-                                      <Age ageAttr={ageColor[movie.grade]}>
-                                        {movie.grade === 0 ? "전체" : movie.grade}
-                                      </Age>
-                                    ) : (
-                                        <Age ageAttr={ageColor[0]}>전체</Age>
-                                      )}
-                                    {/* {console.log(moviesChoice)} */}
-                                    <p>{movie.name}</p>
-                                  </MovieLi>
-                                ))}
-                            </MovieUl>
-                          </AccordionDetails>
-                        </Accordion>
-                        <Accordion
-                          square
-                          expanded={expanded === "panel2"}
-                          onChange={handleChange("panel2")}
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel2d-content"
-                            id="panel2d-header"
-                          >
-                            <Typography>TOP10 외 영화</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <MovieUl>
-                              {restMovies.restMovie &&
-                                restMovies.restMovie.map((movie, idx) => (
-                                  <MovieLi
-                                    key={idx}
-                                    onClick={() =>
-                                      onMoviesChoice((movies) => ({
-                                        ...movies,
-                                        choice: true,
-                                        movie,
-                                        movieId: movie.id,
-                                      }))
-                                    }
-                                    choice={movie.id}
-                                    current={moviesChoice.movieId}
-                                  >
-                                    {movie.grade ? (
-                                      <Age ageAttr={ageColor[movie.grade]}>
-                                        {movie.grade === 0 ? "전체" : movie.grade}
-                                      </Age>
-                                    ) : (
-                                        <Age ageAttr={ageColor[0]}>전체</Age>
-                                      )}
-                                    {/* {console.log(moviesChoice)} */}
-                                    <p>{movie.name}</p>
-                                  </MovieLi>
-                                ))}
-                            </MovieUl>
-                          </AccordionDetails>
-                        </Accordion>
-                        <Accordion
-                          square
-                          expanded={expanded === "panel3"}
-                          onChange={handleChange("panel3")}
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel3d-content"
-                            id="panel3d-header"
-                          >
-                            <Typography>회원 나이대 영화순위</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            {/* //Todo 회원 나이대 영화순위 정렬 */}
-                            <MovieUl>
-                              {userData.favoriteMovies ? (
-                                userData.favoriteMovies.map((movie, idx) => {
-                                  return (
-                                    <MovieLi
-                                      key={idx}
-                                      onClick={() =>
-                                        onMoviesChoice((movies) => ({
-                                          ...movies,
-                                          choice: true,
-                                          movie,
-                                          movieId: movie.id,
-                                        }))
-                                      }
-                                      choice={movie.id}
-                                      current={moviesChoice.movieId}
-                                    >{`${idx + 1} : ${movie}`}</MovieLi>
-                                  );
-                                })
-                              ) : (
-                                  <MovieLi>로그인을 해주세요</MovieLi>
-                                )}
-                            </MovieUl>
-                          </AccordionDetails>
-                        </Accordion>
-                      </div>
-                    </MoviesChoice>
-                    <TheaterChoice>
-                      <span>극장선택</span>
-                      <div>
-                        {/* // TODO MY극장 위에 상영관 추천 추가 */}
-                        <Accordion2
-                          expanded={expanded2 === "panel1"}
-                          onChange={handleChange2("panel1")}
-                        >
-                          <AccordionSummary2
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1bh-content"
-                            id="panel1bh-header"
-                          >
-                            <Typography>MY극장</Typography>
-                          </AccordionSummary2>
-                          <AccordionDetails2>
-                            {/* //TODO userData 넣기 */}
-                            <Typography>설정한 MY극장이 없습니다.</Typography>
-                            <Typography>설정하러 가실?</Typography>
-                          </AccordionDetails2>
-                        </Accordion2>
-                      </div>
-                      <div className={tabStyled.root}>
-                        <Tabs
-                          orientation="vertical"
-                          variant="scrollable"
-                          value={areaValue}
-                          onChange={handleChange3}
-                          aria-label="Vertical tabs example"
-                          className={tabStyled.tabs}
-                        >
-                          {/* //TODO 지역 데이터 받아와서 넣기 */}
-                          {area.map((area, idx) => {
-                            return (
-                              <Tab
-                                key={idx}
-                                label={area}
-                                {...a11yProps(idx)}
-                                className={tabStyled.tab}
-                              />
-                            );
-                          })}
-                        </Tabs>
-                        {/* 지역상영관 정보 */}
-                        <TheaterRegion>
-                          {area.map((area, idx) => (
-                            <TabPanel
-                              value={areaValue}
-                              index={idx}
-                              className={tabStyled.tabpanel}
-                            >
-                              <p>{area}</p>
-                              {cinemas.cinema &&
-                                areaCinema[area].map((theater, idx) => (
-                                  <MovieLi
-                                    key={idx}
-                                    onClick={() =>
-                                      onTheaterChoice((area) => ({
-                                        ...area,
-                                        choice: true,
-                                        theater,
-                                        theaterId: theater.id,
-                                      }))
-                                    }
-                                    choice={theater.id}
-                                    current={theaterChoice.theaterId}
-                                  >
-                                    {/* {console.log(theaterChoice)} */}
-                                    {theater.name}
-                                  </MovieLi>
-                                ))}
-                            </TabPanel>
-                          ))}
-                        </TheaterRegion>
-                      </div>
-                    </TheaterChoice>
-                    <DayChoice>
-                      <span>관람일 선택</span>
-                      <div>
-                        <CalenderBox
-                          onChange={onChange}
-                          onClickDay={(toDay) =>
-                            onDayChoice((data) => ({
-                              ...data,
-                              choice: true,
-                              day: toDay.toISOString().split("T")[0],
-                            }))
-                          }
-                          value={toDay}
-                        />
-                        <Explanation>
-                          <p>
-                            영화, 극장, 관람일을 선택하시면 시간 선택이 아래쪽에
-                            나타납니다
-                      </p>
-                        </Explanation>
-                      </div>
-                    </DayChoice>
-                  </Choice>
-                  {moviesChoice.choice && theaterChoice.choice && dayChoice.choice && (
-                    <TheaterDetail>
-                      <ScjeduleInfo>
-                        <p>시간선택</p>
-                        <p> : 30분전 예매 / 30분전 취소 가능</p>
-                      </ScjeduleInfo>
-                      <CinemaInfo>
-                        <div>상영관들 data</div>
-                        <div>상영관들 data</div>
-                        <div>상영관들 data</div>
-                      </CinemaInfo>
-                    </TheaterDetail>
-                  )}
-                </MainReservation>
-              </MoviesReservation>
-              <UserInfoReservation
-                userInfo={{
-                  userName: "조재훈",
-                  phoneNumber: ["010", "2373", "9147"],
-                  email: "wognskec@gmail.com",
-                }}
-                display={display}
-              />
-              <SeatReservation
-                display={display}
-                onMovieSeat={onMovieSeat}
-              // theaterChoice={theaterChoice}
-              // dayChoice={dayChoice}
-              />
-              <DiscountReservation display={display} />
-            </ReservationInfo>
-            {moviesChoice.choice ? (
-              <MoviesDetail choice={moviesChoice.choice}>
-                <MoviesBgImage
-                  bgImage={
-                    moviesChoice.choice
-                      ? moviesChoice.movie.poster
-                      : require("../../assets/noPosterSmall.png").default
-                  }
-                />
-                <MoviesInfo>
-                  <img
-                    className={"Choice"}
-                    src={
-                      moviesChoice.choice
-                        ? moviesChoice.movie.poster
-                        : require("../../assets/noPosterSmall.png").default
-                    }
-                  />
+      </Header>
+      <Main>
+        <ReservationInfo>
+          <MoviesReservation display={display} current={1}>
+            <MainReservation>
+              <Choice>
+                <MoviesChoice>
+                  <span>영화 선택</span>
                   <div>
-                    <div>
-                      {moviesChoice.movie.grade ? (
-                        <Age ageAttr={ageColor[moviesChoice.movie.grade]}>
-                          {moviesChoice.movie.grade === 0
-                            ? "전체"
-                            : moviesChoice.movie.grade}
-                        </Age>
-                      ) : (
-                          <Age ageAttr={ageColor[0]}>전체</Age>
-                        )}
-                      {/* {console.log(moviesChoice)} */}
-                      <p>{moviesChoice.movie.name}</p>
-                    </div>
-                    <div>
-                      {theaterChoice.choice
-                        ? theaterChoice.theater.name
-                        : "극장을 선택하세요."}
-                    </div>
-                    {/* //TODO 관람일자 왜...왜 씨발 왜... */}
-                    <div>
-                      {dayChoice.choice ? dayChoice.day : "관람일시를 선택하세요."}
-                    </div>
-                    <div>좌석을 선택하세요.</div>
+                    <Accordion
+                      square
+                      expanded={expanded === "panel1"}
+                      onChange={handleChange("panel1")}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1d-content"
+                        id="panel1d-header"
+                      >
+                        <Typography>예매 TOP 10</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {/* {console.log(movies.popular)} */}
+                        <MovieUl>
+                          {schedule.movies &&
+                            schedule.movies.map((movie, idx) => (
+                              <MovieLi
+                                key={idx}
+                                onClick={() => onMovieChoice(movie.id)}
+                                choice={movie.id}
+                                current={scheduleChoice.movie}
+                              >
+                                <p>{idx + 1}</p>
+                                {movie.grade ? (
+                                  <Age ageAttr={ageColor[movie.grade]}>
+                                    {movie.grade === 0 ? "전체" : movie.grade}
+                                  </Age>
+                                ) : (
+                                  <Age ageAttr={ageColor[0]}>전체</Age>
+                                )}
+                                {/* {console.log(moviesChoice)} */}
+                                <p>{movie.name}</p>
+                              </MovieLi>
+                            ))}
+                        </MovieUl>
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion
+                      square
+                      expanded={expanded === "panel2"}
+                      onChange={handleChange("panel2")}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel2d-content"
+                        id="panel2d-header"
+                      >
+                        <Typography>TOP10 외 영화</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <MovieUl>
+                          {restMovies.restMovie &&
+                            restMovies.restMovie.map((movie, idx) => (
+                              <MovieLi
+                                key={idx}
+                                onClick={() =>
+                                  onMoviesChoice((movies) => ({
+                                    ...movies,
+                                    choice: true,
+                                    movie,
+                                    movieId: movie.id,
+                                  }))
+                                }
+                                choice={movie.id}
+                                current={moviesChoice.movieId}
+                              >
+                                {movie.grade ? (
+                                  <Age ageAttr={ageColor[movie.grade]}>
+                                    {movie.grade === 0 ? "전체" : movie.grade}
+                                  </Age>
+                                ) : (
+                                  <Age ageAttr={ageColor[0]}>전체</Age>
+                                )}
+                                {/* {console.log(moviesChoice)} */}
+                                <p>{movie.name}</p>
+                              </MovieLi>
+                            ))}
+                        </MovieUl>
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion
+                      square
+                      expanded={expanded === "panel3"}
+                      onChange={handleChange("panel3")}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel3d-content"
+                        id="panel3d-header"
+                      >
+                        <Typography>회원 나이대 영화순위</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {/* //Todo 회원 나이대 영화순위 정렬 */}
+                        <MovieUl>
+                          {userData.favoriteMovies ? (
+                            userData.favoriteMovies.map((movie, idx) => {
+                              return (
+                                <MovieLi
+                                  key={idx}
+                                  onClick={() =>
+                                    onMoviesChoice((movies) => ({
+                                      ...movies,
+                                      choice: true,
+                                      movie,
+                                      movieId: movie.id,
+                                    }))
+                                  }
+                                  choice={movie.id}
+                                  current={moviesChoice.movieId}
+                                >{`${idx + 1} : ${movie}`}</MovieLi>
+                              );
+                            })
+                          ) : (
+                            <MovieLi>로그인을 해주세요</MovieLi>
+                          )}
+                        </MovieUl>
+                      </AccordionDetails>
+                    </Accordion>
                   </div>
-                </MoviesInfo>
-                {movieSeat.choice && (
-                  <>
-                    <TicketInfo>
+                </MoviesChoice>
+                <TheaterChoice>
+                  <span>극장선택</span>
+                  <div>
+                    {/* // TODO MY극장 위에 상영관 추천 추가 */}
+                    <Accordion2
+                      expanded={expanded2 === "panel1"}
+                      onChange={handleChange2("panel1")}
+                    >
+                      <AccordionSummary2
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1bh-content"
+                        id="panel1bh-header"
+                      >
+                        <Typography>MY극장</Typography>
+                      </AccordionSummary2>
+                      <AccordionDetails2>
+                        {/* //TODO userData 넣기 */}
+                        <Typography>설정한 MY극장이 없습니다.</Typography>
+                        <Typography>설정하러 가실?</Typography>
+                      </AccordionDetails2>
+                    </Accordion2>
+                  </div>
+                  <div className={tabStyled.root}>
+                    <Tabs
+                      orientation="vertical"
+                      variant="scrollable"
+                      value={areaValue}
+                      onChange={handleChange3}
+                      aria-label="Vertical tabs example"
+                      className={tabStyled.tabs}
+                    >
+                      {/* //TODO 지역 데이터 받아와서 넣기 */}
+                      {area.map((area, idx) => {
+                        return (
+                          <Tab
+                            key={idx}
+                            label={area}
+                            {...a11yProps(idx)}
+                            className={tabStyled.tab}
+                          />
+                        );
+                      })}
+                    </Tabs>
+                    {/* 지역상영관 정보 */}
+                    <TheaterRegion>
+                      {area.map((area, idx) => (
+                        <TabPanel
+                          value={areaValue}
+                          index={idx}
+                          className={tabStyled.tabpanel}
+                        >
+                          <p>{area}</p>
+                          {schedule.cinemas &&
+                            areaCinema[area].map((theater, idx) => (
+                              <MovieLi
+                                key={idx}
+                                onClick={() => onCinemaChoice(theater.id)}
+                                choice={theater.id}
+                                current={scheduleChoice.cinema}
+                              >
+                                {/* {console.log(theaterChoice)} */}
+                                {theater.name}
+                              </MovieLi>
+                            ))}
+                        </TabPanel>
+                      ))}
+                    </TheaterRegion>
+                  </div>
+                </TheaterChoice>
+                <DayChoice>
+                  <span>관람일 선택</span>
+                  <div>
+                    <CalenderBox
+                      onChange={onChange}
+                      onClickDay={(toDay) =>
+                        setScheduleChoice((prevState) => ({
+                          ...prevState,
+                          date: toDay.toISOString().split("T")[0]
+                        }))
+                      }
+                      value={
+                        toDay
+                      }
+                    />
+                    <Explanation>
                       <p>
-                        <span>성인(2)</span>
-                        <span>26,000원</span>
+                        영화, 극장, 관람일을 선택하시면 시간 선택이 아래쪽에
+                        나타납니다
                       </p>
-                      <p>
-                        <span>청소년(2)</span>
-                        <span>26,000원</span>
-                      </p>
-                      <p>
-                        <span>우대(2)</span>
-                        <span>26,000원</span>
-                      </p>
-                      <p>
-                        <span>예매수수료(2)</span>
-                        <span>26,000원</span>
-                      </p>
-                      <p>
-                        <span>할인금액</span>
-                        <span>(-) 1000원</span>
-                      </p>
-                    </TicketInfo>
-                    <AmountInfo>
-                      <div>
-                        <p>최종결제금액</p>
-                        <p>50,000원</p>
-                      </div>
-                      <Btn>결제</Btn>
-                    </AmountInfo>
-                  </>
-                )}
-              </MoviesDetail>
-            ) : (
-                <MoviesDetail choice={moviesChoice.choice}>
-                  <MoviesInfo>
-                    <div className={"nonChoice"} />
-                    <div>
-                      <div>영화를 선택하세요.</div>
-                      <div>극장을 선택하세요.</div>
-                      <div>관람일시를 선택하세요.</div>
-                      <div>좌석을 선택하세요.</div>
-                    </div>
-                  </MoviesInfo>
-                </MoviesDetail>
+                    </Explanation>
+                  </div>
+                </DayChoice>
+              </Choice>
+              {scheduleChoice.movie && scheduleChoice.cinema && scheduleChoice.date && (
+                <TheaterDetail>
+                  <ScjeduleInfo>
+                    <p>시간선택</p>
+                    <p> : 30분전 예매 / 30분전 취소 가능</p>
+                  </ScjeduleInfo>
+                  <CinemaInfo>
+                    <div>상영관들 data</div>
+                    <div>상영관들 data</div>
+                    <div>상영관들 data</div>
+                  </CinemaInfo>
+                </TheaterDetail>
               )}
-          </Main>
-          <PrevBtn onClick={() => onDisplay(display - 1)} state={display}>
-            <p>⬅</p>
-          </PrevBtn>
-          <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
-            <p>➡</p>
-          </NextBtn>
-          {/* <Test1 row={10} col={30} /> */}
-        </Container>
-      ));
+            </MainReservation>
+          </MoviesReservation>
+          <UserInfoReservation
+            userInfo={{
+              userName: "조재훈",
+              phoneNumber: ["010", "2373", "9147"],
+              email: "wognskec@gmail.com",
+            }}
+            display={display}
+          />
+          <SeatReservation
+            display={display}
+            onMovieSeat={onMovieSeat}
+            // theaterChoice={theaterChoice}
+            // dayChoice={dayChoice}
+          />
+          <DiscountReservation display={display} />
+        </ReservationInfo>
+        {scheduleChoice.movieDetail ? (
+          <MoviesDetail choice={scheduleChoice.movie !== null}>
+            <MoviesBgImage
+              bgImage={
+                scheduleChoice.movieDetail
+                  ? scheduleChoice.movieDetail.poster
+                  : require("../../assets/noPosterSmall.png").default
+              }
+            />
+            <MoviesInfo>
+              <img
+                className={"Choice"}
+                src={
+                  scheduleChoice.movieDetail
+                    ? scheduleChoice.movieDetail.poster
+                    : require("../../assets/noPosterSmall.png").default
+                }
+              />
+              <div>
+                <div>
+                  {scheduleChoice.movieDetail.grade ? (
+                    <Age ageAttr={ageColor[scheduleChoice.movieDetail.grade]}>
+                      {scheduleChoice.movieDetail.grade === 0
+                        ? "전체"
+                        : scheduleChoice.movieDetail.watch_grade}
+                    </Age>
+                  ) : (
+                    <Age ageAttr={ageColor[0]}>전체</Age>
+                  )}
+                  {/* {console.log(moviesChoice)} */}
+                  <p>{scheduleChoice.movieDetail.name}</p>
+                </div>
+                <div>
+                  {scheduleChoice.cinema
+                    ? scheduleChoice.cinemaDetail.name
+                    : "극장을 선택하세요."}
+                </div>
+                {/* //TODO 관람일자 왜...왜 씨발 왜... */}
+                <div>
+                  {scheduleChoice.date ? scheduleChoice.date : "관람일시를 선택하세요."}
+                </div>
+                <div>좌석을 선택하세요.</div>
+              </div>
+            </MoviesInfo>
+            {movieSeat.choice && (
+              <>
+                <TicketInfo>
+                  <p>
+                    <span>성인(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>청소년(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>우대(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>예매수수료(2)</span>
+                    <span>26,000원</span>
+                  </p>
+                  <p>
+                    <span>할인금액</span>
+                    <span>(-) 1000원</span>
+                  </p>
+                </TicketInfo>
+                <AmountInfo>
+                  <div>
+                    <p>최종결제금액</p>
+                    <p>50,000원</p>
+                  </div>
+                  <Btn>결제</Btn>
+                </AmountInfo>
+              </>
+            )}
+          </MoviesDetail>
+        ) : (
+          <MoviesDetail choice={moviesChoice.choice}>
+            <MoviesInfo>
+              <div className={"nonChoice"} />
+              <div>
+                <div>영화를 선택하세요.</div>
+                <div>극장을 선택하세요.</div>
+                <div>관람일시를 선택하세요.</div>
+                <div>좌석을 선택하세요.</div>
+              </div>
+            </MoviesInfo>
+          </MoviesDetail>
+        )}
+      </Main>
+      <PrevBtn onClick={() => onDisplay(display - 1)} state={display}>
+        <p>⬅</p>
+      </PrevBtn>
+      <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
+        <p>➡</p>
+      </NextBtn>
+      {/* <Test1 row={10} col={30} /> */}
+    </Container>
+  ))
 };
 export default Reservation;
 
@@ -841,7 +958,7 @@ const MoviesBgImage = styled.div`
 
 const MoviesInfo = styled.div`
   padding: 0 10px 0 30px;
-  display: felx;
+  display: flex;
   justify-content: center;
 
   /* align-items: center; */
@@ -998,6 +1115,7 @@ const CalenderBox = styled(Calendar)`
   .react-calendar__month-view__days button abbr {
     font-size: 12px;
   }
+  
 `;
 
 const Explanation = styled.div`
