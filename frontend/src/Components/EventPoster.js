@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Box, Button } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
+// import { Box, Button } from "@material-ui/core";
+import Dialog from '@material-ui/core/Dialog';
+// import MuiDialogTitle from '@material-ui/core/DialogTitle';
+// import MuiDialogContent from '@material-ui/core/DialogContent';
+// import MuiDialogActions from '@material-ui/core/DialogActions';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
+// import Typography from '@material-ui/core/Typography';
+import axios from 'axios'
+
+
+
 
 const EventModal = styled.div``;
 
@@ -28,12 +31,13 @@ const EventPoster = ({ id, day, src, title, text }) => {
       .get(`http://dbzara.kro.kr/api/v1/event/${id}/`)
       .then((result) => setModal(result.data))
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   return (
     <>
       {/* 이벤트 랜더링 */}
       <EventBg src={src}></EventBg>
+      {/* {console.log(src)} */}
       <EventInfo>
         <Btn>
           <DDay>D - {day}</DDay>
@@ -44,11 +48,8 @@ const EventPoster = ({ id, day, src, title, text }) => {
 
       {/* 모달 창 */}
       <EventModal>
-        <Dialog
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
           <img src={modal.poster} />
           {/* <p>{modal.title}</p> */}
 

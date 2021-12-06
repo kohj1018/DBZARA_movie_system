@@ -1,0 +1,58 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container-fluid mt-2 w-100">
+        <div class="row">
+            <div class="col mb-3">
+                {% include '_search_bar.html' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Evaluation Info</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="dataTable" class="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
+                                <table id="dataTable" class="table my-0">
+                                    <thead>
+                                        <tr>
+                                            <th>소속</th>
+                                            <th>이름</th>
+                                            <th>직무</th>
+                                            <th>작성자</th>
+                                            <th>근무 태도</th>
+                                            <th>고객 응대</th>
+                                            <th>업무 능력</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="evaluate-table">
+                                        {% for evaluation in evaluations %}
+                                            <tr>
+                                                <td>{{ evaluation.employee.cinema }}</td>
+                                                <td>{{ evaluation.employee.user.full_name }}</td>
+                                                <td>{{ evaluation.employee.belong }}</td>
+                                                <td>{{ evaluation.employer.user.full_name }}</td>
+                                                <td>{{ evaluation.evaluate1 }}</td>
+                                                <td>{{ evaluation.evaluate2 }}</td>
+                                                <td>{{ evaluation.evaluate3 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center" >
+            <div class="col">
+                {% include '_pagination.html' with page_obj=page_obj %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

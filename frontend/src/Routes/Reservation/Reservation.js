@@ -6,6 +6,7 @@ import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Tab
 import Tabs from "@material-ui/core/Tabs";
@@ -333,10 +334,13 @@ const Reservation = () => {
   // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
 
   return (
-    <Container>
-      <Header>
-        <Refresh onClick={() => window.location.reload()}>
-          처음부터 다시
+    top10.loading ? (<div style={{ minHeight: "82vh" }}><CircularProgress style={{
+      color: "secondary", position: "absolute", top: "40%", left: "50%", margin: "-150px 0 0 - 150px"
+    }} /></div>) : (
+        <Container>
+          <Header>
+            <Refresh onClick={() => window.location.reload()}>
+              처음부터 다시
         </Refresh>
       </Header>
       <Main>
@@ -693,7 +697,7 @@ const Reservation = () => {
       </NextBtn>
       {/* <Test1 row={10} col={30} /> */}
     </Container>
-  );
+  ))
 };
 export default Reservation;
 
@@ -1107,9 +1111,6 @@ const CalenderBox = styled(Calendar)`
     abbr[title="일요일"] {
       color: red;
     }
-    div {
-      margin: 2px;
-    }
   }
   .react-calendar__month-view__days button abbr {
     font-size: 12px;
@@ -1209,6 +1210,7 @@ const MovieLi = styled(Typography)`
   display: flex;
   align-items: center;
   padding-left: 10px;
+  cursor: grab;
   ${(props) =>
     props.choice === props.current ? `background:RGB(236, 97, 90)` : null};
   &:hover {
