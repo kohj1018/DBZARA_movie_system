@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 // TODO movies poster로 연결하고
 
-const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
+
+
+const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {
   console.log(age);
   var ageColorStyle = {};
   // 연령별로 색깔 다르게 표시
@@ -68,31 +70,49 @@ const MoviePoster = ({ id, rank, src, age, title, ticketSales, rates }) => {
       break;
   }
   return (
-    <>
-      <Container>
-        <ImgThumb>
-          <Poster src={src} alt="poster" />
-          <BtnContainer>
-            <OverBtn>
-              <Btn>예매</Btn>
-              <Btn>
-                <SLink to={`MoviesInfo/Index/${id}`}>정보</SLink>
-              </Btn>
-            </OverBtn>
-          </BtnContainer>
-        </ImgThumb>
-        <MvInfo>
-          <MvTit>
-            <Age style={ageColorStyle}>{age}</Age>
-            {title}
-          </MvTit>
-          <MvTxt>
-            <TicketSales>예매율 : {ticketSales}</TicketSales>
-            <Rates>평점 : {rates}</Rates>
-          </MvTxt>
-        </MvInfo>
-      </Container>
-    </>
+    isFilmo === false ? (
+      <>
+        <Container>
+          <ImgThumb>
+            <Poster src={src} alt="poster" />
+            <BtnContainer>
+              <OverBtn>
+                <Btn>예매</Btn>
+                <Btn>
+                  <SLink to={`/MoviesInfo/Index/${id}`}>정보</SLink>
+                </Btn>
+              </OverBtn>
+            </BtnContainer>
+          </ImgThumb>
+          <MvInfo>
+            <MvTit>
+              <Age style={ageColorStyle}>{age}</Age>
+              {title}
+            </MvTit>
+            <MvTxt>
+              <TicketSales>예매율 : {ticketSales}</TicketSales>
+              <Rates>평점 : {rates}</Rates>
+            </MvTxt>
+          </MvInfo>
+        </Container>
+      </>
+    ) : (
+      <>
+        <Container>
+          <SLink2 to={`/MoviesInfo/Index/${id}`}>
+            <ImgThumb>
+              <Poster src={src} alt="poster" />
+            </ImgThumb>
+            <MvInfo style={{ padding: "35px 0" }}>
+              <MvTit>
+                <Age style={ageColorStyle}>{age}</Age>
+                {title}
+              </MvTit>
+            </MvInfo>
+          </SLink2>
+        </Container>
+      </>
+    )
   );
 };
 
@@ -163,6 +183,13 @@ const SLink = styled(Link)`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+`;
+
+const SLink2 = styled(Link)`
+  :hover {
+    display: block;
+    border: 3px solid red;
   }
 `;
 

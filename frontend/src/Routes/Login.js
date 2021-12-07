@@ -12,18 +12,39 @@ import { UserContext } from "context";
 import GoogleLogin from "react-google-login";
 import KakaoLogin from "react-kakao-login";
 import { socialAPI } from "junsu-api";
+import setCookie from "cookie";
 
+// !로그인 연동
 const Login = () => {
   const { userInfo, handleUserInfo } = useContext(UserContext);
+  console.log(userInfo);
+
   const responseGoogle = async (response) => {
     const { profileObj } = response;
-    const data = await socialAPI.googleLogin(profileObj);
-    console.log(data);
+    const dbzaraToken = await socialAPI.googleLogin(profileObj);
+    console.log("구글", dbzaraToken);
+    console.log("구글token", dbzaraToken.data.token);
+    handleUserInfo(dbzaraToken.data.token);
+    // setCookie("dbzaraToken", dbzaraToken.data.token, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "none",
+    // });
+    // setCookie("googleToken", google.data.token);
   };
   const onSuccess = async (response) => {
     const { profile } = response;
-    const data = await socialAPI.kakaoLogin(profile);
-    console.log(data);
+    // const data = await socialAPI.kakaoLogin(profile);
+    const dbzaraToken = await socialAPI.kakaoLogin(profile);
+    console.log("카카오", dbzaraToken);
+    console.log("카카오token", dbzaraToken.data.token);
+    handleUserInfo(dbzaraToken.data.token);
+    // setCookie("dbzaraToken", dbzaraToken.data.token, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "none",
+    // });
+    // setCookie("kakaoToken", kakao.data.token);
   };
   const onFailure = (response) => {
     console.log(response);
@@ -37,6 +58,7 @@ const Login = () => {
 
   return (
     <Container>
+      {console.log(userInfo)}
       <LoginView>
         <GoogleLogin
           clientId={process.env.REACT_APP_GOOGLE_LOGIN_ID}
@@ -107,31 +129,3 @@ const UserDetails = styled(AccordionDetails)`
 const Data = styled.li`
   font-size: 15px;
 `;
-
-// const Login = () => {
-//   //  UserContext에서 정보 받아와서 사용
-//   const { username, password, token, error } = useContext(UserContext);
-//   // console.log(useContext(UserContext));
-//   return (
-//     <Container>
-//       <LoginView>
-//         <Info>
-//           <Accordion>
-//             <UserSummary>
-//               <Typography>UserInfo</Typography>
-//             </UserSummary>
-//             <UserDetails>
-//               <Data>{`name : ${username}`}</Data>
-//               <Data>{`password : ${password}`}</Data>
-//               <Data>
-//                 {token ? `token : ${token.substring(0, 18)}...` : error}
-//               </Data>
-//             </UserDetails>
-//           </Accordion>
-//         </Info>
-//       </LoginView>
-//     </Container>
-//   );
-// };
-
-// export default Login;

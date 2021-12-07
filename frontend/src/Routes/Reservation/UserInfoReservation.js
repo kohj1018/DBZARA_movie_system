@@ -160,7 +160,11 @@ const UserInfoReservation = ({ userInfo, display }) => {
         <div class="inp_line ui_name">
           <div class="ui_tit">예매자</div>
           <div class="ui_inp">
-            <p class="ui_txt">{userInfo.userName}</p>
+            <p class="ui_txt">
+              {userInfo.token &&
+                userInfo.token_docode &&
+                userInfo.token_docode.email}
+            </p>
           </div>
         </div>
         <div class="inp_line ui_phone">
@@ -171,7 +175,7 @@ const UserInfoReservation = ({ userInfo, display }) => {
                 type="text"
                 onkeydown="hpInNumber()"
                 maxlength="3"
-                value={userInfo.phoneNumber[0]}
+                value={userInfo.token && "000"}
               />
             </div>
             <div class="ui_inp_para">
@@ -179,7 +183,7 @@ const UserInfoReservation = ({ userInfo, display }) => {
                 type="text"
                 onkeydown="hpInNumber()"
                 maxlength="4"
-                value={userInfo.phoneNumber[1]}
+                value={userInfo.token && "0000"}
               />
             </div>
             <div class="ui_inp_para">
@@ -187,7 +191,7 @@ const UserInfoReservation = ({ userInfo, display }) => {
                 type="text"
                 onkeydown="hpInNumber()"
                 maxlength="4"
-                value={userInfo.phoneNumber[2]}
+                value={userInfo.token && "0000"}
               />
             </div>
           </div>
@@ -200,7 +204,11 @@ const UserInfoReservation = ({ userInfo, display }) => {
                 type="text"
                 id="email1"
                 class="inp_st"
-                value={userInfo.email.split("@")[0]}
+                value={
+                  userInfo.token &&
+                  userInfo.token_docode &&
+                  userInfo.token_docode.email.split("@")[0]
+                }
               />
             </div>
             <div class="ui_inp_para at_sign">@</div>
@@ -209,7 +217,11 @@ const UserInfoReservation = ({ userInfo, display }) => {
                 type="text"
                 id="email2"
                 class="inp_st"
-                value={userInfo.email.split("@")[1]}
+                value={
+                  userInfo.token &&
+                  userInfo.token_docode &&
+                  userInfo.token_docode.email.split("@")[1]
+                }
               />
             </div>
             <div class="select_line select_area">

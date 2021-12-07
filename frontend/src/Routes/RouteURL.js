@@ -10,6 +10,8 @@ import MyPage from "Routes/MyPage";
 import MyPageMyMovie from "Routes/MyPageMyMovie";
 import MyPageMyRating from "Routes/MyPageMyRating";
 import GuideInfo from "Routes/GuideInfo"
+// import join from "Routes/Join";
+import Filmography from "Routes/Filmography";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -25,6 +27,10 @@ export default [
   {
     path: "/MoviesInfo/Index/:id",
     component: MoviesInfo,
+  },
+  {
+    path: "/MoviesInfo/People/:id",
+    component: Filmography,
   },
   {
     path: "/Reservation",
