@@ -28,7 +28,7 @@ class Command(BaseCommand):
         days = options.get('days')
 
         finish_date = self.kobis.start_date + timedelta(days=days) if days != 0 else date(2020, 1, 1)
-        while self.kobis.start_date < finish_date:
+        while self.kobis.start_date > finish_date:
             schedule_data, base_date = self.kobis.parse_schedule_data()
             for movie, show_counts, audience_counts in schedule_data:
                 except_count = 0
@@ -38,6 +38,7 @@ class Command(BaseCommand):
                     naver_movie = CrawlingMovieAgeRate()
                     movie_code = naver_movie.get_movie_code_by_title(movie.name)
                     age_rate = naver_movie.get_age_rate_by_code(movie_code)
+
                     for _ in range(show_counts):
                         hour = choice(list(range(1, 3)) + list(range(8, 24)))
                         minute = choice(list(range(0, 56, 5)))
@@ -52,6 +53,7 @@ class Command(BaseCommand):
                                 min_age = date(schedule.datetime.year - (idx + 1) * 10, 1, 1)
                                 max_age = date(schedule.datetime.year - (idx + 2) * 10, 1, 1)
                                 for _ in range(int(counts * rate)):
+                                    print(min_age, max_age, age_rate)
                                     try:
                                         profile = choice(list(Profile.objects.filter(user__birth_date__range=[max_age, min_age])))
                                         Reservation.create(

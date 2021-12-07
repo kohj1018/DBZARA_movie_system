@@ -324,23 +324,24 @@ const Reservation = () => {
 
   // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
 
-  return schedule.loading ? (
-    <div style={{ minHeight: "82vh" }}>
-      <CircularProgress
-        style={{
-          color: "secondary",
-          position: "absolute",
-          top: "40%",
-          left: "50%",
-          margin: "-150px 0 0 - 150px",
-        }}
-      />
-    </div>
-  ) : (
-    <Container>
-      <Header>
-        <Refresh onClick={() => window.location.reload()}>
-          처음부터 다시
+  return (
+      schedule.loading ? (
+        <div style={{ minHeight: "82vh" }}>
+          <CircularProgress
+              style={{
+                color: "secondary",
+                position: "absolute",
+                top: "40%",
+                left: "50%",
+                margin: "-150px 0 0 - 150px",
+              }}
+          />
+        </div>
+    )  : (
+        <Container>
+          <Header>
+            <Refresh onClick={() => window.location.reload()}>
+              처음부터 다시
         </Refresh>
       </Header>
       <Main>
