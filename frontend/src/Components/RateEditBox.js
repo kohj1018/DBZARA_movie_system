@@ -1,7 +1,20 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 
 const RateEditBox = ({ rates }) => {
+  // 사용자가 남긴 코멘트
+  let userComment = "";
+
+  const onSubmit = () => {
+    // if ()  이 부분 if문으로 로그인 됐을 때 안됐을 때 구분해야함.
+    alert('등록하기 위해서는 로그인이 필요합니다.')
+    // else
+    
+  }
+
+  // 사용자가 매긴 평점
+  const [userRate, setUserRate] = useState(0);
+
   // 평점에 따라 별 어떻게 채워줘야하는지 계산하는 부분
   let starWidth = [0, 0, 0, 0, 0];
   const result = parseInt(rates / 2); // 채워야하는 별 개수
@@ -17,6 +30,30 @@ const RateEditBox = ({ rates }) => {
         starWidth[i] = 0;
       }
   }
+
+  useEffect(() => {
+    fillStar(userRate);
+    // console.log(userRate);
+  }, [userRate])
+
+  const fillStar = (idx) => {
+    for (i = 0; i <= idx; i++) {
+      document.getElementById(i).style.width='100%';
+    }
+    if (idx < 4) {
+      for (i = idx + 1; i <= 4; i++) {
+        document.getElementById(i).style.width='0%';
+      }
+    }
+  }
+
+  // 엔터 누르면 댓글 등록
+  const onKeyUp = (event) => {
+    if (event.keyCode === 13) { // 엔터키 키코드 13번
+      onSubmit();
+    }
+  }
+
   return (
     <>
       <EditBox>
@@ -26,7 +63,8 @@ const RateEditBox = ({ rates }) => {
             <BigStarArea>
               {[0,1,2,3,4].map(idx => {
                   return (
-                    <BigIcStar>
+                    <BigIcStar onClick={() => setUserRate(idx)}>
+                      <BgStar id={idx}/>
                       <BgStar/>
                     </BigIcStar>
                   )
@@ -51,8 +89,9 @@ const RateEditBox = ({ rates }) => {
               placeholder="별점을 먼저 선택하신 후, 감상을 남겨주세요.
               욕설, 비속어, 타인을 비방하는 문구를 사용하시면 운영자가 임의로 삭제할 수 있으며 스포일러가 포함된 경우 체크해주세요.
               최대 1,500자 작성가능(공백포함)"
+              onKeyUp={onKeyUp}
             />
-            <RateAddBtn>등록</RateAddBtn>
+            <RateAddBtn onClick={onSubmit}>등록</RateAddBtn>
           </ContBottom>
         </ContBox>
       </EditBox>

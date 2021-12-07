@@ -9,7 +9,7 @@ const People = ({ id }) => {
   const [moviePeople, setMoviePeople] = useState();
 
   const getMoviePeople = async () => {
-    const { data: { characters: moviePeople } } = await dbzaraApi.moviePeople(id);
+    const { data: { actors: moviePeople } } = await dbzaraApi.moviePeople(id);
     setMoviePeople(() => moviePeople);
   }
 

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 
 
-const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {
+const MovieView = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {
   console.log(age);
   var ageColorStyle = {};
   // 연령별로 색깔 다르게 표시
@@ -116,7 +116,7 @@ const MoviePoster = ({ isFilmo, id, rank, src, age, title, ticketSales, rates })
   );
 };
 
-export default MoviePoster;
+export default MovieView;
 
 const Container = styled(Box)`
   && {

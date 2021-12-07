@@ -5,7 +5,7 @@ import Default from "./MoviesInfoDetail/Default";
 import People from "./MoviesInfoDetail/People";
 import Videos from "./MoviesInfoDetail/Videos";
 import Photos from "./MoviesInfoDetail/Photos";
-import Rates from "./MoviesInfoDetail/Rates";
+import Review from "./MoviesInfoDetail/Review";
 import { dbzaraApi } from "dbzaraApi";
 import { CircularProgress } from "@material-ui/core";
 
@@ -27,7 +27,7 @@ const MoviesInfo = ({ match }) => {
     setMovie(() => movie);
   }
   const getMovieInfo = async () => {
-    const { data: { results: movieInfo } } = await dbzaraApi.movieInfo(match.params.id);
+    const { data: movieInfo } = await dbzaraApi.movieInfo(match.params.id);
     setMovieInfo(() => movieInfo);
   }
 
@@ -50,7 +50,7 @@ const MoviesInfo = ({ match }) => {
   };
 
   return (
-    movie ? (
+    movie && movieInfo ? (
       <>
         <Container>
           {/* 선택된 영화 이미지 블러 효과 부분 */}
@@ -64,7 +64,7 @@ const MoviesInfo = ({ match }) => {
               </ImgThumb>
               <InfoTxt>
                 <Title>{movie.name}</Title>
-                <EngTit>영어제목</EngTit>
+                <EngTit>{movie.name}</EngTit>
                 <TxtBundle>
                   {/* <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt> */}
                   <Txt>예매율 0위 68.8%</Txt>
@@ -73,8 +73,13 @@ const MoviesInfo = ({ match }) => {
                 <TxtBundle>
                   <Txt>{movie.opening_date} 개봉</Txt>
                   <Txt>{movie.running_time} 분</Txt>
-                  <Txt>{movie.grade}세이상관람가</Txt>
+                  <Txt>{movie.watch_grade}</Txt>
                   {/* <Txt>{movieData[match.params.id].country}</Txt> */}
+                </TxtBundle>
+                <TxtBundle>
+                  {movie.genres.map(genre => {
+                    <Txt>{genre.name}</Txt>
+                  })}
                   <BtnArea>
                     <ReserveBtn>예매</ReserveBtn>
                     <ShareBtn></ShareBtn>
@@ -92,23 +97,36 @@ const MoviesInfo = ({ match }) => {
                   <GrTitle>연령별/성별 예매율</GrTitle>
                   <GraphGrid>
                     <GraphBar>
-                      {/* {movieInfo.age.map((age, index) => {
+                      {movieInfo.age_percent ? (
+                      Object.values(movieInfo.age_percent).map((age, index) => {
                         return (
                           <BarDrawCont>
                             <BarLabel>{index+1}0대</BarLabel>
                             <BarDraw>
-                              <BarPercent style={{width: `0.${age}px`}}></BarPercent>
-                              <GraphTool>0.{age}%</GraphTool>
+                              <BarPercent style={{width: `${age*100}px`}}></BarPercent>
+                              <GraphTool>{age*100}%</GraphTool>
                             </BarDraw>
                           </BarDrawCont>
                         )
-                      })} */}
+                      })) : (
+                        // 여기 수정 필요
+                        [0,1,2,3,4].map((age, index) => {
+                          return (
+                            <BarDrawCont>
+                              <BarLabel>{index+1}0대</BarLabel>
+                              <BarDraw>
+                                <BarPercent style={{width: `${100}px`}}></BarPercent>
+                                <GraphTool>{100}%</GraphTool>
+                              </BarDraw>
+                            </BarDrawCont>
+                          )
+                        }))}
                     </GraphBar>
                     <GraphSex>
-                      {/* <SexMale style={{height: movieInfo.gender.M}}></SexMale>
-                    <SexMaleTxt style={{height: movieInfo.gender.M}}>{movieInfo.gender.M}</SexMaleTxt>
-                    <SexFemale style={{height: movieInfo.gender.F}}></SexFemale>
-                    <SexFemaleTxt style={{height: movieInfo.gender.F}}>{movieInfo.gender.F}</SexFemaleTxt> */}
+                      <SexMale style={{height: `${movieInfo.gender_percent.M*100}%`}}></SexMale>
+                      <SexMaleTxt style={{height: `${movieInfo.gender_percent.M*100}%`}}>{movieInfo.gender_percent.M*100}%</SexMaleTxt>
+                      <SexFemale style={{height: `${movieInfo.gender_percent.F*100}%`}}></SexFemale>
+                      <SexFemaleTxt style={{height: `${movieInfo.gender_percent.F*100}%`}}>{movieInfo.gender_percent.F*100}%</SexFemaleTxt>
                     </GraphSex>
                   </GraphGrid>
                 </GraphGender>
@@ -123,7 +141,7 @@ const MoviesInfo = ({ match }) => {
                   <GrTitle>누적 관객수</GrTitle>
                   {/* <GraphChart></GraphChart> */}
                   <GraphAdnCumView>
-                    {/* <GrTxt>{movieData[match.params.id].dayAdnCum}명</GrTxt> */}
+                    <GrTxt>{movieInfo.counts}명</GrTxt>
                   </GraphAdnCumView>
                 </GraphDayAdnCum>
                 <GraphDaySales>
@@ -131,7 +149,7 @@ const MoviesInfo = ({ match }) => {
                   <GrsTxt>(단위:천원)</GrsTxt>
                   {/* <GraphChart></GraphChart> */}
                   <GraphSalesView>
-                    {/* <GrTxt>{movieData[match.params.id].daySalesCum}</GrTxt> */}
+                    <GrTxt>{movieInfo.sales}</GrTxt>
                   </GraphSalesView>
                 </GraphDaySales>
               </GraphCont>
@@ -222,7 +240,7 @@ const TabContent = (props) => {
       break;
     case 4:
       return (
-        <Rates id={props.id} />
+        <Review id={props.id} />
       )
       break;
   }

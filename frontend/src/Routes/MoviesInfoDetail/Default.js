@@ -42,7 +42,7 @@ const Default = ({ id }) => {
     setMovieImg(() => movieImg);
   }
   const getMoviePeople = async () => {
-    const { data: { characters: moviePeople } } = await dbzaraApi.moviePeople(id);
+    const { data: { actors: moviePeople } } = await dbzaraApi.moviePeople(id);
     setMoviePeople(() => moviePeople);
   }
   const getMovieVideo = async () => {
@@ -64,23 +64,16 @@ const Default = ({ id }) => {
   }, [])
 
   return (
-    movie && moviePeople ? (
+    movie && moviePeople && movieVideo && movieImg && movieReview ? (
       <>
         <Container>
           <Title>시놉시스</Title>
-          {/* {movieData[id].sysTxt.map(txt => {
-              return (
-                <Txt>
-                {txt}
-                </Txt>
-              )
-            })} */}
           <Txt>
             {movie.summary}
           </Txt>
           <Title>제작정보</Title>
-          <Txt>수입 : {movie.distributors[0].name}</Txt>
-          <Txt>배급 : {movie.distributors[0].name}</Txt>
+          <Txt>수입 : {movie.distributors[0] ? movie.distributors[0].name : ""}</Txt>
+          <Txt>배급 : {movie.distributors[0] ? movie.distributors[1] ? movie.distributors[1].name : movie.distributors[0].name : ""}</Txt>
           <Title>배우·제작진</Title>
           <ActArea>
             {moviePeople.map(people => {
@@ -97,7 +90,7 @@ const Default = ({ id }) => {
           <Title>동영상</Title>
           <VodArea>
             <Video
-              src={movieVideo ? movieVideo[0].video : ""}
+              src={movieVideo[0] ? movieVideo[0].video : ""}
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
             />
@@ -126,14 +119,18 @@ const Default = ({ id }) => {
               </RatesTypeMenuTxt>
             </RatesArea>
             <RatesView>
-              {movieData[0].review.map(review => {
+              {movieReview.map(review => {
                 return (
                   <RateViewBox
+                    nickName={review.name}
+                    rates={review.score}
+                    comment={review.comment}
+                    date={review.created.slice(0, 10)}
                     // nickName={review.nickName}
                     // rates={review.rates}
                     // comment={review.comment}
                     // date={review.date}
-                    {...review}
+                    // {...review}
                   />
                 )
               })}
