@@ -115,4 +115,5 @@ const EventTitle = styled.div`
 
 const EventText = styled.div`
   padding-bottom: 10px;
+  cursor: pointer;
 `;

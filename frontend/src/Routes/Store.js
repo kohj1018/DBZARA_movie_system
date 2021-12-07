@@ -4,8 +4,6 @@ import styled from "styled-components";
 import StorePoster from "Components/StorePoster"
 import axios from "axios";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types';
 
 
 const Container = styled.div`
@@ -88,17 +86,6 @@ const AllStoreList = styled.div`
 const Store = () => {
 
   const [tabClick, setTabClick] = useState(0);
-  const [progress, setProgress] = React.useState(10);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
 
   return (
     <>
@@ -130,8 +117,6 @@ const Store = () => {
         </StoreList>
         {/* Tab눌렀을 때 뜨는 메뉴 리스트 */}
         <TabCont tabClick={tabClick} />
-        <TabCont value={progress} />;
-
         {/* <TabSubList></TabSubList>
           <TabSubList></TabSubList>
           <TabSubList></TabSubList>
@@ -140,7 +125,6 @@ const Store = () => {
     </>
   )
 }
-
 
 
 const TabCont = (props) => {
@@ -178,16 +162,9 @@ const TabCont = (props) => {
 
   return (
     !menu.ticket ?  // tickek의 데이터가 없으면(로딩중이면) 빙글빙글 , 다 받아오면 로직띄우기
-      (<div style={{ minHeight: "70vh" }}><CircularProgress variant="determinate" {...props} style={{
+      (<div style={{ minHeight: "70vh" }}><CircularProgress style={{
         position: "absolute", top: "40%", left: "50%", margin: "-150px 0 0 - 150px"
-      }} />
-        <Typography variant="caption" component="div" color="textSecondary" style={{
-          position: "absolute", top: "40%", left: "50%", margin: "-150px 0 0 - 150px"
-        }}>{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </div>
-      ) : (
+      }} /></div>) : (
         tab.map((data, idx) => {
           if (props.tabClick === idx) { //tabClick은 0,1,2,3 idx는 tab배열의 0,1,2,3
             if (props.tabClick === 0) {
@@ -286,12 +263,5 @@ const TabCont = (props) => {
   )
 }
 
-TabCont.propTypes = {
-  /**
-   * The value of the progress indicator for the determinate variant.
-   * Value between 0 and 100.
-   */
-  value: PropTypes.number.isRequired,
-};
 
 export default Store;

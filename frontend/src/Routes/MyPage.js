@@ -6,6 +6,9 @@ import Registration from "./MyPageInfoDetail/Registration"
 import PreferActor from "./MyPageInfoDetail/PreferActor";
 import PreferDirector from "./MyPageInfoDetail/PreferDirector"
 import { PortraitSharp } from "@material-ui/icons";
+import { Link, Switch, Route } from "react-router-dom";
+import MyPageMyRating from "./MyPageMyRating";
+import MyPageMyMovie from "./MyPageMyMovie";
 
 const Container = styled.div`
   position: relative;
@@ -141,6 +144,15 @@ const TabItemLink = styled.a`
   list-style: none;
   cursor: pointer;
 `;
+const SLink = styled(Link)`
+  && {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+
 
 
 const MyPage = () => {
@@ -198,10 +210,10 @@ const MyPage = () => {
                   <UserAccTitle>MY 영화</UserAccTitle>
                   <UserCinemaBox style={{ height: "90px", paddingTop: "0" }}>
                     <UserBoxInner>
-                      <a href="https://movie.yes24.com/MyPage/MyRating" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>나의 평점 모아보기</a>
+                      <SLink to="MyPage/MyRating" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>나의 평점 모아보기</SLink>
                     </UserBoxInner>
                     <UserBoxInner style={{ borderLeft: "1px solid #e5e5e5" }}>
-                      <a href="https://movie.yes24.com/MyPage/MyMovie" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>내가 본 영화</a>
+                      <SLink to="MyPage/MyMovie" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>내가 본 영화</SLink>
                     </UserBoxInner>
                   </UserCinemaBox>
                 </UserMovieArea>
