@@ -26,7 +26,7 @@ const Filmography = ({ match }) => {
                         <BgBlurArea />
                         <TopText>
                             <TopTit>{filmography.name}</TopTit>
-                            <TopStit>1978.09.14</TopStit>
+                            <TopStit>배우</TopStit>
                             <Photo>
                                 <PhotoImg src={filmography.image} />
                             </Photo>

@@ -6,7 +6,7 @@ import RateViewBox from "Components/RateViewBox";
 import { CircularProgress } from "@material-ui/core";
 import { dbzaraApi } from "dbzaraApi";
 
-const Rates = ({ id }) => {
+const Review = ({ id }) => {
   const [movieReview, setMovieReview] = useState();
 
   const getMovieReview = async () => {
@@ -25,7 +25,7 @@ const Rates = ({ id }) => {
           <Title>평점</Title>
           <CommentArea>
             <RateEditBox
-              rates={movieData[id].rates}
+              rates={movieData[0].rates}
             />
             <RatesArea>
               <RatesTypeMenuTxt>
@@ -34,13 +34,13 @@ const Rates = ({ id }) => {
               </RatesTypeMenuTxt>
             </RatesArea>
             <RatesView>
-              {movieData[id].review.map(review => {
+              {movieReview.map(review => {
                 return (
                   <RateViewBox
                     nickName={review.name}
-                    rates={0}
+                    rates={review.score}
                     comment={review.comment}
-                    date={review.created}
+                    date={review.created.slice(0, 10)}
                     // nickName={review.nickName}
                     // rates={review.rates}
                     // comment={review.comment}
@@ -63,7 +63,7 @@ const Rates = ({ id }) => {
     )
 )};
 
-export default Rates;
+export default Review;
 
 
 const Container = styled.div`
