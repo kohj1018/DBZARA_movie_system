@@ -236,6 +236,8 @@ class MovieInfo(models.Model):
     @property
     def age_percent(self):
         temp = dict()
+        if self.counts == 0:
+            return temp
         for element in self.age.keys():
             temp[element] = round(self.age.get(element) / self.counts, 2)
         return temp
@@ -243,6 +245,8 @@ class MovieInfo(models.Model):
     @property
     def gender_percent(self):
         temp = dict()
+        if self.counts == 0:
+            return temp
         for element in self.gender.keys():
             temp[element] = round(self.gender.get(element) / self.counts, 2)
         return temp

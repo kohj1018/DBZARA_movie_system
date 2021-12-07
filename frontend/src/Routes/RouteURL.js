@@ -6,7 +6,12 @@ import Theater from "Routes/Theater";
 import Event from "Routes/Event";
 import Store from "Routes/Store";
 import Login from "Routes/Login";
-import join from "Routes/MyPage";
+import MyPage from "Routes/MyPage";
+import MyPageMyMovie from "Routes/MyPageMyMovie";
+import MyPageMyRating from "Routes/MyPageMyRating";
+import GuideInfo from "Routes/GuideInfo"
+// import join from "Routes/Join";
+import Filmography from "Routes/Filmography";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -22,6 +27,10 @@ export default [
   {
     path: "/MoviesInfo/Index/:id",
     component: MoviesInfo,
+  },
+  {
+    path: "/MoviesInfo/People/:id",
+    component: Filmography,
   },
   {
     path: "/Reservation",
@@ -44,7 +53,19 @@ export default [
     component: Login,
   },
   {
-    path: "/Join",
-    component: join,
+    path: "/MyPage",
+    component: MyPage,
+  },
+  {
+    path: "/MyPage/MyMovie",
+    component: MyPageMyMovie,
+  },
+  {
+    path: "/MyPage/MyRating",
+    component: MyPageMyRating,
+  },
+  {
+    path: "/GuideInfo",
+    component: GuideInfo,
   },
 ];

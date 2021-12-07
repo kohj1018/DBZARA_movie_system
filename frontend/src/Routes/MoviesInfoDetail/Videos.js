@@ -1,34 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import movieData from "movieData";
+import { CircularProgress } from "@material-ui/core";
+import { dbzaraApi } from "dbzaraApi";
 
-const Videos = ({ id }) => (
-  <>
-    <Container>
-      <Title>동영상</Title>
-      <VodArea>
-        {/* <Video
-          poster={movieData[id].videoThumb}
-          controlslist="nodownload"
-          preload="none"
-          src={movieData[id].video} disablepictureinpicture
-        /> */}
-        <Video 
-          src={movieData[id].video} 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-        />
-        {/* <BannerInfo>
-          <PlayBtn/>
-          <BannerTxt>
-            <VodTitle>{movieData[id].title}</VodTitle>
-            <VodType>메인 예고편</VodType>
-          </BannerTxt>
-        </BannerInfo> */}
-      </VodArea>
-    </Container>
-  </>
-);
+const Videos = ({ id }) => {
+  const [movieVideo, setMovieVideo] = useState();
+
+  const getMovieVideo = async () => {
+    const { data: { videos: movieVideo } } = await dbzaraApi.movieVideo(id);
+    setMovieVideo(() => movieVideo);
+  }
+
+  useEffect(() => {
+    getMovieVideo();
+  }, [])
+  return (
+    movieVideo ? (
+      <>
+        <Container>
+          <Title>동영상</Title>
+          <VodArea>
+            {/* <Video
+              poster={movieData[id].videoThumb}
+              controlslist="nodownload"
+              preload="none"
+              src={movieData[id].video} disablepictureinpicture
+            /> */}
+            <Video 
+              src={movieVideo[0].video} 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+            />
+            {/* <BannerInfo>
+              <PlayBtn/>
+              <BannerTxt>
+                <VodTitle>{movieData[id].title}</VodTitle>
+                <VodType>메인 예고편</VodType>
+              </BannerTxt>
+            </BannerInfo> */}
+          </VodArea>
+        </Container>
+      </>
+    ) : (
+      <>
+        <LoadingArea>
+          <CircularProgress/>
+        </LoadingArea>
+      </>
+    )
+)};
 
 export default Videos;
 
@@ -66,6 +87,12 @@ const Video = styled.iframe`
   width: 100%;
   height: 100%;
   object-fit: contain;
+`;
+
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
 `;
 
 // const BannerInfo = styled.div`

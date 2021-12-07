@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
 import movieData from "movieData";
+import { CircularProgress } from "@material-ui/core";
+import { dbzaraApi } from "dbzaraApi";
 
 const Photos = ({ id }) => {
+  const [movieImg, setMovieImg] = useState();
+
+  const getMovieImg = async () => {
+    const { data: { images: movieImg } } = await dbzaraApi.movieImg(id);
+    setMovieImg(() => movieImg);
+  }
+
+  useEffect(() => {
+    getMovieImg();
+  }, [])
+
   // 사진 카로셀(슬라이더) 설정
   const settings = {
     dots: false,
@@ -16,22 +29,30 @@ const Photos = ({ id }) => {
   };
 
   return (
-  <>
-    <Container>
-      <Title>포토</Title>
-      <StyledSlider {...settings}>
-        {movieData[id].photos.map((photo, index) => {
-          return (
-            <PhotoItem>
-              <Photo
-                src={photo}
-              />
-            </PhotoItem>
-          )
-        })}
-      </StyledSlider>
-    </Container>
-  </>
+    movieImg ? (
+      <>
+        <Container>
+          <Title>포토</Title>
+          <StyledSlider {...settings}>
+            {movieImg.map((photo, index) => {
+              return (
+                <PhotoItem>
+                  <Photo
+                    src={photo.image}
+                  />
+                </PhotoItem>
+              )
+            })}
+          </StyledSlider>
+        </Container>
+      </>
+    ) : (
+      <>
+        <LoadingArea>
+          <CircularProgress/>
+        </LoadingArea>
+      </>
+    )
 )};
 
 export default Photos;
@@ -154,4 +175,10 @@ const Photo = styled.img`
   display: block;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+`;
+
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
 `;

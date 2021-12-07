@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -37,7 +38,7 @@ class MovieListAPIView(ListModelMixin, GenericAPIView):
 
     def get_queryset(self):
         option = self.request.query_params.get('option', 'box-office')
-        today = date(2021, 11, 10)
+        today = date.today()
         query_set = super().get_queryset()
 
         if option == 'box-office':
@@ -90,12 +91,18 @@ class MovieVideoAPIView(MovieBaseAPIView):
     serializer_class = MovieVideoSerializer
 
 
-class MovieReviewAPIView(ListModelMixin, MovieBaseAPIView):
-    serializer_class = MovieReviewSerializer
+class MovieReviewAPIView(ListModelMixin, GenericAPIView):
+    permission_classes = [AllowAny]
+    queryset = Movie.objects.all()
+    serializer_class = ReviewSerializer
     pagination_class = BasicPagination
 
     def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+        return self.list(self, request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.get(pk=self.kwargs.get('pk')).review_set.all()
 
 
 class ReviewBaseAPIView(GenericAPIView):

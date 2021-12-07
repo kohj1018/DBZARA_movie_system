@@ -11,13 +11,13 @@ class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'watch_grade', 'name', 'poster', 'backdrop']
+        fields = ['id', 'grade', 'name', 'poster', 'backdrop']
 
 
 class MovieShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'name', 'watch_grade']
+        fields = ['id', 'name', 'grade']
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -77,7 +77,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'name', 'comment', 'sympathy', 'not_sympathy', 'created']
+        fields = ['id', 'name', 'score', 'comment', 'sympathy', 'not_sympathy', 'created']
 
 
 class MovieInfoSerializer(serializers.ModelSerializer):
