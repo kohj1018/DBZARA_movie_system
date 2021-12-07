@@ -9,6 +9,7 @@ import Login from "Routes/Login";
 import MyPage from "Routes/MyPage";
 import MyPageMyMovie from "Routes/MyPageMyMovie";
 import MyPageMyRating from "Routes/MyPageMyRating";
+import GuideInfo from "Routes/GuideInfo"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -56,5 +57,9 @@ export default [
   {
     path: "/MyPage/MyRating",
     component: MyPageMyRating,
+  },
+  {
+    path: "/GuideInfo",
+    component: GuideInfo,
   },
 ];
