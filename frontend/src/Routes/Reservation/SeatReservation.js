@@ -88,8 +88,14 @@ const SeatReservation = ({
             </p>
           </div>
         </SeatInfo>
-        <Seat row={8} col={10} setSelected={setSelected} selected={selected} />
-        {/* <MovieSeat setSelected={setSelected} onMovieSeat={onMovieSeat} /> */}
+        {/* //TODO 상영관 좌성 row, col로 변경 */}
+        <Seat
+          row={8}
+          col={10}
+          selected={selected}
+          setSelected={setSelected}
+          peopleSum={adultNum.count + teenagerNum.count + preferentialNum.count}
+        />
       </SeatPick>
     </Container>
   );
@@ -97,7 +103,7 @@ const SeatReservation = ({
 
 export default SeatReservation;
 
-const handleClick = (value, setSelected, row, col) => {
+const handleClick = (value, selected, setSelected, peopleSum, row, col) => {
   // console.log("value", value.target); //DOM요소
   // console.log("value className", value.target.classList); //class List
 
@@ -110,17 +116,20 @@ const handleClick = (value, setSelected, row, col) => {
     );
     // console.log("삭제");
   } else {
-    value.target.classList.add("clicked");
-    setSelected((seatList) => [
-      ...seatList,
-      `${String.fromCharCode(row + 97)}${col}, `,
-    ]);
+    if (!selected.length || selected.length < peopleSum) {
+      value.target.classList.add("clicked");
+      setSelected((seatList) => [
+        ...seatList,
+        `${String.fromCharCode(row + 97)}${col}, `,
+      ]);
+    }
+
     // console.log("추가");
   }
 };
 
 //! 함수를 안에 넣으면 클릭할때마다 리렌더링 다시 되면서 리셋됨
-const Seat = ({ row, col, setSelected, setSeatRC, seatRC, selected }) => {
+const Seat = ({ row, col, selected, setSelected, peopleSum }) => {
   return (
     <SeatBox row={row} col={col}>
       <div className="screen">screen</div>
@@ -131,14 +140,22 @@ const Seat = ({ row, col, setSelected, setSeatRC, seatRC, selected }) => {
             {[...Array(col).keys()].map((num2, idx2) => (
               <span
                 className={`col${idx2 + 1}`}
-                onClick={(value) => handleClick(value, setSelected, idx1, idx2)}
+                onClick={(value) =>
+                  handleClick(
+                    value,
+                    selected,
+                    setSelected,
+                    peopleSum,
+                    idx1,
+                    idx2
+                  )
+                }
               />
             ))}
           </div>
         ))}
       </div>
-      {console.log("seatRC", seatRC)}
-      {console.log("selected", selected)}
+      {/* {console.log("selected", selected)} */}
     </SeatBox>
   );
 };

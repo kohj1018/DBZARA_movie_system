@@ -64,24 +64,11 @@ const Reservation = () => {
     error: null,
     loading: true,
   });
-  let [top10, setTop10] = useState({
-    top: null,
-    error: null,
-    loading: true,
-  });
-
   let [restMovies, setRestMovies] = useState({
     restMovie: null,
     error: null,
     loading: true,
   });
-
-  let [cinemas, setCinema] = useState({
-    cinema: null,
-    error: null,
-    loading: true,
-  });
-
   async function feactApi() {
     try {
       // TOP10
@@ -134,18 +121,9 @@ const Reservation = () => {
 
   const [theater, setTheater] = useState({
     theaters: null,
+    choice: null,
   });
 
-  const [theaterChoice, onTheaterChoice] = useState({
-    choice: false,
-    theater: null,
-    theaterId: null,
-  });
-
-  const [dayChoice, onDayChoice] = useState({
-    choice: false,
-    day: null,
-  });
   // TODO seat data
   const [movieSeat, onMovieSeat] = useState({
     choice: false,
@@ -195,22 +173,6 @@ const Reservation = () => {
     console.log(scheduleChoice);
   };
 
-  const onDateChoice = async (date) => {
-    const {
-      data: { movies, cinemas },
-    } = await dbzaraApi.scheduleMovie(date);
-    setSchedule((prevState) => ({
-      ...prevState,
-      cinemas,
-      movies,
-    }));
-
-    setScheduleChoice((prevState) => ({
-      ...prevState,
-      date: date,
-    }));
-  };
-
   const setCalendarBorder = (scheduleDate) => {
     const dateList = parseFirstDate();
     let styles = ``;
@@ -230,7 +192,7 @@ const Reservation = () => {
           )})`
         );
         day.style.border = "1px solid rgba(0, 0, 0, 0.1)";
-        console.log("date", day);
+        // console.log("date", day);
       }
     }
   };
@@ -294,9 +256,11 @@ const Reservation = () => {
   // });
   // }
   // console.log(areaCinema);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (scheduleChoice.date && scheduleChoice.cinema && scheduleChoice.movie) {
       const { data } = await dbzaraApi.theaterList(scheduleChoice);
+      // ! 상영관 정보
       setTheater((prevState) => ({
         ...prevState,
         theaters: data,
@@ -322,26 +286,23 @@ const Reservation = () => {
     return dateList;
   };
 
-  // TODO영화개봉날짜 props로 받아서 해당 날짜에border씌우기
-
-  return (
-      schedule.loading ? (
-        <div style={{ minHeight: "82vh" }}>
-          <CircularProgress
-              style={{
-                color: "secondary",
-                position: "absolute",
-                top: "40%",
-                left: "50%",
-                margin: "-150px 0 0 - 150px",
-              }}
-          />
-        </div>
-    )  : (
-        <Container>
-          <Header>
-            <Refresh onClick={() => window.location.reload()}>
-              처음부터 다시
+  return schedule.loading ? (
+    <div style={{ minHeight: "82vh" }}>
+      <CircularProgress
+        style={{
+          color: "secondary",
+          position: "absolute",
+          top: "40%",
+          left: "50%",
+          margin: "-150px 0 0 - 150px",
+        }}
+      />
+    </div>
+  ) : (
+    <Container>
+      <Header>
+        <Refresh onClick={() => window.location.reload()}>
+          처음부터 다시
         </Refresh>
       </Header>
       <Main>
@@ -556,22 +517,36 @@ const Reservation = () => {
                       <p> : 30분전 예매 / 30분전 취소 가능</p>
                     </ScjeduleInfo>
                     <CinemaInfo>
-                      <div>상영관들 data</div>
-                      <div>상영관들 data</div>
-                      <div>상영관들 data</div>
+                      {console.log("theater데이터 ", theater)}
+                      {console.log("상영관", theater.theaters)}
+                      {theater.theaters &&
+                        theater.theaters.map((theater, idx) => (
+                          <div
+                            className={"theater"}
+                            key={idx}
+                            onClick={(value) =>
+                              theaterChoice(value, setTheater)
+                            }
+                          >
+                            <div className={"theaterNumber"} key={idx}>
+                              {`${theater.floor}층 ${theater.name}`}
+                            </div>
+                            <div className={"theaterTime"}>
+                              {`${theater.end_datetime} ~ ${theater.start_datetime}`}
+                            </div>
+                            <div className={"theaterSeat"}>
+                              {`총 좌석 : ${
+                                theater.seat.columns * theater.seat.rows
+                              }`}
+                            </div>
+                          </div>
+                        ))}
                     </CinemaInfo>
                   </TheaterDetail>
                 )}
             </MainReservation>
           </MoviesReservation>
-          <UserInfoReservation
-            userInfo={{
-              userName: "조재훈",
-              phoneNumber: ["010", "2373", "9147"],
-              email: "wognskec@gmail.com",
-            }}
-            display={display}
-          />
+          <UserInfoReservation userInfo={userInfo} display={display} />
           <SeatReservation
             display={display}
             onMovieSeat={onMovieSeat}
@@ -617,8 +592,8 @@ const Reservation = () => {
                     ? scheduleChoice.cinemaDetail.name
                     : "극장을 선택하세요."}
                 </div>
-                {/* //TODO 관람일자 왜...왜 씨발 왜... */}
                 <div>
+                  {/* //Todo 상영관 선택 후 시작시간 정보 띄우기  '상영관 선택' ? `${scheduleChoice.date} /상영관시작시간, 상영관정보 ` : scheduleChoice.date*/}
                   {scheduleChoice.date
                     ? scheduleChoice.date
                     : "관람일시를 선택하세요."}
@@ -680,11 +655,19 @@ const Reservation = () => {
       <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
         <p>➡</p>
       </NextBtn>
-      {/* <Test1 row={10} col={30} /> */}
     </Container>
   );
 };
 export default Reservation;
+
+const theaterChoice = (value, setTheater) => {
+  console.log("value", value.target.parentNode); //DOM요소
+  console.log("형제", value.target.parentNode.prevAll); //DOM요소
+  console.log("value className", value.target.parentNode.classList); //class List
+  value.target.parentNode.classList.remove("clicked");
+  value.target.parentNode.classList.add("clicked"); //추가
+  setTheater((theater) => ({ ...theater, choice: value }));
+};
 
 const Container = styled.div`
   width: 100%;
@@ -949,6 +932,36 @@ const CinemaInfo = styled.div`
   background-color: #ffffff;
   font-size: 20px;
   color: black;
+  display: flex;
+  font-size: 15px;
+
+  .clicked {
+    background-color: red;
+  }
+  .theaterNumber {
+    height: 30px;
+    font-size: 12px;
+  }
+  .theaterTime {
+    height: 80px;
+  }
+  .theaterSeat {
+    height: 20px;
+    font-size: 10px;
+  }
+  > div {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    width: 110px;
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    > div:nth-child(-n + 2) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+  }
 `;
 
 const CalenderBox = styled(Calendar)`
