@@ -5,3 +5,7 @@ from .base import (
 from .cinema import (
     CinemaDetailSerializer, ScheduleSerializer, ScheduleCinemaSerializer, ScheduleMovieSerializer
 )
+
+from .reservation import (
+    ReservationSerializer
+)

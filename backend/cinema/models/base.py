@@ -52,7 +52,7 @@ class Cinema(models.Model):
 
     @property
     def schedule_movie_by_cinema(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return Schedule.objects.filter(
                 theater__cinema=self,
                 movie__closing_date__gt=base_date
@@ -60,7 +60,7 @@ class Cinema(models.Model):
 
     @property
     def schedule_datetime_by_cinema(self):
-        base_date = date(2021, 11, 10)
+        base_date = date.today()
         return Schedule.objects.filter(
                 theater__cinema=self,
                 movie__closing_date__gt=base_date
@@ -122,12 +122,17 @@ class Schedule(PostgresPartitionedModel):
     movie = models.ForeignKey('movie.Movie', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
 
-    @property
-    def schedule_cinema_by_date(self):
-        return self.objects
-
     def __str__(self):
         return f'{self.theater} - {self.movie}'
+
+    @property
+    def start_datetime(self):
+        return f'{str(self.datetime.hour).zfill(2)}:{str(self.datetime.minute).zfill(2)}'
+
+    @property
+    def end_datetime(self):
+        end_datetime = self.datetime + timedelta(minutes=self.movie.running_time)
+        return f'{str(end_datetime.hour).zfill(2)}:{str(end_datetime.minute).zfill(2)}'
 
 
 class Reservation(PostgresPartitionedModel):

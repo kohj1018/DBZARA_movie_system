@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         start_date = date.today()
-        end_date = date.today() - timedelta(days=100)
+        end_date = date(2020, 1, 1)
         while start_date > end_date:
             start_date = date(start_date.year, start_date.month, start_date.day)
             normal, not_normal = 0, 0

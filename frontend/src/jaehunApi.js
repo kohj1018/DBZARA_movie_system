@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://dbzara.kro.kr/api/v1",
+  baseURL: "http://dbzara.kro.kr/api/v1/",
 });
 
 export const dbzaraApi = {
@@ -20,6 +20,11 @@ export const dbzaraApi = {
   movieInfo: (id) => api.get(`movie/${id}`),
   movieVideo: (id) => api.get(`movie/${id}/videos`),
 
+  schedule: () => api.get("schedule/"),
+  theaterList: (data) =>
+    api.post("schedule/", {
+      ...data,
+    }),
   moviesList: () =>
     api.get(`schedule/`, {
       params: {
@@ -33,4 +38,5 @@ export const dbzaraApi = {
   //   스케줄data
   scheduleCinema: (cinemaId) => api.get(`/schedule/cinema/${cinemaId}`),
   scheduleMovie: (movieId) => api.get(`/schedule/movie/${movieId}`),
+  scheduleDate: (date) => api.get(`/schedule/movie/${date}`),
 };
