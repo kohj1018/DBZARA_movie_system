@@ -38,7 +38,7 @@ class MovieListAPIView(ListModelMixin, GenericAPIView):
 
     def get_queryset(self):
         option = self.request.query_params.get('option', 'box-office')
-        today = date(2021, 11, 10)
+        today = date.today()
         query_set = super().get_queryset()
 
         if option == 'box-office':

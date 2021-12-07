@@ -75,7 +75,7 @@ class ScheduleAPIView(APIView):
 
     def get(self, request):
         option = self.request.query_params.get('option', 'top')
-        today = date(2021, 11, 10)
+        today = date.today()
         movie_query_set = sorted(Movie.objects.filter(
             closing_date__gte=today
         ), key=lambda movie: movie.reservation_rate, reverse=True)
@@ -83,16 +83,20 @@ class ScheduleAPIView(APIView):
         if option == 'top':
             cinema_query_set = Cinema.objects.all()
             cinema_serializer = CinemaSerializer(cinema_query_set, many=True)
-            movie_query_set = movie_query_set[:10]
-            movie_serializer = ReservationChoiceMovieSerializer(movie_query_set, many=True)
+            movie_serializer = ReservationChoiceMovieSerializer(movie_query_set[:10], many=True)
+            rest_serializer = ReservationChoiceMovieSerializer(movie_query_set[10:], many=True)
+
             return Response({
                 'cinemas': cinema_serializer.data,
-                'movies': movie_serializer.data
+                'movies': movie_serializer.data,
+                'rests': rest_serializer.data
+
             }, status=status.HTTP_200_OK)
 
         elif option == 'sub':
             movie_query_set = movie_query_set[10:]
-            movie_serializer = ReservationChoiceMovieSerializer(movie_query_set, many=True)
+            movie_serializer = ReservationChoiceMovieSerializer(movie_query_set[:10], many=True)
+            rest_serializer = ReservationChoiceMovieSerializer(movie_query_set[10:], many=True)
             return Response(movie_serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
