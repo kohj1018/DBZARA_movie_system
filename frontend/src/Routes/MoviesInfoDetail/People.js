@@ -1,45 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PeopleView from "Components/PeopleView";
 import movieData from "movieData";
+import { CircularProgress } from "@material-ui/core";
+import { dbzaraApi } from "dbzaraApi";
 
 const People = ({ id }) => {
-  const directorList = movieData[id].people.filter(people =>
-    people.job !== "배우"
-  );
-  const actorList = movieData[id].people.filter(people =>
-    people.job === "배우"
-  );
+  const [moviePeople, setMoviePeople] = useState();
+
+  const getMoviePeople = async () => {
+    const { data: { characters: moviePeople } } = await dbzaraApi.moviePeople(id);
+    setMoviePeople(() => moviePeople);
+  }
+
+  useEffect(() => {
+    getMoviePeople();
+  }, [])
+
+  // const directorList = movieData[id].people.filter(people =>
+  //   people.job != "배우"
+  // );
+  // const actorList = movieData[id].people.filter(people =>
+  //   people.job == "배우"
+  // );
   return (
-    <>
-      <Container>
-        <Title>배우·제작진</Title>
-        <ActArea>
-          {directorList.map(people => {
-            return (
-              <PeopleView
-                // name={people.name}
-                // job={people.job}
-                // src={people.src}
-                {...people}
-              />
-            )
-          })}
-        </ActArea>
-        <ActArea>
-          {actorList.map(people => {
-            return (
-              <PeopleView
-                // name={people.name}
-                // job={people.job}
-                // src={people.src}
-                {...people}
-              />
-            )
-          })}
-        </ActArea>
-      </Container>
-    </>
+    moviePeople ? (
+      <>
+        <Container>
+          <Title>배우·제작진</Title>
+          <ActArea>
+            {moviePeople.map(people => {
+              return (
+                <PeopleView
+                  id={people.actor.id}
+                  name={people.actor.name}
+                  job={"배우"}
+                  src={people.actor.image}
+                />
+              )
+            })}
+          </ActArea>
+          {/* <ActArea>
+            {actorList.map(people => {
+              return (
+                <PeopleView
+                  // name={people.name}
+                  // job={people.job}
+                  // src={people.src}
+                  {...people}
+                />
+              )
+            })}
+          </ActArea> */}
+        </Container>
+      </>
+    ) : (
+      <>
+        <LoadingArea>
+          <CircularProgress />
+        </LoadingArea>
+      </>
+    )
   )
 };
 
@@ -68,4 +89,10 @@ const Title = styled.p`
 
 const ActArea = styled.div`
   padding-top: 30px;
+`;
+
+const LoadingArea = styled.div`
+  margin: 400px auto 300px;
+  width: 1200px;
+  text-align: center;
 `;

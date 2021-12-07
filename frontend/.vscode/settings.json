@@ -1,9 +1,0 @@
-{
-    "editor.formatOnSave": true,
-    "json.schemas": [],
-    "launch": {
-        "configurations": [],
-        "compounds": []
-    },
-    "editor.tabSize": 2
-}
