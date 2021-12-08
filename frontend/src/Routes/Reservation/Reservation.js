@@ -15,6 +15,8 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 //  calendar
 import Calendar from "react-calendar";
@@ -76,6 +78,9 @@ const Reservation = () => {
         data: { movies, cinemas },
       } = await dbzaraApi.schedule();
 
+      const { data: restMovie } = await dbzaraApi.moviesList();
+      console.log("나머지영화들", restMovie);
+      setRestMovies((restMovies) => ({ ...restMovies, restMovie }));
       setSchedule((prevState) => ({
         ...prevState,
         movies,
@@ -102,6 +107,7 @@ const Reservation = () => {
   // ! user DATA
   const { userInfo } = useContext(UserContext);
 
+  // ! User Choice
   const [scheduleChoice, setScheduleChoice] = useState({
     movie: null,
     movieDetail: null,
@@ -112,7 +118,6 @@ const Reservation = () => {
     error: null,
   });
 
-  // ! User Choice
   const [moviesChoice, onMoviesChoice] = useState({
     choice: false,
     movie: null,
@@ -124,14 +129,14 @@ const Reservation = () => {
     choice: null,
   });
 
-  // TODO seat data
-  const [movieSeat, onMovieSeat] = useState({
-    choice: false,
-    seat: null,
+  const [nextStepMui, setNextStepMui] = useState({
+    agree1: false,
+    agree2: false,
+    adultNum: 0,
+    teenagerNum: 0,
+    preferentialNum: 0,
+    selected: 0,
   });
-
-  // ! 현재 화면idx
-  const [display, onDisplay] = useState(1);
 
   const onMovieChoice = async (movieId) => {
     const {
@@ -142,8 +147,8 @@ const Reservation = () => {
       cinemas: cinemas,
       date: date,
     }));
-    console.log("junsu-prev", schedule);
-    console.log("junsu-after", movies, cinemas, date);
+    // console.log("junsu-prev", schedule);
+    // console.log("junsu-after", movies, cinemas, date);
 
     setScheduleChoice((prevState) => ({
       ...prevState,
@@ -286,6 +291,32 @@ const Reservation = () => {
     return dateList;
   };
 
+  // ! 현재 화면idx
+  const [display, onDisplay] = useState(1);
+
+  // ! 다음 페이지
+  const [nextStep, setNextStep] = useState(false);
+
+  const next = (display, theater, nextStepMui) => {
+    if (
+      (display === 1 && theater.choice !== null) ||
+      (display === 2 && nextStepMui.agree1 && nextStepMui.agree2) ||
+      (display === 3 &&
+        nextStepMui.adultNum +
+          nextStepMui.teenagerNum +
+          nextStepMui.preferentialNum ===
+          nextStepMui.selected.length)
+    ) {
+      setNextStep(true);
+    } else {
+      setNextStep(false);
+    }
+  };
+
+  useEffect(() => {
+    next(display, theater, nextStepMui);
+  }, [display, theater, nextStepMui]);
+
   return schedule.loading ? (
     <div style={{ minHeight: "82vh" }}>
       <CircularProgress
@@ -369,16 +400,9 @@ const Reservation = () => {
                             restMovies.restMovie.map((movie, idx) => (
                               <MovieLi
                                 key={idx}
-                                onClick={() =>
-                                  onMoviesChoice((movies) => ({
-                                    ...movies,
-                                    choice: true,
-                                    movie,
-                                    movieId: movie.id,
-                                  }))
-                                }
+                                onClick={() => onMovieChoice(movie.id)}
                                 choice={movie.id}
-                                current={moviesChoice.movieId}
+                                current={scheduleChoice.movie}
                               >
                                 {movie.grade ? (
                                   <Age ageAttr={ageColor[movie.grade]}>
@@ -409,9 +433,11 @@ const Reservation = () => {
                       <AccordionDetails>
                         {/* //Todo 회원 나이대 영화순위 정렬 */}
                         <MovieUl>
-                          {userInfo ? null : (
-                            <MovieLi>로그인을 해주세요</MovieLi>
-                          )}
+                          <MovieLi>
+                            {userInfo.token ? null : (
+                              <Link to="/Login">로그인을 해주세요</Link>
+                            )}
+                          </MovieLi>
                         </MovieUl>
                       </AccordionDetails>
                     </Accordion>
@@ -525,7 +551,7 @@ const Reservation = () => {
                             className={"theater"}
                             key={idx}
                             onClick={(value) =>
-                              theaterChoice(value, setTheater)
+                              theaterChoice(value, theater, setTheater)
                             }
                           >
                             <div className={"theaterNumber"} key={idx}>
@@ -546,12 +572,17 @@ const Reservation = () => {
                 )}
             </MainReservation>
           </MoviesReservation>
-          <UserInfoReservation userInfo={userInfo} display={display} />
+          <UserInfoReservation
+            userInfo={userInfo}
+            display={display}
+            agree={nextStepMui}
+            setAgree={setNextStepMui}
+          />
           <SeatReservation
             display={display}
-            onMovieSeat={onMovieSeat}
-            // theaterChoice={theaterChoice}
-            // dayChoice={dayChoice}
+            scheduleChoice={scheduleChoice}
+            theaterChoice={theater.choice}
+            setPeopleSum={setNextStepMui}
           />
           <DiscountReservation display={display} />
         </ReservationInfo>
@@ -579,12 +610,13 @@ const Reservation = () => {
                     <Age ageAttr={ageColor[scheduleChoice.movieDetail.grade]}>
                       {scheduleChoice.movieDetail.grade === 0
                         ? "전체"
-                        : scheduleChoice.movieDetail.watch_grade}
+                        : scheduleChoice.movieDetail.grade}
                     </Age>
                   ) : (
                     <Age ageAttr={ageColor[0]}>전체</Age>
                   )}
-                  {/* {console.log(moviesChoice)} */}
+                  {console.log("선택 상영관", theater.choice)}
+                  {console.log("선택 항목들", scheduleChoice)}
                   <p>{scheduleChoice.movieDetail.name}</p>
                 </div>
                 <div>
@@ -593,44 +625,63 @@ const Reservation = () => {
                     : "극장을 선택하세요."}
                 </div>
                 <div>
-                  {/* //Todo 상영관 선택 후 시작시간 정보 띄우기  '상영관 선택' ? `${scheduleChoice.date} /상영관시작시간, 상영관정보 ` : scheduleChoice.date*/}
                   {scheduleChoice.date
-                    ? scheduleChoice.date
+                    ? theater.choice
+                      ? `${scheduleChoice.date} / ${theater.choice.start_datetime}, ${theater.choice.floor}층 ${theater.choice.name} `
+                      : scheduleChoice.date
                     : "관람일시를 선택하세요."}
                 </div>
-                <div>좌석을 선택하세요.</div>
+                <div>
+                  {nextStepMui.selected
+                    ? nextStepMui.selected
+                    : "좌석을 선택하세요."}
+                </div>
               </div>
             </MoviesInfo>
-            {movieSeat.choice && (
+            {nextStepMui.selected.length > 0 && (
               <>
                 <TicketInfo>
                   <p>
-                    <span>성인(2)</span>
-                    <span>26,000원</span>
+                    <span>{`성인(${nextStepMui.adultNum})`}</span>
+                    <span>{`${nextStepMui.adultNum * 13000}원`}</span>
                   </p>
                   <p>
-                    <span>청소년(2)</span>
-                    <span>26,000원</span>
+                    <span>{`청소년(${nextStepMui.teenagerNum})`}</span>
+                    <span>{`${nextStepMui.teenagerNum * 11000}원`}</span>
                   </p>
                   <p>
-                    <span>우대(2)</span>
-                    <span>26,000원</span>
+                    <span>{`우대(${nextStepMui.preferentialNum})`}</span>
+                    <span>{`${nextStepMui.preferentialNum * 8000}원`}</span>
                   </p>
                   <p>
-                    <span>예매수수료(2)</span>
-                    <span>26,000원</span>
+                    <span>{`예메 수수료 (${
+                      nextStepMui.adultNum +
+                      nextStepMui.teenagerNum +
+                      nextStepMui.preferentialNum
+                    })`}</span>
+                    <span>{`${
+                      (nextStepMui.adultNum +
+                        nextStepMui.teenagerNum +
+                        nextStepMui.preferentialNum) *
+                      500
+                    }원`}</span>
                   </p>
                   <p>
                     <span>할인금액</span>
-                    <span>(-) 1000원</span>
+                    <span>(-) 0원</span>
                   </p>
                 </TicketInfo>
                 <AmountInfo>
                   <div>
+                    {/* //TODO 할인 금액있으면 처리 */}
                     <p>최종결제금액</p>
-                    <p>50,000원</p>
+                    <p>{`${
+                      nextStepMui.adultNum * 13000 +
+                      nextStepMui.teenagerNum * 11000 +
+                      nextStepMui.preferentialNum * 8000
+                    }원`}</p>
                   </div>
-                  <Btn>결제</Btn>
+                  {display === 4 && <Btn>결제</Btn>}
                 </AmountInfo>
               </>
             )}
@@ -650,23 +701,56 @@ const Reservation = () => {
         )}
       </Main>
       <PrevBtn onClick={() => onDisplay(display - 1)} state={display}>
-        <p>⬅</p>
+        <p>
+          <ArrowBackIcon fontSize="large" />
+        </p>
       </PrevBtn>
-      <NextBtn onClick={() => onDisplay(display + 1)} state={display}>
-        <p>➡</p>
+      <NextBtn
+        onClick={() => (nextStep ? onDisplay(display + 1) : null)}
+        state={display}
+        nextStep={nextStep}
+      >
+        {/* {console.log("nextStep", nextStep)}
+        {console.log("display", display)}
+        {console.log("nextStep1", display === 1 && theater.choice !== null)}
+        {console.log(
+          "nextStep2",
+          display === 2 && nextStepMui.agree1 && nextStepMui.agree2
+        )}
+        {console.log(
+          "nextStep3",
+          display === 3 && nextStepMui.peopleSum === nextStepMui.selected
+        )}
+        {console.log("nextStep3-1", nextStepMui.adultNum)}
+        {console.log("nextStep3-2", nextStepMui.teenagerNum)}
+        {console.log("nextStep3-3", nextStepMui.preferentialNum)}
+        {console.log("nextStep3-4", nextStepMui.selected)} */}
+        <p>
+          <ArrowForwardIcon fontSize="large" />
+        </p>
       </NextBtn>
     </Container>
   );
 };
 export default Reservation;
 
-const theaterChoice = (value, setTheater) => {
-  console.log("value", value.target.parentNode); //DOM요소
-  console.log("형제", value.target.parentNode.prevAll); //DOM요소
-  console.log("value className", value.target.parentNode.classList); //class List
-  value.target.parentNode.classList.remove("clicked");
+const theaterChoice = (value, choice, setTheater) => {
+  for (
+    let i = 0;
+    i < value.target.parentNode.parentNode.childNodes.length;
+    i++
+  ) {
+    if (
+      value.target.parentNode.parentNode.childNodes[i].classList[1] ===
+      "clicked"
+    ) {
+      value.target.parentNode.parentNode.childNodes[i].classList.remove(
+        "clicked"
+      );
+    }
+  }
   value.target.parentNode.classList.add("clicked"); //추가
-  setTheater((theater) => ({ ...theater, choice: value }));
+  setTheater((theater) => ({ ...theater, choice }));
 };
 
 const Container = styled.div`
@@ -826,7 +910,7 @@ const MoviesInfo = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-size: 12px;
+    font-size: 14px;
 
     > div:nth-child(1) {
       display: flex;
@@ -848,8 +932,8 @@ const TicketInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: blue;
   font-size: 14px;
+  font-weight: bolder;
   > p {
     width: 100%;
     display: flex;
@@ -865,6 +949,7 @@ const TicketInfo = styled.div`
 const AmountInfo = styled.div`
   padding: 42px 30px 0 0;
   display: flex;
+  font-weight: bolder;
   > div {
     width: 210px;
     height: 80px;
@@ -873,8 +958,7 @@ const AmountInfo = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: blue;
-    font-size: 13px;
+    font-size: 14px;
     > p:last-child {
       padding-top: 14px;
       color: red;
@@ -885,10 +969,9 @@ const AmountInfo = styled.div`
 
 const Btn = styled(Button)`
   && {
-    width: 111px;
-    height: 111px;
+    width: 80px;
+    height: 80px;
     text-align: center;
-    font-size: 25px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     color: rgba(0, 0, 0, 0.125);
   }
@@ -896,14 +979,21 @@ const Btn = styled(Button)`
 
 const PrevBtn = styled(Btn)`
   && {
+    padding-top: 15px;
     display: ${(props) => (props.state === 1 ? "none" : "block")};
-    font-size: 60px;
+    &:hover {
+      background-color: RGB(97, 90, 236);
+    }
   }
 `;
 const NextBtn = styled(PrevBtn)`
   && {
     display: ${(props) => (props.state === 4 ? "none" : "block")};
-    /* background: red; */
+    background-color: ${(prop) => (prop.nextStep ? `RGB(97, 90, 236);` : null)};
+    &:hover {
+      background-color: ${(prop) =>
+        prop.nextStep ? `RGB(97, 90, 236);` : "RGB(236, 97, 90);"};
+    }
   }
 `;
 
@@ -936,7 +1026,7 @@ const CinemaInfo = styled.div`
   font-size: 15px;
 
   .clicked {
-    background-color: red;
+    background-color: #ec615c;
   }
   .theaterNumber {
     height: 30px;

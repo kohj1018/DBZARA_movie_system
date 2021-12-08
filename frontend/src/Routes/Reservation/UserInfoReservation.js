@@ -1,5 +1,185 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+
+const UserInfoReservation = ({ userInfo, display, agree, setAgree }) => {
+  return (
+    <Container display={display} current={2}>
+      <UserInfo>
+        <div class="inp_line ui_name">
+          <div class="ui_tit">예매자</div>
+          <div class="ui_inp">
+            <p class="ui_txt">
+              {userInfo.token &&
+                userInfo.token_docode &&
+                userInfo.token_docode.email.split("@")[0]}
+            </p>
+          </div>
+        </div>
+        <div class="inp_line ui_phone">
+          <div class="ui_tit">휴대폰</div>
+          <div class="ui_inp">
+            <div class="select_line select_area">
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="3"
+                value={userInfo.token && "000"}
+              />
+            </div>
+            <div class="ui_inp_para">
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="4"
+                value={userInfo.token && "0000"}
+              />
+            </div>
+            <div class="ui_inp_para">
+              <input
+                type="text"
+                onkeydown="hpInNumber()"
+                maxlength="4"
+                value={userInfo.token && "0000"}
+              />
+            </div>
+          </div>
+        </div>
+        <div class="inp_line ui_email">
+          <div class="ui_tit">이메일</div>
+          <div class="ui_inp ">
+            <div class="ui_inp_para">
+              <input
+                type="text"
+                id="email1"
+                class="inp_st"
+                value={
+                  userInfo.token &&
+                  userInfo.token_docode &&
+                  userInfo.token_docode.email.split("@")[0]
+                }
+              />
+            </div>
+            <div class="ui_inp_para at_sign">@</div>
+            <div class="ui_inp_para">
+              <input
+                type="text"
+                id="email2"
+                class="inp_st"
+                value={
+                  userInfo.token &&
+                  userInfo.token_docode &&
+                  userInfo.token_docode.email.split("@")[1]
+                }
+              />
+            </div>
+            <div class="select_line select_area">
+              <div class="sel_val eve_sel"></div>
+              <div class="sel_option eve_list" id="selEmail"></div>
+            </div>
+          </div>
+        </div>
+        <ul class="li_bar">
+          <li>
+            - 예매 완료시 예매번호를 전송해 드립니다. 휴대폰 번호를 꼭
+            확인하세요.
+          </li>
+          <li>
+            - 부정확한 정보로 인한 예매사고 발생시 YES24는 책임을 지지 않습니다.
+          </li>
+        </ul>
+      </UserInfo>
+      <AgreeData>
+        <AgreeInfo>
+          <div className="agree1">
+            <div>
+              <table>
+                <tr>
+                  <th>수집목적</th>
+                  <th>DBZARA</th>
+                </tr>
+                <tr>
+                  <th>목적</th>
+                  <th>상영시간 변경 등 긴급한 경우 연락을 위한 목적</th>
+                </tr>
+                <tr>
+                  <th>항목</th>
+                  <th>이름, 휴대폰번호, 이메일 주소</th>
+                </tr>
+                <tr>
+                  <th>보유 이용기간</th>
+                  <th>극장정산 및 회계처리를 위해 6개월 보관</th>
+                </tr>
+              </table>
+              <div>
+                <input
+                  type="checkBox"
+                  onClick={() =>
+                    setAgree((data) => ({
+                      ...data,
+                      agree1: agree.agree1 ? false : true,
+                    }))
+                  }
+                />
+                <p>[필수] 개인정보 수집 · 이용 동의</p>
+              </div>
+            </div>
+          </div>
+          <div className="agree2">
+            <div>
+              <table>
+                <tr>
+                  <th>수집목적</th>
+                  <th>DBZARA</th>
+                </tr>
+                <tr>
+                  <th>목적</th>
+                  <th>상영시간 변경 등 긴급한 경우 연락을 위한 목적</th>
+                </tr>
+                <tr>
+                  <th>항목</th>
+                  <th>이름, 휴대폰번호, 이메일 주소</th>
+                </tr>
+                <tr>
+                  <th>보유 이용기간</th>
+                  <th>극장정산 및 회계처리를 위해 6개월 보관</th>
+                </tr>
+              </table>
+              <div>
+                <input
+                  type="checkBox"
+                  onClick={() =>
+                    setAgree((data) => ({
+                      ...data,
+                      agree2: agree.agree2 ? false : true,
+                    }))
+                  }
+                />
+                {console.log("agree", agree.agree1, agree.agree2)}
+                <p>[필수] 개인정보 수집 · 이용 동의</p>
+              </div>
+            </div>
+          </div>
+        </AgreeInfo>
+        {/* <AllAgree>
+          <p>
+            정보제공에 동의하지 않을 권리가 있으나, 동의하지 않을 경우 예매를
+            진행할 수 없습니다.
+          </p>
+          <input
+            type="checkbox"
+            onClick={() =>
+              setAgree((data) => ({ ...data, agree1: true, agree2: true }))
+            }
+          />
+          {console.log(agree)}
+          <p>전체동의</p>
+        </AllAgree> */}
+      </AgreeData>
+    </Container>
+  );
+};
+
+export default UserInfoReservation;
 
 const Container = styled.div`
   display: ${(props) => (props.display === props.current ? "block" : "none")};
@@ -147,181 +327,3 @@ const AllAgree = styled.div`
     font-size: 24px;
   }
 `;
-
-const UserInfoReservation = ({ userInfo, display }) => {
-  const [agree, setAgree] = useState({
-    agree1: false,
-    agree2: false,
-  });
-
-  return (
-    <Container display={display} current={2}>
-      <UserInfo>
-        <div class="inp_line ui_name">
-          <div class="ui_tit">예매자</div>
-          <div class="ui_inp">
-            <p class="ui_txt">
-              {userInfo.token &&
-                userInfo.token_docode &&
-                userInfo.token_docode.email}
-            </p>
-          </div>
-        </div>
-        <div class="inp_line ui_phone">
-          <div class="ui_tit">휴대폰</div>
-          <div class="ui_inp">
-            <div class="select_line select_area">
-              <input
-                type="text"
-                onkeydown="hpInNumber()"
-                maxlength="3"
-                value={userInfo.token && "000"}
-              />
-            </div>
-            <div class="ui_inp_para">
-              <input
-                type="text"
-                onkeydown="hpInNumber()"
-                maxlength="4"
-                value={userInfo.token && "0000"}
-              />
-            </div>
-            <div class="ui_inp_para">
-              <input
-                type="text"
-                onkeydown="hpInNumber()"
-                maxlength="4"
-                value={userInfo.token && "0000"}
-              />
-            </div>
-          </div>
-        </div>
-        <div class="inp_line ui_email">
-          <div class="ui_tit">이메일</div>
-          <div class="ui_inp ">
-            <div class="ui_inp_para">
-              <input
-                type="text"
-                id="email1"
-                class="inp_st"
-                value={
-                  userInfo.token &&
-                  userInfo.token_docode &&
-                  userInfo.token_docode.email.split("@")[0]
-                }
-              />
-            </div>
-            <div class="ui_inp_para at_sign">@</div>
-            <div class="ui_inp_para">
-              <input
-                type="text"
-                id="email2"
-                class="inp_st"
-                value={
-                  userInfo.token &&
-                  userInfo.token_docode &&
-                  userInfo.token_docode.email.split("@")[1]
-                }
-              />
-            </div>
-            <div class="select_line select_area">
-              <div class="sel_val eve_sel"></div>
-              <div class="sel_option eve_list" id="selEmail"></div>
-            </div>
-          </div>
-        </div>
-        <ul class="li_bar">
-          <li>
-            - 예매 완료시 예매번호를 전송해 드립니다. 휴대폰 번호를 꼭
-            확인하세요.
-          </li>
-          <li>
-            - 부정확한 정보로 인한 예매사고 발생시 YES24는 책임을 지지 않습니다.
-          </li>
-        </ul>
-      </UserInfo>
-      <AgreeData>
-        <AgreeInfo>
-          <div className="agree1">
-            <div>
-              <table>
-                <tr>
-                  <th>수집목적</th>
-                  <th>DBZARA</th>
-                </tr>
-                <tr>
-                  <th>목적</th>
-                  <th>상영시간 변경 등 긴급한 경우 연락을 위한 목적</th>
-                </tr>
-                <tr>
-                  <th>항목</th>
-                  <th>이름, 휴대폰번호, 이메일 주소</th>
-                </tr>
-                <tr>
-                  <th>보유 이용기간</th>
-                  <th>극장정산 및 회계처리를 위해 6개월 보관</th>
-                </tr>
-              </table>
-              <div>
-                <input
-                  type="checkBox"
-                  onClick={() =>
-                    setAgree((data) => ({ ...data, agree1: true }))
-                  }
-                />
-                <p>[필수] 개인정보 수집 · 이용 동의</p>
-              </div>
-            </div>
-          </div>
-          <div className="agree2">
-            <div>
-              <table>
-                <tr>
-                  <th>수집목적</th>
-                  <th>DBZARA</th>
-                </tr>
-                <tr>
-                  <th>목적</th>
-                  <th>상영시간 변경 등 긴급한 경우 연락을 위한 목적</th>
-                </tr>
-                <tr>
-                  <th>항목</th>
-                  <th>이름, 휴대폰번호, 이메일 주소</th>
-                </tr>
-                <tr>
-                  <th>보유 이용기간</th>
-                  <th>극장정산 및 회계처리를 위해 6개월 보관</th>
-                </tr>
-              </table>
-              <div>
-                <input
-                  type="checkBox"
-                  onClick={() =>
-                    setAgree((data) => ({ ...data, agree2: true }))
-                  }
-                />
-                <p>[필수] 개인정보 수집 · 이용 동의</p>
-              </div>
-            </div>
-          </div>
-        </AgreeInfo>
-        {/* <AllAgree>
-          <p>
-            정보제공에 동의하지 않을 권리가 있으나, 동의하지 않을 경우 예매를
-            진행할 수 없습니다.
-          </p>
-          <input
-            type="checkbox"
-            onClick={() =>
-              setAgree((data) => ({ ...data, agree1: true, agree2: true }))
-            }
-          />
-          {console.log(agree)}
-          <p>전체동의</p>
-        </AllAgree> */}
-      </AgreeData>
-    </Container>
-  );
-};
-
-export default UserInfoReservation;
