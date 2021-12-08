@@ -730,7 +730,7 @@ const Reservation = () => {
         </p>
       </NextBtn>
     </Container>
-  ));
+  );
 };
 export default Reservation;
 

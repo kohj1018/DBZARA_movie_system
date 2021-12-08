@@ -4,7 +4,7 @@ import {UserContext} from "./context";
 import {useCookies} from "react-cookie";
 
 
-const api = axios.create({ baseURL: "http://127.0.0.1:8000/api/v1/" });
+const api = axios.create({ baseURL: "http://dbzara.kro.kr/api/v1/" });
 
 
 export const socialAPI = {
@@ -22,7 +22,8 @@ export const socialAPI = {
   preferDirector: () => api.get('accounts/directors/'),
   refreshToken: () => api.post('/token/refresh/', {
       token: api.defaults.headers.common['Authorization']
-  })
+  }),
+  createComment: (data) => api.post('/review/', data)
 };
 
 export const refreshToken = () => {
@@ -30,8 +31,7 @@ export const refreshToken = () => {
     api.defaults.headers.common['Authorization'] = `JWT ${token}`;
 }
 
-export const useToken = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['token']);
+export const setToken = (cookies) => {
     if (cookies.token) {
         api.defaults.headers.common['Authorization'] = `JWT ${cookies.token}`;
     }

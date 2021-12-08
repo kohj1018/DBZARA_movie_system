@@ -155,7 +155,6 @@ const SLink = styled(Link)`
 `;
 
 const MyPage = () => {
-  const token = useToken();
   const [tabClick, setTabClick] = useState(0);
 
   const [profile, setProfile] = useState({

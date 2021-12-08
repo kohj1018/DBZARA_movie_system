@@ -111,6 +111,7 @@ const Default = ({ id }) => {
           <CommentArea>
             <RateEditBox
               rates={movieData[0].rates}
+              movie={id}
             />
             <RatesArea>
               <RatesTypeMenuTxt>

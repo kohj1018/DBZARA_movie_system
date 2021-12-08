@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UserContext } from "context";
 import { Link } from "react-router-dom";
 import {useCookies} from "react-cookie";
+import {setToken} from "../junsu-api";
 
 const UserInfo = styled.div`
   display: grid;
@@ -53,12 +54,15 @@ const Context = styled.span`
 `;
 
 const SideBar = ({ setSideBar }) => {
-    const [cookies, setCookies] = useCookies(['token']);
+    const [cookies, setCookies, removeCookie] = useCookies(['token']);
     const { userInfo, handleUserInfo } = useContext(UserContext);
 
     useEffect(() => {
-        handleUserInfo(cookies.token);
-    }, [cookies.token])
+        if(cookies.token) {
+            handleUserInfo(cookies.token);
+            setToken(cookies);
+        }
+    }, [cookies])
 
   const NavItemContext = [
     "로그아웃",
@@ -82,11 +86,20 @@ const SideBar = ({ setSideBar }) => {
       </UserInfo>
       <NavList>
         {NavItemContext.map((data, idx) => {
-            return (
-                <NavItem>
-                    <Context>{data}</Context>
-                </NavItem>
-            );
+            if(idx === 0) {
+                return(
+                    <NavItem>
+                        <Context onClick={() => removeCookie('token')}>{data}</Context>
+                    </NavItem>
+                    )
+            } else {
+                return (
+                    <NavItem>
+                        <Context>{data}</Context>
+                    </NavItem>
+                );
+            }
+
         })}
       </NavList>
     </>
