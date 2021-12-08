@@ -51,8 +51,8 @@ const MoviesNotOpen = () => {
                   src={movie.poster}
                   age={movie.grade}
                   title={movie.name}
-                  ticketSales={0}
-                  rates={0}
+                  ticketSales={movie.reservation_rate}
+                  rates={movie.review_rate}
                 // {...movie}
                 />
               );

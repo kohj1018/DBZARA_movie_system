@@ -92,7 +92,7 @@ const MovieView = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) =
               {title}
             </MvTit>
             <MvTxt>
-              <TicketSales>예매율 : {ticketSales}</TicketSales>
+              <TicketSales>예매율 : {ticketSales}%</TicketSales>
               <Rates>평점 : {rates}</Rates>
             </MvTxt>
           </MvInfo>

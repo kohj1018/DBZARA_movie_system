@@ -66,9 +66,8 @@ const MoviesInfo = ({ match }) => {
                 <Title>{movie.name}</Title>
                 <EngTit>{movie.name}</EngTit>
                 <TxtBundle>
-                  {/* <Txt>예매율 {movieData[match.params.id].rank}위 {movieData[match.params.id].ticketSales}</Txt> */}
-                  <Txt>예매율 0위 68.8%</Txt>
-                  <Txt>평점 7.1</Txt>
+                  <Txt>예매율 0위 {movie.reservation_rate}%</Txt>
+                  <Txt>평점 {movie.review_rate}</Txt>
                 </TxtBundle>
                 <TxtBundle>
                   <Txt>{movie.opening_date} 개봉</Txt>
@@ -77,9 +76,11 @@ const MoviesInfo = ({ match }) => {
                   {/* <Txt>{movieData[match.params.id].country}</Txt> */}
                 </TxtBundle>
                 <TxtBundle>
-                  {movie.genres.map(genre => {
-                    <Txt>{genre.name}</Txt>
-                  })}
+                  {movie.genres[0] ? movie.genres.map(genre => {
+                    return (
+                      <Txt>{genre.name}</Txt>
+                    )
+                  }) : ""}
                   <BtnArea>
                     <ReserveBtn><SLink to={"/Reservation"}>예매</SLink></ReserveBtn>
                     <ShareBtn></ShareBtn>
@@ -146,7 +147,7 @@ const MoviesInfo = ({ match }) => {
                 </GraphDayAdnCum>
                 <GraphDaySales>
                   <GrTitle>누적 매출액</GrTitle>
-                  <GrsTxt>(단위:천원)</GrsTxt>
+                  <GrsTxt>(단위:원)</GrsTxt>
                   {/* <GraphChart></GraphChart> */}
                   <GraphSalesView>
                     <GrTxt>{movieInfo.sales}</GrTxt>
