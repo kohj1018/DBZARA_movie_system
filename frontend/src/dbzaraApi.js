@@ -6,10 +6,24 @@ const api = axios.create({
 
 export const dbzaraApi = {
   // 영화data
-  boxOffice: () =>
+  boxOffice1: () =>
     api.get("movie/", {
       params: {
         option: "box-office",
+        page: 1
+      },
+    }),
+  boxOffice2: () =>
+    api.get("movie/", {
+      params: {
+        option: "box-office",
+        page: 2
+      },
+    }),
+  nowPlaying: () =>
+    api.get("movie/", {
+      params: {
+        option: "now-playing",
       },
     }),
   notOpen: () =>
@@ -26,7 +40,13 @@ export const dbzaraApi = {
 
   // review CRUD
   movieReview: (id) => api.get(`movie/${id}/reviews`),
-  reviewPost: () => api.post("review/"),
+  reviewPost: (score, comment) => 
+    api.post("review/", {
+      score: score,
+      comment: comment,
+      sympathy: 0,
+      not_sympathy: 0
+    }),
   reviewDelete: (id) => api.delete(`review/${id}`),
 
   //  배우data

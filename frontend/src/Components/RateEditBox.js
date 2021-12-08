@@ -5,15 +5,17 @@ const RateEditBox = ({ rates }) => {
   // 사용자가 남긴 코멘트
   let userComment = "";
 
+  // await dbzaraApi.reviewPost(score,commemt);
+
   const onSubmit = () => {
     // if ()  이 부분 if문으로 로그인 됐을 때 안됐을 때 구분해야함.
     alert('등록하기 위해서는 로그인이 필요합니다.')
     // else
-    
+
   }
 
   // 사용자가 매긴 평점
-  const [userRate, setUserRate] = useState(0);
+  const [userRate, setUserRate] = useState(-1);
 
   // 평점에 따라 별 어떻게 채워줘야하는지 계산하는 부분
   let starWidth = [0, 0, 0, 0, 0];
