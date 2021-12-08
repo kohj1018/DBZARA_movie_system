@@ -5,8 +5,6 @@ import movieData from "movieData";
 import PeopleView from "Components/PeopleView";
 import RateEditBox from "Components/RateEditBox";
 import RateViewBox from "Components/RateViewBox";
-import People from "./People";
-import { Translate } from "@material-ui/icons";
 import { dbzaraApi } from "dbzaraApi";
 import { CircularProgress } from "@material-ui/core";
 

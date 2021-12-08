@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import movieData from "movieData";
 import Default from "./MoviesInfoDetail/Default";
 import People from "./MoviesInfoDetail/People";
 import Videos from "./MoviesInfoDetail/Videos";
@@ -8,6 +7,7 @@ import Photos from "./MoviesInfoDetail/Photos";
 import Review from "./MoviesInfoDetail/Review";
 import { dbzaraApi } from "dbzaraApi";
 import { CircularProgress } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // TODO
 // 0. Api 사용
@@ -81,7 +81,7 @@ const MoviesInfo = ({ match }) => {
                     <Txt>{genre.name}</Txt>
                   })}
                   <BtnArea>
-                    <ReserveBtn>예매</ReserveBtn>
+                    <ReserveBtn><SLink to={"/Reservation"}>예매</SLink></ReserveBtn>
                     <ShareBtn></ShareBtn>
                   </BtnArea>
                 </TxtBundle>
@@ -130,13 +130,13 @@ const MoviesInfo = ({ match }) => {
                     </GraphSex>
                   </GraphGrid>
                 </GraphGender>
-                <GraphDayAdn>
+                {/* <GraphDayAdn>
                   <GrTitle>일일 관객수</GrTitle>
                   <GraphDayAdnView>
-                    {/* <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt> */}
+                    <GrTxt>{movieData[match.params.id].dayAdn}명</GrTxt>
                     <GrTxt02>(11월26일 기준)</GrTxt02>
                   </GraphDayAdnView>
-                </GraphDayAdn>
+                </GraphDayAdn> */}
                 <GraphDayAdnCum>
                   <GrTitle>누적 관객수</GrTitle>
                   {/* <GraphChart></GraphChart> */}
@@ -418,6 +418,7 @@ const GraphCont = styled.div`
 `;
 
 const GraphGender = styled.div`
+  margin-left: 70px;
   width: 265px;
   position: relative;
   display: inline-block;
@@ -613,6 +614,7 @@ const GrTxt02 = styled.p`
 `;
 
 const GraphDayAdnCum = styled.div`
+  margin-left: 50px;
   position: relative;
   display: inline-block;
   width: calc((100% - 265px) / 3);
@@ -645,6 +647,7 @@ const GraphSalesView = styled.div`
 // 
 
 const GraphDaySales = styled.div`
+  margin-left: 30px;
   position: relative;
   display: inline-block;
   width: calc((100% - 265px) / 3);
@@ -707,3 +710,5 @@ const LoadingArea = styled.div`
   width: 1200px;
   text-align: center;
 `;
+
+const SLink = styled(Link)``;
