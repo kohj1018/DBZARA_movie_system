@@ -17,7 +17,8 @@ from movie.models import Movie, Review, MovieInfo, Actor, Director, MovieRank
 from movie.serializers import (
     MovieRankSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
     MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer, MovieInfoSerializer,
-    ActorDetailSerializer, DirectorDetailSerializer
+    ActorDetailSerializer, DirectorDetailSerializer, ReservationRankSerializer, ReviewRankSerializer,
+    NotOpenSerializer
 )
 
 
@@ -41,12 +42,15 @@ class MovieListAPIView(ListModelMixin, GenericAPIView):
         query_set = super().get_queryset()
 
         if option == 'box-office':
+            self.serializer_class = ReservationRankSerializer
             return query_set.exclude(reservation_rate_rank=0).order_by('reservation_rate_rank')
 
         elif option == 'review':
+            self.serializer_class = ReviewRankSerializer
             return query_set.exclude(review_rate_rank=0).order_by('review_rate_rank')
 
         elif option == 'not-open':
+            self.serializer_class = NotOpenSerializer
             return query_set.filter(reservation_rate_rank=0, review_rate_rank=0)
 
 

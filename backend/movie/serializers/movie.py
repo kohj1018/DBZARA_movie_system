@@ -24,7 +24,8 @@ class MovieDetailSerializer(MovieSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'name', 'poster', 'backdrop', 'watch_grade', 'running_time', 'summary', 'opening_date', 'genres', 'distributors']
+        fields = ['id', 'name', 'poster', 'backdrop', 'watch_grade', 'running_time',
+                  'summary', 'opening_date', 'genres', 'distributors', 'reservation_rate', 'review_rate']
 
 
 class MovieReservationSerializer(MovieSerializer):

@@ -74,13 +74,11 @@ class Movie(models.Model):
 
     @property
     def reservation_rate(self):
-        now_date = date.today()
-        prev_date = date.today() - timedelta(days=14)
-        return round(Reservation.objects.filter(
-            schedule__in=Schedule.objects.filter(movie=self, datetime__range=[prev_date, now_date])
-        ).count() / Reservation.objects.filter(
-            schedule__in=Schedule.objects.filter(datetime__range=[prev_date, now_date])
-        ).count(), 3) * 100
+        return round(self.movierank_set.first().reservation_rate, 1)
+
+    @property
+    def review_rate(self):
+        return round(self.movierank_set.first().review_rate, 1)
 
     @property
     def short_directors(self):
@@ -297,6 +295,11 @@ class MovieRank(models.Model):
     review_rate = models.FloatField()
     review_rate_rank = models.IntegerField()
     reservation_rate_rank = models.IntegerField()
+
+    @property
+    def opening_count(self):
+        now_date = date.today()
+        return (self.movie.opening_date - now_date) / timedelta(days=1)
 
     @classmethod
     def update(cls):
