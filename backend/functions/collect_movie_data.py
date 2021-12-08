@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from random import randint
 import requests
 import os
 
@@ -112,6 +113,33 @@ class TMDBAPI:
     def __init__(self):
         self.SECRET_KEY = secret_settings.TMDB_SECRET_KEY
         self.language = 'ko'
+
+    def get_not_open_movies(self):
+        path = '/movie/upcoming'
+        data = requests.get(TMDBAPI.BASE_URL + path, params={
+            'api_key': self.SECRET_KEY,
+            'language': self.language,
+            'region': 'kr'
+        }).json()
+        movies = data['results']
+        for movie in movies:
+            movie_id = int(movie['id'])
+            movie, created = Movie.objects.get_or_create(
+                tmdb_id=movie['id'],
+                defaults={
+                    'kobis_id': movie['id'],
+                    'name': movie['title'],
+                    'running_time': 0,
+                    'summary': movie['overview'],
+                    'opening_date': movie['release_date'],
+                    'closing_date': movie['release_date']
+                }
+            )
+            if created:
+                self.get_movie_detail(movie_id, movie)
+                self.get_movie_credits(movie_id, movie, {}, {})
+                # movie.closing_date = movie.opening_date + timedelta(days=randint(14, 21))
+                movie.save()
 
     def get_movie_id_by_name(self, name):
         path = '/search/movie'
