@@ -23,6 +23,14 @@ export default [
     path: "/Movies",
     component: Movies,
   },
+  {
+    path: "/Movies/Now-Playing",
+    component: Movies,
+  },
+  {
+    path: "/Movies/Upcoming-Release",
+    component: Movies,
+  },
   // 이거 왜 MovieView.js의 Link to랑 같이 "/MoviesInfo/Index?mId=:id"로 바꾸면 안되지?
   {
     path: "/MoviesInfo/Index/:id",
