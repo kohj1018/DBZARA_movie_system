@@ -29,29 +29,23 @@ const ActArea = styled.div`
 `;
 
 
-const PreferDirector = ({ id }) => {
-  const LatestTitle = movieData[0].title
-  const directorList = movieData[0].people.filter(people =>
-    people.job !== "배우"
-  );
+const PreferDirector = ({ directorList }) => {
+  console.log(directorList);
   return (
     <>
       <Container>
-        <Title>4점 이상의 평점을 부여한 영화목록
-          <li style={{ fontSize: "17px", color: "#2b2b2b", padding: "10px 0 0 10px" }}> {LatestTitle} </li>
-        </Title>
-        <p style={{ color: "2b2b2b", fontSize: "15px", paddingTop: "40px" }}>{LatestTitle} 감독 정보</p>
         <ActArea>
-          {directorList.map(people => {
+
+          {directorList ? (directorList.map(people => {
             return (
               <PeopleView
-                // name={people.name}
-                // job={people.job}
-                // src={people.src}
-                {...people}
+                  id={people.id}
+                  key={people.id}
+                  name={people.name}
+                  src={people.image}
               />
             )
-          })}
+          })) : <div>선호하는 배우가 없습니다.</div>}
         </ActArea>
       </Container>
     </>

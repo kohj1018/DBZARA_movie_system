@@ -682,7 +682,7 @@ const Reservation = () => {
       </NextBtn>
       {/* <Test1 row={10} col={30} /> */}
     </Container>
-  );
+  ));
 };
 export default Reservation;
 

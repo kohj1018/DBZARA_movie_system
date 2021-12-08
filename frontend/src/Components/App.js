@@ -1,6 +1,5 @@
 import React from "react";
 import GlobalStyles from "Components/GlobalStyles";
-import UserInfo from "context";
 import Footer from "Components/Footer";
 import {
   HashRouter as Router,
@@ -17,7 +16,6 @@ function App() {
     // UserContext 정보가 사용되는 곳을 감쌈
     <>
       <GlobalStyles />
-      <UserInfo>
         <Router>
           <Header />
           <Switch>
@@ -27,7 +25,6 @@ function App() {
             <Redirect from="*" to="/" />
           </Switch>
         </Router>
-      </UserInfo>
       <Footer />
     </>
   );

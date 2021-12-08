@@ -1,10 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./Components/App";
+import {CookiesProvider} from "react-cookie";
+import UserInfo from "./context";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <CookiesProvider>
+          <UserInfo>
+            <App />
+          </UserInfo>
+      </CookiesProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -53,8 +53,8 @@ const MovieVideo = ({ id }) => {
     }
   }
 
-  useEffect(() => {
-    DetailMoives();
+  useEffect(async () => {
+    await DetailMoives();
   }, []);
 
   return moviesData.loading

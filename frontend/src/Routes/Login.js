@@ -11,40 +11,35 @@ import {
 import { UserContext } from "context";
 import GoogleLogin from "react-google-login";
 import KakaoLogin from "react-kakao-login";
-import { socialAPI } from "junsu-api";
-import setCookie from "cookie";
+import { socialAPI, useToken } from "junsu-api";
+import {useCookies} from "react-cookie";
 
 // !로그인 연동
 const Login = () => {
   const { userInfo, handleUserInfo } = useContext(UserContext);
-  console.log(userInfo);
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
   const responseGoogle = async (response) => {
     const { profileObj } = response;
     const dbzaraToken = await socialAPI.googleLogin(profileObj);
-    console.log("구글", dbzaraToken);
-    console.log("구글token", dbzaraToken.data.token);
     handleUserInfo(dbzaraToken.data.token);
-    // setCookie("dbzaraToken", dbzaraToken.data.token, {
-    //   path: "/",
-    //   secure: true,
-    //   sameSite: "none",
-    // });
-    // setCookie("googleToken", google.data.token);
+
+    setCookie("token", dbzaraToken.data.token, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
   };
   const onSuccess = async (response) => {
     const { profile } = response;
     // const data = await socialAPI.kakaoLogin(profile);
     const dbzaraToken = await socialAPI.kakaoLogin(profile);
-    console.log("카카오", dbzaraToken);
-    console.log("카카오token", dbzaraToken.data.token);
     handleUserInfo(dbzaraToken.data.token);
-    // setCookie("dbzaraToken", dbzaraToken.data.token, {
-    //   path: "/",
-    //   secure: true,
-    //   sameSite: "none",
-    // });
-    // setCookie("kakaoToken", kakao.data.token);
+    setCookie("token", dbzaraToken.data.token, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
   };
   const onFailure = (response) => {
     console.log(response);
@@ -58,7 +53,6 @@ const Login = () => {
 
   return (
     <Container>
-      {console.log(userInfo)}
       <LoginView>
         <GoogleLogin
           clientId={process.env.REACT_APP_GOOGLE_LOGIN_ID}
