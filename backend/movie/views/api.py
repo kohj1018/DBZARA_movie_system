@@ -97,22 +97,14 @@ class MovieReviewAPIView(ListModelMixin, GenericAPIView):
     permission_classes = [AllowAny]
     queryset = Movie.objects.all()
     serializer_class = ReviewSerializer
+    pagination_class = BasicPagination
 
-    def get(self, request, pk, *args, **kwargs):
-        queryset = Movie.objects.all()
-        queryset = queryset.get(pk=pk).review_set.all()
-        user_review = queryset.filter(profile=self.request.user.profile)
-        if user_review.count() > 0:
-            queryset = queryset.exclude(profile=self.request.user.profile)[:30]
-            return Response({
-                'review': ReviewSerializer(user_review.first()).data,
-                'reviews': ReviewSerializer(queryset, many=True).data
-            })
-        else:
-            queryset = queryset[:30]
-            return Response({
-                'reviews': ReviewSerializer(queryset, many=True).data
-            })
+    def get(self, request, *args, **kwargs):
+        return self.list(self, request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.get(pk=self.kwargs.get('pk')).review_set.all()
 
 
 class ReviewBaseAPIView(GenericAPIView):
