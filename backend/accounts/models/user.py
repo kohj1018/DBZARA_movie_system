@@ -72,13 +72,13 @@ class Profile(models.Model):
         self.favorite_genres.remove(genre)
 
     def add_favorite_actor(self, actor):
-        self.favorite_actors.add(actor)
+        self.favorite_actors.add(*actor)
 
     def delete_favorite_actor(self, actor):
         self.favorite_actors.remove(actor)
 
     def add_favorite_director(self, director):
-        self.favorite_directors.add(director)
+        self.favorite_directors.add(*director)
 
     def delete_favorite_director(self, director):
         self.favorite_directors.remove(director)
@@ -122,8 +122,8 @@ class Profile(models.Model):
         return self.user.username[:3] + ("*" * len(self.user.username[3:]))
 
     @property
-    def mileage_sum(self):
-        return Mileage.objects.filter(profile=self)
+    def mileage(self):
+        return sum(self.mileage_set.all().values_list('point', flat=True))
 
     def __str__(self):
         return self.user.full_name

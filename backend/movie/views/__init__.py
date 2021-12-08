@@ -12,6 +12,7 @@ from .detail import (
     ActorDetailView, DirectorDetailView, MovieDetailView
 )
 
+
 movie_list_api_view = MovieListAPIView.as_view()
 movie_detail_api_view = MovieAPIDetailView.as_view()
 movie_info_api_view = MovieInfoAPIView.as_view()

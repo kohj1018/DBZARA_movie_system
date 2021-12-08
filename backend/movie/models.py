@@ -202,12 +202,15 @@ class Video(models.Model):
 
 
 class Review(models.Model):
+    class Meta:
+        unique_together = ['movie', 'profile']
+
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     profile = models.ForeignKey('accounts.Profile', on_delete=models.DO_NOTHING)
     score = models.IntegerField(validators=[validate_score])
     comment = models.TextField()
-    sympathy = models.IntegerField()
-    not_sympathy = models.IntegerField()
+    sympathy = models.IntegerField(default=0)
+    not_sympathy = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
     @classmethod
@@ -285,3 +288,11 @@ class MovieInfo(models.Model):
         self.counts = counts
         self.sales = sales
         self.save()
+
+
+class MovieRank(models.Model):
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    reservation_rate = models.FloatField()
+    review_rate = models.FloatField()
+    box_office_rank = models.IntegerField()
+    not_open_rank = models.IntegerField()

@@ -35,10 +35,13 @@ class StoreListAPIView(APIView):
     def get_store(self):
         ticket = self.queryset.filter(category__middle_category_id=1)
         ticket_serializer = self.serializer_class(ticket, many=True)
+
         snack = self.queryset.filter(category_id__in=list(range(33, 36)))
         snack_serializer = self.serializer_class(snack, many=True)
+
         beverage = self.queryset.filter(category_id__in=list(range(36, 42)))
         beverage_serializer = self.serializer_class(beverage, many=True)
+        
         combo = self.queryset.filter(category_id=42)
         combo_serializer = self.serializer_class(combo, many=True)
         return {
