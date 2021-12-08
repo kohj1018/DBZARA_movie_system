@@ -12,6 +12,8 @@ import MyPageMyRating from "Routes/MyPageMyRating";
 import GuideInfo from "Routes/GuideInfo"
 // import join from "Routes/Join";
 import Filmography from "Routes/Filmography";
+import MoviesRating from "./MoviesRating";
+import MoviesNotOpen from "./MoviesNotOpen";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -24,12 +26,12 @@ export default [
     component: Movies,
   },
   {
-    path: "/Movies/Now-Playing",
-    component: Movies,
+    path: "/Movies/Review-Rating",
+    component: MoviesRating,
   },
   {
     path: "/Movies/Upcoming-Release",
-    component: Movies,
+    component: MoviesNotOpen,
   },
   // 이거 왜 MovieView.js의 Link to랑 같이 "/MoviesInfo/Index?mId=:id"로 바꾸면 안되지?
   {

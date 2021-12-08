@@ -6,30 +6,25 @@ const api = axios.create({
 
 export const dbzaraApi = {
   // 영화data
-  boxOffice1: () =>
+  boxOffice: (pageNum) =>
     api.get("movie/", {
       params: {
         option: "box-office",
-        page: 1
+        page: pageNum
       },
     }),
-  boxOffice2: () =>
+  reviewRating: (pageNum) =>
     api.get("movie/", {
       params: {
-        option: "box-office",
-        page: 2
+        option: "review",
+        page: pageNum
       },
     }),
-  nowPlaying: () =>
-    api.get("movie/", {
-      params: {
-        option: "now-playing",
-      },
-    }),
-  notOpen: () =>
+  notOpen: (pageNum) =>
     api.get("movie/", {
       params: {
         option: "not-open",
+        page: pageNum
       },
     }),
   movie: (id) => api.get(`movie/${id}`),
