@@ -10,7 +10,7 @@ from movie.serializers import (
 )
 from accounts.models import Profile
 from accounts.serializers import (
-    ProfileMovieSerializer, ProfileGenreSerializer, ProfileActorSerializer, ProfileDirectorSerializer, ProfileDistributorsSerializer
+    ProfileSerializer, ProfileMovieSerializer, ProfileGenreSerializer, ProfileActorSerializer, ProfileDirectorSerializer, ProfileDistributorsSerializer
 )
 
 
@@ -23,6 +23,10 @@ class ProfileBaseAPIView(RetrieveModelMixin, GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class ProfileAPIView(ProfileBaseAPIView):
+    serializer_class = ProfileSerializer
 
 
 class ProfileMovieAPIView(ProfileBaseAPIView):

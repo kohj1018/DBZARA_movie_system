@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
 import Checking from "./MyPageInfoDetail/Checking"
@@ -9,6 +9,8 @@ import { PortraitSharp } from "@material-ui/icons";
 import { Link, Switch, Route } from "react-router-dom";
 import MyPageMyRating from "./MyPageMyRating";
 import MyPageMyMovie from "./MyPageMyMovie";
+import {UserContext} from "context";
+import {socialAPI, useToken} from "../junsu-api";
 
 const Container = styled.div`
   position: relative;
@@ -152,11 +154,65 @@ const SLink = styled(Link)`
   }
 `;
 
-
-
-
 const MyPage = () => {
   const [tabClick, setTabClick] = useState(0);
+
+  const [profile, setProfile] = useState({
+    profile: null,
+    loading: true,
+    error: null
+  });
+
+  const [actors, setActors] = useState({
+    actors: null,
+    loading: true,
+    error: null
+  });
+
+  const [directors, setDirectors] = useState({
+    directors: null,
+    loading: true,
+    error: null
+  });
+
+  useEffect(async () => {
+    try {
+
+      const { data: { user, grade, mileage } } = await socialAPI.profile();
+      setProfile((prevState) => ({
+        ...prevState,
+        profile: {
+          ...user,
+          ...grade,
+          mileage: mileage
+        }
+      }));
+
+      const { data: { actors } } = await socialAPI.preferActor();
+      const { data: { directors } } = await socialAPI.preferDirector();
+      setActors((prevState) => ({
+        ...prevState,
+        actors: actors
+      }))
+      setDirectors((prevState) => ({
+        ...prevState,
+        directors: directors
+      }))
+    }
+    catch (e) {
+      setProfile((prevState) => ({
+        ...prevState,
+        error: e
+      }));
+    } finally {
+      setProfile((prevState) => ({
+        ...prevState,
+        loading: false
+      }))
+    }
+  }, []);
+
+
 
   const originTabStyle = {
     borderBottom: "1px solid #b4b4b4",
@@ -168,81 +224,87 @@ const MyPage = () => {
   }
 
   return (
-    <Container>
-      <Content>
-        <UserArea>
-          <UserGradeArea>
-            노하준님은 <span style={{ color: "#787878" }}> 일반 </span> 회원입니다
-          </UserGradeArea>
-          <UserCont>
-            <UserInfoArea>
-              <UserAccArea>
-                <UserAccTitle>MY 계좌</UserAccTitle>
-                <UserContBox>
-                  <UserAccCont>
-                    <UserAccBox>
-                      <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>DB 포인트</p>
-                      <p style={{ fontSize: "20px", color: "#2b2b2b" }}>0원</p>
-                    </UserAccBox>
-                    <UserAccBox>
-                      <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>DB 머니</p>
-                      <p style={{ fontSize: "20px", color: "#2b2b2b" }}>0원</p>
-                    </UserAccBox>
-                    <UserAccBox>
-                      <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>
-                        <span style={{ marginRight: "24px" }}>예매권</span>
-                        <span>할인권</span>
-                      </p>
-                      <p style={{ fontSize: "20px", color: "#2b2b2b" }}>
-                        <span style={{ marginRight: "36px" }}>0매</span>
-                        <span>1매</span>
-                      </p>
-                    </UserAccBox>
-                  </UserAccCont>
-                </UserContBox>
-              </UserAccArea>
-              <UserMovieInfo>
-                <UserCinemaArea>
-                  <UserAccTitle>MY 극장</UserAccTitle>
-                  <UserCinemaBox>MY극장을 설정해 주세요.</UserCinemaBox>
-                </UserCinemaArea>
-                <UserMovieArea>
-                  <UserAccTitle>MY 영화</UserAccTitle>
-                  <UserCinemaBox style={{ height: "90px", paddingTop: "0" }}>
-                    <UserBoxInner>
-                      <SLink to="MyPage/MyRating" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>나의 평점 모아보기</SLink>
-                    </UserBoxInner>
-                    <UserBoxInner style={{ borderLeft: "1px solid #e5e5e5" }}>
-                      <SLink to="MyPage/MyMovie" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>내가 본 영화</SLink>
-                    </UserBoxInner>
-                  </UserCinemaBox>
-                </UserMovieArea>
-              </UserMovieInfo>
-            </UserInfoArea>
-            <TabInfo>
-              <TabMenu>
-                {["예매확인/취소", "예매권/할인권 등록", "선호하는 배우", "선호하는 감독"].map((tabName, idx) => {
-                  return (
-                    <>
-                      {tabClick === idx ? (
-                        <TabMenuItem style={activeTabStyle}>
-                          <TabItemLink onClick={() => { setTabClick(idx) }}>{tabName}</TabItemLink>
-                        </TabMenuItem>
-                      ) : (
-                          <TabMenuItem style={originTabStyle}>
-                            <TabItemLink onClick={() => { setTabClick(idx) }}>{tabName}</TabItemLink>
-                          </TabMenuItem>
-                        )}
-                    </>
-                  )
-                })}
-              </TabMenu>
-              <TabContent tabClick={tabClick} />
-            </TabInfo>
-          </UserCont>
-        </UserArea>
-      </Content>
-    </Container>
+      <>
+      {
+        profile.profile ? (
+            <Container>
+              <Content>
+                <UserArea>
+                  <UserGradeArea>
+                    {profile.profile && profile.profile.full_name}님은 <span style={{ color: "#787878" }}> {profile.profile.name} </span> 회원입니다
+                  </UserGradeArea>
+                  <UserCont>
+                    <UserInfoArea>
+                      <UserAccArea>
+                        <UserAccTitle>MY 계좌</UserAccTitle>
+                        <UserContBox>
+                          <UserAccCont>
+                            <UserAccBox>
+                              <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>DB 포인트</p>
+                              <p style={{ fontSize: "20px", color: "#2b2b2b" }}>{profile.profile && `${profile.profile.mileage} POINT`}</p>
+                            </UserAccBox>
+                            <UserAccBox>
+                              <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>DB 머니</p>
+                              <p style={{ fontSize: "20px", color: "#2b2b2b" }}>0원</p>
+                            </UserAccBox>
+                            <UserAccBox>
+                              <p style={{ paddingBottom: "12px", fontSize: "15px", color: "#777" }}>
+                                <span style={{ marginRight: "24px" }}>예매권</span>
+                                <span>할인권</span>
+                              </p>
+                              <p style={{ fontSize: "20px", color: "#2b2b2b" }}>
+                                <span style={{ marginRight: "36px" }}>0매</span>
+                                <span>1매</span>
+                              </p>
+                            </UserAccBox>
+                          </UserAccCont>
+                        </UserContBox>
+                      </UserAccArea>
+                      <UserMovieInfo>
+                        <UserCinemaArea>
+                          <UserAccTitle>MY 극장</UserAccTitle>
+                          <UserCinemaBox>MY극장을 설정해 주세요.</UserCinemaBox>
+                        </UserCinemaArea>
+                        <UserMovieArea>
+                          <UserAccTitle>MY 영화</UserAccTitle>
+                          <UserCinemaBox style={{ height: "90px", paddingTop: "0" }}>
+                            <UserBoxInner>
+                              <SLink to="MyPage/MyRating" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>나의 평점 모아보기</SLink>
+                            </UserBoxInner>
+                            <UserBoxInner style={{ borderLeft: "1px solid #e5e5e5" }}>
+                              <SLink to="MyPage/MyMovie" style={{ color: "#2b2b2b", top: "36px", position: "relative" }}>내가 본 영화</SLink>
+                            </UserBoxInner>
+                          </UserCinemaBox>
+                        </UserMovieArea>
+                      </UserMovieInfo>
+                    </UserInfoArea>
+                    <TabInfo>
+                      <TabMenu>
+                        {["예매확인/취소", "예매권/할인권 등록", "선호하는 배우", "선호하는 감독"].map((tabName, idx) => {
+                          return (
+                              <>
+                                {tabClick === idx ? (
+                                    <TabMenuItem style={activeTabStyle}>
+                                      <TabItemLink onClick={() => { setTabClick(idx) }}>{tabName}</TabItemLink>
+                                    </TabMenuItem>
+                                ) : (
+                                    <TabMenuItem style={originTabStyle}>
+                                      <TabItemLink onClick={() => { setTabClick(idx) }}>{tabName}</TabItemLink>
+                                    </TabMenuItem>
+                                )}
+                              </>
+                          )
+                        })}
+                      </TabMenu>
+                      <TabContent tabClick={tabClick} actors={actors} directors={directors}/>
+                    </TabInfo>
+                  </UserCont>
+                </UserArea>
+              </Content>
+            </Container>
+        ) : <div></div>
+      }
+      </>
   );
 };
 
@@ -258,11 +320,11 @@ const TabContent = (props) => {
     )
   } else if (props.tabClick === 2) {
     return (
-      <PreferActor id={props.id} />
+      <PreferActor actorList={props.actors.actors}  />
     )
   } else {
     return (
-      <PreferDirector id={props.id} />
+      <PreferDirector directorList={props.directors.directors} />
     )
   }
 }

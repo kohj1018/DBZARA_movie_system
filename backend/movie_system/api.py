@@ -38,6 +38,7 @@ urlpatterns = [
     path('store/', item.store_list_api_view, name='item'),
 
     # accounts api
+    path('accounts/profile/', accounts.profile_api_view, name='profile'),
     path('accounts/login/google/', accounts.google_login_api_view, name='google-login'),
     path('accounts/login/kakao/', accounts.kakao_login_api_viwe, name='kakao-login'),
     path('accounts/movies/', accounts.profile_movie_api_view, name='profile-movie'),

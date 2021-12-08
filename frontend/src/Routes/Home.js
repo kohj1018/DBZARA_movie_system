@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import MoviePoster from "Components/MoviePoster";
 import { dbzaraApi } from "jaehunApi";
+import {socialAPI} from "../junsu-api";
 import { Link } from "react-router-dom";
 import MovieVideo from "Components/MovieVideo";
 import EventPoster from "Components/EventPoster";
@@ -128,6 +129,12 @@ const Home = () => {
     loading: true,
   });
 
+  let [event, setEvent] = useState({
+      results:null,
+      error: null,
+      loading: true
+  })
+
   // API 연결
   async function feactApi() {
     try {
@@ -141,6 +148,14 @@ const Home = () => {
         data: { results: notOpen },
       } = await dbzaraApi.notOpen();
       setNotOpenMovies((movies) => ({ ...movies, notOpen }));
+
+      const {
+          data: {results: event}
+      } = await socialAPI.event();
+      setEvent((prevState) => ({
+          ...prevState,
+          results: event
+      }))
     } catch {
       setMovies((movies) => ({
         ...movies,
@@ -356,12 +371,17 @@ const Home = () => {
               <EventnameSpan>Event</EventnameSpan>
             </Eventname>
             <EventImgs scrollY={position.Event}>
-              {[1, 2, 3].map((event, idx) => {
+              {event.results && event.results.map((event, idx) => {
+                  if (idx < 3) {
                 return (
                   <EventImg>
-                    <EventPoster />
+                    <EventPoster
+                        src={event.backdrop}
+                        id={event.id}
+                        day={event.remain_date}
+                        title={event.title}/>
                   </EventImg>
-                );
+                );}
               })}
             </EventImgs>
           </Event>

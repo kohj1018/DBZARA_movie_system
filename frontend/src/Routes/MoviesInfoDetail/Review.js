@@ -7,25 +7,33 @@ import { CircularProgress } from "@material-ui/core";
 import { dbzaraApi } from "dbzaraApi";
 
 const Review = ({ id }) => {
-  const [movieReview, setMovieReview] = useState();
+  const [movieReview, setMovieReview] = useState({
+    movie: null,
+    reviews: null
+  });
 
   const getMovieReview = async () => {
     const { data: { results: movieReview } } = await dbzaraApi.movieReview(id);
-    setMovieReview(() => movieReview);
+    setMovieReview((prevState) => ({
+      ...prevState,
+      movie: id,
+      reviews: movieReview
+    }));
   }
 
-  useEffect(() => {
-    getMovieReview();
+  useEffect(async () => {
+    await getMovieReview();
   }, [])
 
   return (
-    movieReview ? (
+    movieReview.reviews ? (
       <>
         <Container>
           <Title>평점</Title>
           <CommentArea>
             <RateEditBox
-              rates={movieData[0].rates}
+                rates={movieData[0].rates}
+                movie={id}
             />
             <RatesArea>
               <RatesTypeMenuTxt>
@@ -34,7 +42,7 @@ const Review = ({ id }) => {
               </RatesTypeMenuTxt>
             </RatesArea>
             <RatesView>
-              {movieReview.map(review => {
+              {movieReview.reviews.map(review => {
                 return (
                   <RateViewBox
                     nickName={review.name}

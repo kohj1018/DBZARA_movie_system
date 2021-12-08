@@ -83,7 +83,8 @@ const AllStoreList = styled.div`
 
 
 
-const Store = () => {
+const Store = (props) => {
+  console.log(props)
 
   const [tabClick, setTabClick] = useState(0);
 

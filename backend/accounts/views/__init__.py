@@ -5,7 +5,7 @@ from .social import GoogleLoginView, KakaoLoginAPIView
 from .api import (
     ProfileMovieAPIView, ProfileGenreAPIView, ProfileActorAPIView, ProfileDirectorAPIView, ProfileDistributorAPIView,
     ProfileMovieDetailAPIView, ProfileGenreDetailAPIView, ProfileActorDetailAPIView, ProfileDirectorDetailAPIView,
-    ProfileDistributorDetailAPIView
+    ProfileDistributorDetailAPIView, ProfileAPIView
 )
 
 
@@ -13,6 +13,8 @@ employee_list_view = EmployeeListView.as_view()
 employee_attendance_list_view = EmployeeAttendanceListView.as_view()
 employee_evaluate_list_view = EmployerEvaluationListView.as_view()
 
+
+profile_api_view = ProfileAPIView.as_view()
 profile_movie_api_view = ProfileMovieAPIView.as_view()
 profile_genre_api_view = ProfileGenreAPIView.as_view()
 profile_actor_api_view = ProfileActorAPIView.as_view()

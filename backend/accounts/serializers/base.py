@@ -10,12 +10,19 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'birth_date', 'age', 'is_social', 'full_name', 'gender']
 
 
+class GradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grade
+        fields = ['name', 'benefits']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    grade = GradeSerializer()
 
     class Meta:
         model = Profile
-        fields = ['user', 'grade', 'image']
+        fields = ['user', 'grade', 'image', 'mileage']
 
 
 class CouponHoldSerializer(serializers.ModelSerializer):
@@ -28,12 +35,6 @@ class NonCouponHoldSerializer(serializers.ModelSerializer):
     class Meta:
         model = NonCouponHold
         fields = ['non_coupon']
-
-
-class GradeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Grade
-        fields = ['name', 'benefits']
 
 
 class MileageSerializer(serializers.ModelSerializer):

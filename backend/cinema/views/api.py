@@ -28,13 +28,15 @@ class ScheduleCinemaAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
+        base_date = date.today()
+        today = datetime(base_date.year, base_date.month, base_date.day)
         cinema = Cinema.objects.get(pk=pk)
         queryset = Movie.objects.filter(pk__in=cinema.schedule_movie_by_cinema)
         serializer = MovieShortSerializer(queryset, many=True)
         return Response({
             'cinemas': CinemaSerializer(cinema).data,
             'movies': serializer.data,
-            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in cinema.schedule_datetime_by_cinema])
+            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in cinema.schedule_datetime_by_cinema if d >= today])
         }, status=status.HTTP_200_OK)
 
 
@@ -60,13 +62,15 @@ class ScheduleMovieAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
+        base_date = date.today()
+        today = datetime(base_date.year, base_date.month, base_date.day)
         movie = Movie.objects.get(pk=pk)
         queryset = Cinema.objects.filter(pk__in=movie.schedule_cinema_by_movie)
         serializer = CinemaSerializer(queryset, many=True)
         return Response({
             'movies': MovieSerializer(movie).data,
             'cinemas': serializer.data,
-            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in movie.schedule_datetime_by_movie])
+            'date': set([datetime.strftime(d, '%Y-%m-%d') for d in movie.schedule_datetime_by_movie if d > today])
         }, status=status.HTTP_200_OK)
 
 

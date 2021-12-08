@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import SideBar from "Components/SideBar";
+import {useCookies} from "react-cookie";
 // TODO 메뉴, 서치 클릭 -> 사이드바
 
 export default withRouter(({ location: { pathname } }) => {
@@ -15,6 +16,7 @@ export default withRouter(({ location: { pathname } }) => {
 
   // 스크롤 이벤트
   const [position, setPosition] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
   const onScroll = () => {
     if (window.scrollY >= 70) setPosition(true);
@@ -143,8 +145,13 @@ export default withRouter(({ location: { pathname } }) => {
               <LinkText>스토어</LinkText>
             </SLink>
             <TabUl>
-              {["티켓", "식음료", "포인트"].map((item) => (
-                <TabLi to="/" hover={hover}>
+              {["스낵", "음료", "콤보"].map((item, idx) => (
+                <TabLi to={{
+                  pathname: "/Store",
+                  state: {
+                    index: 123,
+                  }
+                }} hover={hover}>
                   {item}
                 </TabLi>
               ))}
@@ -153,9 +160,18 @@ export default withRouter(({ location: { pathname } }) => {
         </List>
 
         <List>
-          <LoginItem current={pathname === "/Login"}>
-            <SLink to="/Login">로그인</SLink>
-          </LoginItem>
+          {
+            cookies.token ? (
+                <LoginItem current={pathname === "/Login"}>
+                  <SLink to="/MyPage"><i className="fas fa-user"></i></SLink>
+                </LoginItem>
+            ) : (
+                <LoginItem current={pathname === "/Login"}>
+                  <SLink to="/Login">로그인</SLink>
+                </LoginItem>
+            )
+          }
+
           <LoginItem onClick={() => setSideBar(true)}>🟦</LoginItem>
         </List>
         <Side open={sideBar}>

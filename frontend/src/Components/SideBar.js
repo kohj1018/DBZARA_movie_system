@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect} from "react";
 import styled from "styled-components";
 import { UserContext } from "context";
 import { Link } from "react-router-dom";
+import {useCookies} from "react-cookie";
+import {setToken} from "../junsu-api";
 
 const UserInfo = styled.div`
   display: grid;
@@ -52,10 +54,18 @@ const Context = styled.span`
 `;
 
 const SideBar = ({ setSideBar }) => {
-  const { userInfo } = useContext(UserContext);
+    const [cookies, setCookies, removeCookie] = useCookies(['token']);
+    const { userInfo, handleUserInfo } = useContext(UserContext);
+
+    useEffect(() => {
+        if(cookies.token) {
+            handleUserInfo(cookies.token);
+            setToken(cookies);
+        }
+    }, [cookies])
 
   const NavItemContext = [
-    "예매확인/취소",
+    "로그아웃",
     "예매권/할인권등록",
     "고객센터",
     "할인안내",
@@ -75,12 +85,21 @@ const SideBar = ({ setSideBar }) => {
         <Exit onClick={() => setSideBar(false)}>❌</Exit>
       </UserInfo>
       <NavList>
-        {NavItemContext.map((data) => {
-          return (
-            <NavItem>
-              <Context>{data}</Context>
-            </NavItem>
-          );
+        {NavItemContext.map((data, idx) => {
+            if(idx === 0) {
+                return(
+                    <NavItem>
+                        <Context onClick={() => removeCookie('token')}>{data}</Context>
+                    </NavItem>
+                    )
+            } else {
+                return (
+                    <NavItem>
+                        <Context>{data}</Context>
+                    </NavItem>
+                );
+            }
+
         })}
       </NavList>
     </>

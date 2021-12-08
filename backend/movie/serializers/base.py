@@ -74,10 +74,12 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='profile.anonymization_name')
+    sympathy = serializers.ReadOnlyField()
+    not_sympathy = serializers.ReadOnlyField()
 
     class Meta:
         model = Review
-        fields = ['id', 'name', 'score', 'comment', 'sympathy', 'not_sympathy', 'created']
+        fields = ['id', 'movie', 'name', 'score', 'comment', 'sympathy', 'not_sympathy', 'created']
 
 
 class MovieInfoSerializer(serializers.ModelSerializer):
