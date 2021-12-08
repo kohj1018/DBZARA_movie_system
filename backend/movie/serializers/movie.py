@@ -1,11 +1,6 @@
 from movie.serializers.base import *
 
 
-class MovieListSerializer(MovieSerializer):
-    class Meta(MovieSerializer.Meta):
-        fields = MovieSerializer.Meta.fields + ['reservation_rate']
-
-
 class ReservationBaseMovieSerializer(MovieSerializer):
     class Meta(MovieSerializer.Meta):
         fields = ['id', 'name', 'grade']

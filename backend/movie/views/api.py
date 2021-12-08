@@ -13,9 +13,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from accounts.models import Profile
-from movie.models import Movie, Review, MovieInfo, Actor, Director
+from movie.models import Movie, Review, MovieInfo, Actor, Director, MovieRank
 from movie.serializers import (
-    MovieListSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
+    MovieRankSerializer, MovieDetailSerializer, MovieStaffSerializer, MovieImageSerializer,
     MovieVideoSerializer, MovieReviewSerializer, ReviewSerializer, MovieInfoSerializer,
     ActorDetailSerializer, DirectorDetailSerializer
 )
@@ -28,28 +28,26 @@ class BasicPagination(PageNumberPagination):
 
 
 class MovieListAPIView(ListModelMixin, GenericAPIView):
-    queryset = Movie.objects.all()
+    queryset = MovieRank.objects.all()
     permission_classes = [AllowAny]
     pagination_class = BasicPagination
-    serializer_class = MovieListSerializer
+    serializer_class = MovieRankSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         option = self.request.query_params.get('option', 'box-office')
-        today = date.today()
         query_set = super().get_queryset()
 
         if option == 'box-office':
-            return sorted(query_set.filter(
-                closing_date__gte=today
-            ), key=lambda movie: movie.reservation_rate, reverse=True)
+            return query_set.exclude(reservation_rate_rank=0).order_by('reservation_rate_rank')
+
+        elif option == 'review':
+            return query_set.exclude(review_rate_rank=0).order_by('review_rate_rank')
 
         elif option == 'not-open':
-            return sorted(query_set.filter(
-                opening_date__gte=today
-            ), key=lambda movie: movie.reservation_rate, reverse=True)
+            return query_set.filter(reservation_rate_rank=0, review_rate_rank=0)
 
 
 class MovieBaseAPIView (RetrieveModelMixin, GenericAPIView):
