@@ -5,7 +5,7 @@
 <figure class="snip1253 hover">
     <div class="image">
         {% if movie.backdrop %}
-            <img class="img-fluid img-thumbnail" src="{{ movie.backdrop }}" alt="sample66" />
+            <img class="img-fluid img-thumbnail" src="{{ movie.backdrop.url }}" alt="sample66" />
         {% else %}
             <img class="img-fluid img-thumbnail" src="{% static 'img/no-photo-available.jpeg' %}" />
         {% endif %}

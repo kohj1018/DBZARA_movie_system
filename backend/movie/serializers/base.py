@@ -95,5 +95,19 @@ class MovieRankSerializer(serializers.ModelSerializer):
 
     class Meta(MovieSerializer.Meta):
         model = MovieRank
-        fields = ['id', 'name', 'grade', 'poster', 'backdrop', 'reservation_rate']
+        fields = ['id', 'name', 'grade', 'poster', 'backdrop']
 
+
+class ReservationRankSerializer(MovieRankSerializer):
+    class Meta(MovieRankSerializer.Meta):
+        fields = MovieRankSerializer.Meta.fields + ['reservation_rate']
+
+
+class ReviewRankSerializer(MovieRankSerializer):
+    class Meta(MovieRankSerializer.Meta):
+        fields = MovieRankSerializer.Meta.fields + ['review_rate']
+
+
+class NotOpenSerializer(MovieRankSerializer):
+    class Meta(MovieRankSerializer.Meta):
+        fields = MovieRankSerializer.Meta.fields + ['opening_count']
