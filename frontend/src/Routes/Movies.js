@@ -5,30 +5,69 @@ import movieData from "movieData";
 import { dbzaraApi } from "dbzaraApi";
 import PeopleView from "Components/PeopleView";
 import { CircularProgress } from "@material-ui/core";
+import { withRouter } from "react-router";
 
-const Movies = () => {
+const Movies = ({ location }) => {
+
+  // let showType = location.state.showType;
+  let showType = "boxOffice"
+
   const [movies, setMovies] = useState();
+  const [page, setPage] = useState(1);
   const getMovie = async () => {
-    const {
-      data: { results: movies },
-    } = await dbzaraApi.boxOffice();
-    setMovies(() => movies);
+    // Link로 들어온 props(showType)에 따라 어떤 걸 보여줄지 선택
+    switch (showType) {
+      case "nowPlaying":
+        const {
+          data: { results: moviesNowPlaying },
+        } = await dbzaraApi.nowPlaying();
+        setMovies((movies) => [...movies, moviesNowPlaying]);
+        console.log("nowPlaying");
+        break;
+      case "notOpen":
+        const {
+          data: { results: moviesNotOpen },
+        } = await dbzaraApi.notOpen();
+        setMovies((movies) => [...movies, moviesNotOpen]);
+        console.log("notOpen");
+        break;
+      default:
+        // if 문 더보기 눌렀을 때 추가하는 거
+        if (page < 2) {
+          const {
+            data: { results: moviesBoxOffice },
+          } = await dbzaraApi.boxOffice1();
+          setMovies(() => moviesBoxOffice);
+          console.log("boxOffice");
+        } else {
+          const {
+            data: { results: moviesBoxOffice },
+          } = await dbzaraApi.boxOffice2();
+          // useState의 set함수에 기존 배열 값에 concat()함수를 사용하면 내용이 추가됨.
+          setMovies(movies.concat(moviesBoxOffice));
+          console.log("boxOffice");
+        }
+        break;
+    }
   };
 
   useEffect(() => {
     getMovie();
-  }, []);
+    console.log(page);
+  }, [page]);
+
+  const moreMovieData = () => {
+    if (page < 2) {
+      setPage(2);
+    } else {
+      alert("더 이상 불러올 수 없습니다.")
+    }
+  }
 
   return (
     movies ? (
       <>
         <Container>
-          {/* <PeopleView
-            id={0}
-            name={"임지연"}
-            job={"배우"}
-            src={"https://movie-simg.yes24.com/NYes24//PER_PHOTO//14/09/Lim_jiyeon_112010.jpg"}
-          /> */}
           <MovieRankCont>
             {movies.map(movie => {
               return (
@@ -47,7 +86,7 @@ const Movies = () => {
             })}
           </MovieRankCont>
           <BtnBottomArea>
-            <Btn>더보기</Btn>
+            <Btn onClick={moreMovieData}>더보기</Btn>
           </BtnBottomArea>
         </Container>
       </>
@@ -61,7 +100,7 @@ const Movies = () => {
   )
 };
 
-export default Movies;
+export default withRouter(Movies);
 
 const Container = styled.div`
   margin: 150px auto 200px;

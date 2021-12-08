@@ -63,11 +63,34 @@ export default withRouter(({ location: { pathname } }) => {
             onMouseOver={() => onHover()}
             onMouseOut={() => outHover()}
           >
-            <SLink to="/Movies">
+            <SLink to={{
+                pathname: "/Movies",
+                state: {
+                  showType: "boxOffice"
+                }
+              }}>
               <LinkText>영화</LinkText>
             </SLink>
             <TabUl>
-              {[
+              <TabLi to={{
+                pathname: "/Movies",
+                state: {
+                  showType: "boxOffice"
+                }
+              }} hover={hover}>예매순위</TabLi>
+              <TabLi to={{
+                pathname: "/Movies/Now-Playing",
+                state: {
+                  showType: "nowPlaying"
+                }
+              }} hover={hover}>현재상영작</TabLi>
+              <TabLi to={{
+                pathname: "/Movies/Upcoming-Release",
+                state: {
+                  showType: "notOpen"
+                }
+              }} hover={hover}>개봉예정작</TabLi>
+              {/* {[
                 "예매순위",
                 "현재상영작",
                 "개봉예정작",
@@ -78,7 +101,7 @@ export default withRouter(({ location: { pathname } }) => {
                 <TabLi to="/" hover={hover}>
                   {item}
                 </TabLi>
-              ))}
+              ))} */}
             </TabUl>
           </Item>
           <Item

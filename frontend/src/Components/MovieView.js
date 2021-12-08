@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 
 const MovieView = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) => {
-  console.log(age);
+  
   var ageColorStyle = {};
   // 연령별로 색깔 다르게 표시
   switch (age) {
@@ -58,7 +58,7 @@ const MovieView = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) =
       };
       break;
   }
-  console.log(ageColorStyle);
+  
   switch (age) {
     case 0:
       age = "전체";

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import MovieSeat from "Components/MovieSeat";
-
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 // 좌석배정
 
 const SeatReservation = ({
   display,
-  onMovieSeat,
-  // moviesChoice,
-  // theaterChoice,
-  // dayChoice,
+  scheduleChoice,
+  theaterChoice,
+  setPeopleSum,
 }) => {
   //  ! 인원수
   // const [count, setCount] = useState({
@@ -26,6 +24,8 @@ const SeatReservation = ({
   //     cnt: 0,
   //   },
   // });
+
+  // TODO 하나의 state로 만들기
   const [adultNum, setAdultNum] = useState({
     type: "adult",
     count: 0,
@@ -38,8 +38,19 @@ const SeatReservation = ({
     type: "preferential",
     count: 0,
   });
+
   const [selected, setSelected] = useState(new Set([])); //좌석 정보list
 
+  useEffect(() => {
+    setPeopleSum((data) => ({
+      ...data,
+      adultNum: adultNum.count,
+      teenagerNum: teenagerNum.count,
+      preferentialNum: preferentialNum.count,
+      selected,
+    }));
+    console.log(selected);
+  }, [adultNum.count, teenagerNum.count, preferentialNum.count, selected]);
   return (
     <Container display={display} current={3}>
       <p>인원/좌석 선택</p>
@@ -73,8 +84,16 @@ const SeatReservation = ({
           </div>
           <div className={"TheaterContainer"}>
             <p>선택한 상영관 및 시간</p>
-            <p>상영관 {false ? `theaterChoice.theater` : "디비자라"}</p>
-            <p>시간 {false ? `dayChoice.day` : "00"}</p>
+            <p>
+              {scheduleChoice.cinemaDetail &&
+                `${scheduleChoice.cinemaDetail.name}`}
+            </p>
+            <p>
+              {scheduleChoice &&
+                theaterChoice &&
+                `${scheduleChoice.date} / ${theaterChoice.start_datetime}~${theaterChoice.end_datetime}`}
+            </p>
+            {/* {console.log("scheduleChoice", scheduleChoice)} */}
             {/* {console.log("moviesChoice", moviesChoice)}
             {console.log("theaterChoice",theaterChoice)}
             {console.log("dayChoice",dayChoice)} */}
@@ -88,8 +107,15 @@ const SeatReservation = ({
             </p>
           </div>
         </SeatInfo>
-        <Seat row={8} col={10} setSelected={setSelected} selected={selected} />
-        {/* <MovieSeat setSelected={setSelected} onMovieSeat={onMovieSeat} /> */}
+        <Seat
+          row={theaterChoice && theaterChoice.seat && theaterChoice.seat.rows}
+          col={
+            theaterChoice && theaterChoice.seat && theaterChoice.seat.columns
+          }
+          selected={selected}
+          setSelected={setSelected}
+          peopleSum={adultNum.count + teenagerNum.count + preferentialNum.count}
+        />
       </SeatPick>
     </Container>
   );
@@ -97,7 +123,7 @@ const SeatReservation = ({
 
 export default SeatReservation;
 
-const handleClick = (value, setSelected, row, col) => {
+const handleClick = (value, selected, setSelected, peopleSum, row, col) => {
   // console.log("value", value.target); //DOM요소
   // console.log("value className", value.target.classList); //class List
 
@@ -110,19 +136,32 @@ const handleClick = (value, setSelected, row, col) => {
     );
     // console.log("삭제");
   } else {
-    value.target.classList.add("clicked");
-    setSelected((seatList) => [
-      ...seatList,
-      `${String.fromCharCode(row + 97)}${col}, `,
-    ]);
+    if (!selected.length || selected.length < peopleSum) {
+      value.target.classList.add("clicked");
+      setSelected((seatList) => [
+        ...seatList,
+        `${String.fromCharCode(row + 97)}${col}, `,
+      ]);
+    } else {
+    }
+
     // console.log("추가");
   }
 };
 
 //! 함수를 안에 넣으면 클릭할때마다 리렌더링 다시 되면서 리셋됨
-const Seat = ({ row, col, setSelected, setSeatRC, seatRC, selected }) => {
+const Seat = ({ row, col, selected, setSelected, peopleSum }) => {
   return (
     <SeatBox row={row} col={col}>
+      {peopleSum === 0 && (
+        <div className={"notCnt"}>
+          <div>
+            <ArrowUpwardIcon fontSize="large" />
+          </div>
+          <div>인원을 먼저 선택해 주세요!</div>
+        </div>
+      )}
+
       <div className="screen">screen</div>
       <div>
         {[...Array(row).keys()].map((num1, idx1) => (
@@ -131,14 +170,22 @@ const Seat = ({ row, col, setSelected, setSeatRC, seatRC, selected }) => {
             {[...Array(col).keys()].map((num2, idx2) => (
               <span
                 className={`col${idx2 + 1}`}
-                onClick={(value) => handleClick(value, setSelected, idx1, idx2)}
+                onClick={(value) =>
+                  handleClick(
+                    value,
+                    selected,
+                    setSelected,
+                    peopleSum,
+                    idx1,
+                    idx2
+                  )
+                }
               />
             ))}
           </div>
         ))}
       </div>
-      {console.log("seatRC", seatRC)}
-      {console.log("selected", selected)}
+      {/* {console.log("selected", selected)} */}
     </SeatBox>
   );
 };
@@ -149,15 +196,41 @@ const SeatBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
   padding: 100px;
   border-top: 1px solid #e5e5e5;
+  .notCnt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    color: white;
+    font-size: 25px;
+    > div {
+      :nth-child(1) {
+        margin-bottom: 30px;
+      }
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 350px;
+    }
+  }
   .screen {
     margin-left: 30px;
-    width: ${(prop) => `${prop.row * 50}px`};
-    height: ${(prop) => `${prop.row * 12}px`};
+    width: ${(prop) => `${prop.col * 50}px`};
+    /* height: ${(prop) => `${prop.row * 12}px`}; */
+    height: 100px;
     border-radius: 10px 10px 50px 50px / 10px 10px 50px 50px;
     background-color: #e7e7e7;
-    font-size: ${(prop) => `${prop.row * 10}px`};
+    /* font-size: ${(prop) => `${prop.row * 10}px`}; */
+    padding-top: 5px;
+    font-size: 70px;
     color: #e1e1e1;
     text-align: center;
     margin-bottom: 20px;
