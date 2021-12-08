@@ -77,7 +77,9 @@ const MovieView = ({ isFilmo, id, rank, src, age, title, ticketSales, rates }) =
             <Poster src={src} alt="poster" />
             <BtnContainer>
               <OverBtn>
-                <Btn>예매</Btn>
+                <Btn>
+                  <SLink to={"/Reservation"}>예매</SLink>
+                </Btn>
                 <Btn>
                   <SLink to={`/MoviesInfo/Index/${id}`}>정보</SLink>
                 </Btn>

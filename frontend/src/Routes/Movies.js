@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieView from "Components/MovieView";
-import movieData from "movieData";
 import { dbzaraApi } from "dbzaraApi";
-import PeopleView from "Components/PeopleView";
 import { CircularProgress } from "@material-ui/core";
 import { withRouter } from "react-router";
 
@@ -58,7 +56,7 @@ const Movies = ({ location }) => {
 
   const moreMovieData = () => {
     if (page < 2) {
-      setPage(2);
+      setPage(page + 1);
     } else {
       alert("더 이상 불러올 수 없습니다.")
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Box, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const MoviePoster = ({ id, bgUrl, index }) => {
   //받아올 데이터
@@ -13,13 +14,10 @@ const MoviePoster = ({ id, bgUrl, index }) => {
       <Index>{index}</Index>
       <Background>
         <Btn>
-          {/* TODO 버튼 Link로 만들기 */}
-          {/* <Link>예매</Link> */}
-          <p>예매</p>
+          <SLink to={"/Reservation"}>예매</SLink>
         </Btn>
         <Btn>
-          {/* <Link>정보</Link> */}
-          <p>정보</p>
+          <SLink to={`/MoviesInfo/Index/${id}`}>정보</SLink>
         </Btn>
       </Background>
       {/* </MovieImg> */}
@@ -81,3 +79,5 @@ const Btn = styled(Button)`
     }
   }
 `;
+
+const SLink = styled(Link)``;
