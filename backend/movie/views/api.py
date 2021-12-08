@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
@@ -153,7 +153,7 @@ class ReviewAPIView(ReviewBaseAPIView):
         400: 'Not Authentication'
     })
     def post(self, request):
-        serializer = self.serializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         profile = Profile.objects.get(user=request.user)
         if serializer.is_valid():
             serializer.save(profile=profile)
